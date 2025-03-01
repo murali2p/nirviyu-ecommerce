@@ -14,9 +14,7 @@ importlib_metadata
 itsdangerous
 Jinja2
 MarkupSafe
-
 mysql-connector-python
-mysqlclient
 razorpay
 requests
 urllib3
