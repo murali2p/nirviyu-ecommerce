@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Products{% endblock %} {% block
+content %}
+
+<h2 class="container product-header">Health Supplements</h2>
+<div class="container grid grid--3-cols">
+  {% for product in products %}
+  <div class="product-card">
+    <form action="/products/{{product.prod_id}}" method="post">
+      <button type="submit" class="product-image-button">
+        <img
+          class="product-image"
+          src="{{ url_for('static', filename='uploads/' + product.path) }}"
+          alt="{{ product.name }}"
+        />
+      </button>
+    </form>
+    <h3 class="product-name">{{ product.prod_name }}</h3>
+    <p class="product-desc">{{ product.description }}</p>
+    <p class="product-price">
+      <strong>Price: ₹ {{ product.price }}</strong>
+    </p>
+    <form action="/add_to_cart/{{ product.prod_id }}" method="post">
+      <button class="btn btn--primary">Add to Cart</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
