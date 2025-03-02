@@ -32,7 +32,7 @@
               >Services</a
             >
           </li>
-          <li><a class="nav-el" href="cart">Cart</a></li>
+          <li><a class="nav-el" href="{{ url_for('cart') }}">Cart</a></li>
           <li>
             <a class="nav-el" href="{{ url_for('index') }}#know_more"
               >Contact Us</a
@@ -51,9 +51,11 @@
         <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()"
           >&times;</a
         >
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('products') }}">Products</a>
+        <a href="{{ url_for('index')}}#services">Services</a>
+        <a href="{{ url_for('cart') }}">Cart</a>
+        <a href="{{ url_for('index') }}#know_more">Contact Us</a>
       </div>
     </header>
     {% block content %}{% endblock %}

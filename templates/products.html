@@ -2,7 +2,7 @@
 content %}
 
 <h2 class="container product-header">Health Supplements</h2>
-<div class="container grid grid--3-cols">
+<div class="product-container container grid grid--3-cols">
   {% for product in products %}
   <div class="product-card">
     <form action="/products/{{product.prod_id}}" method="post">
@@ -25,5 +25,13 @@ content %}
   </div>
   {% endfor %}
 </div>
+<script
+  type="module"
+  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+  nomodule
+  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
 
 {% endblock %}
