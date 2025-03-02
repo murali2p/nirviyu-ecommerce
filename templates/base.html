@@ -27,13 +27,36 @@
           <li>
             <a class="nav-el" href="{{ url_for('products') }}">Products</a>
           </li>
-          <li><a class="nav-el" href="#">Services</a></li>
+          <li>
+            <a class="nav-el" href="{{ url_for('index') }}#services"
+              >Services</a
+            >
+          </li>
           <li><a class="nav-el" href="cart">Cart</a></li>
-          <li><a class="nav-el" href="#">Contact Us</a></li>
+          <li>
+            <a class="nav-el" href="{{ url_for('index') }}#know_more"
+              >Contact Us</a
+            >
+          </li>
           <li><a class="nav-el login-bar" href="login"> Login </a></li>
         </ul>
       </nav>
+      <ion-icon
+        class="nav-icon"
+        name="menu-outline"
+        onclick="toggleNav()"
+      ></ion-icon>
+
+      <div id="sidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()"
+          >&times;</a
+        >
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+      </div>
     </header>
     {% block content %}{% endblock %}
+    <script src="../static/scripts/nav.js"></script>
   </body>
 </html>

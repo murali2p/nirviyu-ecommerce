@@ -111,7 +111,7 @@ def roles_required(*roles):
 def load_user(user_id):
     connection = mysql.connector.connect(**db_config)
     cur = connection.cursor()
-    cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    cur.execute("SELECT * FROM users WHERE cust_id = %s", (user_id,))
     user = cur.fetchone()
     cur.close()
     if user:
@@ -363,24 +363,24 @@ def orders():
         cursor = connection.cursor(dictionary=True)
         
         # GETTING THE LATEST ORDER ID
-        query='SELECT ORDERS.ORDER_ID  FROM ORDERS INNER JOIN ORDER_GENERATE ON ORDERS.ORDER_ID = ORDER_GENERATE.ORDER_ID WHERE ORDERS.CUST_ID= %s ORDER BY ORDER_GENERATE.UPDATED_AT DESC LIMIT 1'
+        query='select orders.order_id  from orders inner join order_generate on orders.order_id = order_generate.order_id where orders.cust_id= %s order by order_generate.updated_at desc limit 1'
         cursor.execute(query,(current_user.id,))
         order_id = cursor.fetchone()
         
   
         # GETTING THE ORDER DETAILS
-        cursor.execute('SELECT * FROM orders WHERE order_id = %s', (order_id['ORDER_ID'],))
+        cursor.execute('SELECT * FROM orders WHERE order_id = %s', (order_id['order_id'],))
         orders = cursor.fetchall()
        
         
         # getting the payment details
-        cursor.execute('SELECT * FROM order_generate WHERE order_id = %s', (order_id['ORDER_ID'],))
+        cursor.execute('SELECT * FROM order_generate WHERE order_id = %s', (order_id['order_id'],))
         payment = cursor.fetchone()
         
         cursor.close()
         connection.close()
         
-        return render_template('orders.html',order_id=order_id['ORDER_ID'], orders=orders, payment=payment)
+        return render_template('orders.html',order_id=order_id['order_id'], orders=orders, payment=payment)
     except Exception as e:
         return jsonify({'error': str(e)})
 
