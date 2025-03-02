@@ -1025,6 +1025,12 @@ health plan Settings
     gap: 2rem;
   }
 
+  .service-provider-header {
+    font-size: 2.4rem;
+    font-weight: 600;
+    padding: 0rem 3.2rem 3.2rem 3.2rem;
+  }
+
   /***************************
   popular-health-plans settings
   ***************************/
@@ -1112,7 +1118,8 @@ health plan Settings
   }
 
   .cta-header {
-    font-size: 2.4rem;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
   }
   .form-fields {
     display: flex !important;
@@ -1130,7 +1137,7 @@ health plan Settings
   }
   .cta-container {
     max-width: 100rem;
-    padding: 4.8rem 3.2rem;
+    padding: 4.8rem 3.2rem 0rem 3.2rem;
     margin: 0 auto;
     outline-width: 0.1rem;
   }
@@ -1146,6 +1153,10 @@ health plan Settings
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 4.8rem;
+  }
+
+  .service-header {
+    font-size: 1.8rem;
   }
   /***************************
   popular-health-plans settings
@@ -1178,7 +1189,10 @@ health plan Settings
   }
 
   .btn {
-    margin-bottom: 0rem !important;
+    margin-bottom: 0.4rem !important;
+    font-size: 1rem;
+    justify-self: center;
+    align-self: center;
   }
 
   .slider-btn {
@@ -1201,8 +1215,8 @@ health plan Settings
   }
 
   .popular-plan-header {
-    font-size: 2.4rem;
-    margin-bottom: 1.2rem !important;
+    font-size: 1.8rem;
+    margin-bottom: 2.4rem !important;
 
     padding: 1.2rem 0rem !important;
   }
@@ -1221,9 +1235,10 @@ health plan Settings
 services settings   
 ***************************/
   .service-header {
-    font-size: 2.4rem;
+    font-size: 1.8rem;
     font-weight: 600;
     padding: 4.8rem 3.2rem 3.2rem 3.2rem;
+    margin-bottom: 0rem;
   }
 
   .service-primary-heading {
@@ -1234,6 +1249,9 @@ services settings
     font-size: 1.2rem;
   }
 
+  .services-list {
+    padding: 0rem !important;
+  }
   /***************************
 hero-section
 ***************************/
@@ -1250,5 +1268,13 @@ hero-section
 
   .product-card {
     margin: 1.4rem;
+    justify-items: center;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .product-image {
+    align-self: center;
+    justify-self: center;
   }
 }
