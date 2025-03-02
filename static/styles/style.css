@@ -307,10 +307,14 @@ Footer Settings
   background-color: #cfdfd6;
   color: #417f5a;
   padding: 3.2rem 6.4rem 3.2rem 6.4rem;
+  justify-content: center;
+  justify-items: center;
+  text-align: center;
 }
 
 .footer .logo-img {
   margin-bottom: 2.4rem;
+  justify-content: center;
 }
 
 .social-links {
@@ -318,6 +322,8 @@ Footer Settings
   gap: 2rem;
   list-style: none;
   padding: 1.2rem 0 1.2rem 0;
+  justify-items: center;
+  justify-content: center;
 }
 
 .social-icon {
@@ -893,6 +899,16 @@ health plan Settings
     gap: 1.8rem;
     margin-bottom: 2.4rem;
   }
+
+  /***********************
+  product settings
+  ***********************/
+
+  .product-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -937,7 +953,7 @@ health plan Settings
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: rgba(17, 17, 17, 0.873);
     overflow-x: hidden;
     transition: 0.3s;
     padding-top: 60px;
@@ -1144,15 +1160,27 @@ health plan Settings
     gap: 2rem;
   }
   .health-plan-item-container {
+    display: flex;
     flex: 0 0 50%;
-    max-width: 50%;
+    flex-direction: column;
+
+    max-width: 100%;
     box-sizing: border-box;
-    padding: 1.2rem;
+    padding: 0.8rem !important;
     box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
     border-radius: 12px;
 
     position: relative;
   }
+
+  .container {
+    padding: 0rem;
+  }
+
+  .btn {
+    margin-bottom: 0rem !important;
+  }
+
   .slider-btn {
     display: block;
     position: absolute;
@@ -1174,6 +1202,7 @@ health plan Settings
 
   .popular-plan-header {
     font-size: 2.4rem;
+    margin-bottom: 1.2rem !important;
 
     padding: 1.2rem 0rem !important;
   }
@@ -1213,5 +1242,13 @@ hero-section
     grid-template-columns: 1fr;
     gap: 2rem;
     padding: 6.4rem 3.2rem 6.4rem 3.2rem !important;
+  }
+
+  /***************************
+  product settings
+  ***************************/
+
+  .product-card {
+    margin: 1.4rem;
   }
 }
