@@ -1,0 +1,16 @@
+{% extends 'base.html'%} {% block title %}Nirviyu : Stay Healthy{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Payment Success</h1>
+  <p>Your payment was successful. Thank you for shopping with us.</p>
+  <p>Your order id is generated :{{ data['razorpay_payment_id'] }}</p>
+</div>
+<script
+  type="module"
+  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+  nomodule
+  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+{% endblock %}

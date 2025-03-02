@@ -8,10 +8,13 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 import razorpay
+from datetime import timedelta
 import datetime
 
 app = Flask(__name__)  # create a new Flask app
-app.secret_key = 'your_secret_key'  
+app.secret_key = 'your_secret_key' 
+# Set a longer session lifetime (e.g., 30 minutes)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 
 #razorpay payment gateway configuration
@@ -156,6 +159,7 @@ def login():
         if user and check_password_hash(user[2], form.password.data):  # user[2] is password in DB
             user_obj = User(id=user[0], username=user[1], password=user[2], role=user[3])
             login_user(user_obj)
+            session.permanent = True  # Ensure session persists
             return redirect(url_for('index'))
         else:
             return 'user_not_found'
@@ -385,6 +389,49 @@ def orders():
         return jsonify({'error': str(e)})
 
 
+
+@app.route('/payment_success', methods=['POST'])
+def payment_success():
+    try:
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        data = request.form
+        cursor.execute('UPDATE order_generate SET razorpay_payment_id = %s, razorpay_signature = %s WHERE razorpay_order_id = %s', (data['razorpay_payment_id'], data['razorpay_signature'], data['razorpay_order_id']))
+        connection.commit()
+        
+        # login in the user who has placed the order
+        
+        cursor.execute('SELECT cust_id FROM orders as o inner join order_generate as og on o.order_id =og.order_id WHERE og.razorpay_order_id = %s', (data['razorpay_order_id'],))
+        user_id = cursor.fetchone()
+        
+        print("found the user id")
+        print(user_id)
+        cursor.close()
+        connection.close()
+        
+        
+        # create the user object
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE cust_id = %s", (user_id['cust_id'],))
+        customer = cursor.fetchone()
+
+        print("found the user object")
+        # Re-authenticate user
+        user = User(id=customer['cust_id'], username=customer['username'], password=customer['password'], role=customer['role'])
+        if user:
+            login_user(user)  # Restore Flask-Login session
+        
+        print("logged in the user")
+        print(current_user.username)
+              
+        cursor.close()
+        connection.close()
+        return render_template('payment_success.html', data=data)
+    except mysql.connector.Error as err:
+        return jsonify({'Sql error': str(err)})
+    except Exception as e:
+        return jsonify({'exception error': str(e)})
 
 
 if __name__ == '__main__':
