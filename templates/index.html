@@ -5,6 +5,21 @@
 
     <main>
 
+      <!--header class="header">
+        <img class="logo-img" src="../static/img/logo/logo-removebg-preview.png" alt="Nirviyu" />
+        <nav class="nav">
+          <ul class="nav-list">
+            <li><a href="#" class="nav-el">Home</a></li>
+            <li><a href="#" class="nav-el">Services</a></li>
+            <li><a href="#" class="nav-el">Products</a></li>
+            <li><a href="#" class="nav-el">Contact</a></li>
+          </ul>
+          <div class="nav-icon">
+            <ion-icon name="menu-outline"></ion-icon>
+          </div>
+        </nav>
+      </header--> 
+
       <div class="banner">
         <section class="hero container grid grid--2-cols">
           <div>
@@ -13,9 +28,9 @@
               Nirviyu is a health and wellness platform that helps you to stay
               healthy and fit.
             </p>
-            <a href="#" class="btn">Book Lab tests</a>
-            <a href="#" class="btn">Book Doctor Visit</a>
-            <a href="#know" class="btn">Know More</a>    
+            <a href="products" class="btn">View Products</a>
+            <!--a href="#" class="btn">Book Doctor Visit</a-->
+            <a href="#know_more" class="btn">Know More</a>    
 
           </div>
           <img
@@ -27,7 +42,7 @@
 
       </div>
 
-      <section class="services-list">
+      <section class="services-list" id="services">
         <h2 class="service-header">Our Services</h2>
         <ul class="services">
           <li class="service-item">
@@ -105,29 +120,31 @@
           </li>
         </ul>
       </section>
-      <section class = "popular-health-plans">
-        <h2 class = "popular-plan-header service-header">Our popular Health-Check plans</h2>
-        <div class="health-plan-items container grid grid--3-cols">
+      <section class="popular-health-plans">
+        <h2 class="popular-plan-header service-header">Our popular Health-Check plans</h2>
+        <button class="slider-btn slider-btn--prev">&lt;</button>
+        <div class="health-plan-items container">
           <div class ="health-plan-item-container">
             <h3 class ="health-plan-item-header">Full Body Check Prime</h3>
             <p class = "health-plan-item-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque laborum natus repellendus sed sint beatae libero distinctio consectetur impedit temporibus vero dignissimos, tempore repudiandae molestias nostrum dolorem? Hic, mollitia dolore.</p>
-            <a href="#" class="btn">Book health check</a>
+            <a href="products" class="btn">Book health check</a>
           </div>
           <div class ="health-plan-item-container">
             <h3 class ="health-plan-item-header">Full Body Check Advance</h3>
             <p class = "health-plan-item-desc">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse culpa non a minus officiis quidem molestiae, ullam tempora error earum accusantium tenetur doloribus expedita nostrum quibusdam qui. Reprehenderit, cumque facilis?</p>
-            <a href="#" class="btn">Book health check</a>
+            <a href="products" class="btn ">Book health check</a>
           </div>
           <div class ="health-plan-item-container">
             <h3 class ="health-plan-item-header">Full Body Check Lite</h3>
             
               <p class = "health-plan-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus ab, fugit numquam corporis reprehenderit, sapiente cum nisi eligendi, velit nulla minima. Natus nostrum inventore nemo itaque quasi voluptates laudantium eveniet!</p>
-            <a href="#" class="btn">Book health check</a>
+            <a href="products" class="btn">Book health check</a>
           </div>
 
         </div>
+        <button class="slider-btn slider-btn--next">&gt;</button>
       </section>
-      <section class="cta cta-container grid grid--2-cols">
+      <section class="cta cta-container grid grid--2-cols" id="know_more">
         <form class="cta-form">
 
           <h2 class="cta-header">Get in touch with us</h2>
@@ -302,7 +319,7 @@
            <path class="fil0" d="M7.99 1.32c-0.03,0 -0.04,0 -0.06,0.01 -0.01,0 -0.03,0.01 -0.04,0.02 -0.01,0.01 -0.02,0.02 -0.02,0.03 -0.01,0.01 -0.01,0.02 -0.02,0.03l0.25 0c0,-0.01 0,-0.02 -0.01,-0.03 0,-0.01 -0.01,-0.02 -0.02,-0.03 -0.01,-0.01 -0.02,-0.02 -0.03,-0.02 -0.02,-0.01 -0.03,-0.01 -0.05,-0.01zm-0.14 0.22l0 0.02c0,0.01 0.01,0.03 0.02,0.04 0.01,0.02 0.02,0.03 0.04,0.04 0.01,0 0.03,0.01 0.04,0.02 0.02,0 0.04,0 0.06,0 0.01,0 0.03,0 0.05,0 0.01,0 0.03,-0.01 0.04,-0.01 0.02,0 0.03,-0.01 0.04,-0.01 0.02,-0.01 0.03,-0.01 0.05,-0.02l0.06 0.12c-0.02,0.02 -0.04,0.03 -0.06,0.04 -0.02,0.01 -0.04,0.01 -0.06,0.02 -0.01,0.01 -0.03,0.01 -0.05,0.01 -0.03,0.01 -0.05,0.01 -0.08,0.01 -0.05,0 -0.1,-0.01 -0.14,-0.03 -0.04,-0.02 -0.07,-0.04 -0.1,-0.07 -0.03,-0.03 -0.05,-0.06 -0.07,-0.1 -0.01,-0.04 -0.02,-0.08 -0.02,-0.13 0,-0.04 0.01,-0.08 0.03,-0.12 0.01,-0.04 0.03,-0.08 0.06,-0.1 0.03,-0.03 0.06,-0.06 0.1,-0.07 0.04,-0.02 0.08,-0.03 0.13,-0.03 0.05,0 0.09,0.01 0.13,0.03 0.03,0.01 0.07,0.03 0.09,0.06 0.03,0.03 0.05,0.06 0.06,0.1 0.01,0.04 0.02,0.08 0.02,0.12 0,0.01 0,0.02 0,0.03 0,0.01 0,0.02 0,0.03l-0.44 0z"/>
            <polygon class="fil1" points="2.11,2.95 2.11,2.63 1.99,2.63 1.99,2.57 2.31,2.57 2.31,2.63 2.18,2.63 2.18,2.95 "/>
            <path class="fil1" d="M2.46 2.95c-0.03,0 -0.06,-0.01 -0.08,-0.02 -0.03,-0.01 -0.05,-0.03 -0.06,-0.05 -0.01,-0.02 -0.02,-0.05 -0.02,-0.08 0,-0.03 0.01,-0.05 0.02,-0.08 0.01,-0.02 0.03,-0.04 0.05,-0.05 0.03,-0.01 0.05,-0.02 0.08,-0.02 0.03,0 0.05,0.01 0.08,0.02 0.02,0.01 0.04,0.03 0.05,0.05 0.01,0.03 0.02,0.05 0.02,0.08 0,0.01 0,0.01 0,0.01 0,0.01 0,0.01 0,0.01l-0.24 0 0 -0.04 0.2 0 -0.03 0.01c0,-0.01 0,-0.03 -0.01,-0.04 0,-0.01 -0.01,-0.02 -0.03,-0.03 -0.01,-0.01 -0.02,-0.01 -0.04,-0.01 -0.01,0 -0.03,0 -0.04,0.01 -0.02,0.01 -0.03,0.02 -0.03,0.03 -0.01,0.01 -0.01,0.03 -0.01,0.04l0 0.01c0,0.02 0,0.04 0.01,0.05 0.01,0.01 0.02,0.02 0.03,0.03 0.02,0.01 0.03,0.01 0.05,0.01 0.02,0 0.03,0 0.05,-0.01 0.01,0 0.02,-0.01 0.03,-0.02l0.04 0.04c-0.01,0.02 -0.03,0.03 -0.05,0.04 -0.02,0.01 -0.04,0.01 -0.07,0.01z"/>
-           <path class="fil1" d="M2.75 2.95c-0.02,0 -0.04,0 -0.07,-0.01 -0.02,-0.01 -0.04,-0.01 -0.05,-0.02l0.03 -0.05c0.01,0 0.02,0.01 0.04,0.02 0.02,0 0.04,0 0.06,0 0.02,0 0.03,0 0.04,0 0.01,-0.01 0.02,-0.02 0.02,-0.03 0,-0.01 -0.01,-0.01 -0.01,-0.02 -0.01,0 -0.02,0 -0.03,-0.01 -0.01,0 -0.02,0 -0.03,0 -0.02,0 -0.03,-0.01 -0.04,-0.01 -0.01,0 -0.03,-0.01 -0.04,-0.01 -0.01,-0.01 -0.01,-0.02 -0.02,-0.03 -0.01,-0.01 -0.01,-0.02 -0.01,-0.04 0,-0.02 0,-0.03 0.01,-0.04 0.02,-0.02 0.03,-0.03 0.05,-0.04 0.02,0 0.04,-0.01 0.07,-0.01 0.02,0 0.04,0 0.06,0.01 0.02,0 0.03,0.01 0.05,0.02l-0.03 0.05c-0.01,-0.01 -0.03,-0.01 -0.04,-0.02 -0.02,0 -0.03,0 -0.04,0 -0.02,0 -0.04,0 -0.05,0.01 -0.01,0 -0.01,0.01 -0.01,0.02 0,0.01 0,0.02 0,0.02 0.01,0 0.02,0.01 0.03,0.01 0.01,0 0.02,0 0.04,0.01 0.01,0 0.02,0 0.03,0 0.02,0.01 0.03,0.01 0.04,0.02 0.01,0 0.02,0.01 0.02,0.02 0.01,0.01 0.01,0.02 0.01,0.04 0,0.02 0,0.03 -0.01,0.05 -0.01,0.01 -0.03,0.02 -0.05,0.03 -0.02,0.01 -0.04,0.01 -0.07,0.01z"/>
+           <path class="fil1" d="M2.75 2.95c-0.02,0 -0.04,0 -0.07,-0.01 -0.02,-0.01 -0.04,-0.01 -0.05,-0.02l0.03 -0.05c0.01,0 0.02,0.01 0.04,0.02 0.02,0 0.04,0 0.06,0 0.02,0 0.03,0 0.04,0 0.01,-0.01 0.02,-0.02 0.02,-0.03 0,-0.01 -0.01,-0.01 -0.01,-0.02 -0.01,0 -0.02,0 -0.03,-0.01 -0.01,0 -0.02,0 -0.03,0 -0.02,0 -0.03,-0.01 -0.04,-0.01 -0.01,0 -0.03,-0.01 -0.04,-0.01 -0.01,-0.01 -0.01,-0.02 -0.02,-0.03 -0.01,-0.01 -0.01,-0.02 -0.01,-0.04 0,-0.02 0,-0.03 0.01,-0.04 0.02,-0.02 0.03,-0.03 0.05,-0.04 0.02,0 0.04,-0.01 0.07,-0.01 0.02,0 0.04,0 0.06,0.01 0.02,0 0.03,0.01 0.05,0.02l-0.03 0.05c-0.01,-0.01 -0.03,-0.01 -0.04,-0.02 -0.02,0 -0.03,0 -0.04,0 -0.02,0 -0.04,0 -0.05,0.01 -0.01,0 -0.01,0.01 -0.01,0.02 0,0.01 0,0.02 0.01,0.02 0.01,0 0.02,0.01 0.03,0.01 0.01,0 0.02,0 0.04,0.01 0.01,0 0.02,0 0.03,0 0.02,0.01 0.03,0.01 0.04,0.02 0.01,0 0.02,0.01 0.02,0.02 0.01,0.01 0.01,0.02 0.01,0.04 0,0.02 0,0.03 -0.01,0.05 -0.01,0.01 -0.03,0.02 -0.05,0.03 -0.02,0.01 -0.04,0.01 -0.07,0.01z"/>
            <path class="fil1" d="M3.05 2.95c-0.03,0 -0.05,-0.01 -0.07,-0.02 -0.02,-0.02 -0.03,-0.05 -0.03,-0.08l0 -0.26 0.07 0 0 0.26c0,0.01 0,0.03 0.01,0.03 0.01,0.01 0.02,0.01 0.03,0.01 0.02,0 0.03,0 0.04,-0.01l0.02 0.05c-0.01,0.01 -0.02,0.01 -0.03,0.02 -0.01,0 -0.03,0 -0.04,0zm-0.15 -0.24l0 -0.05 0.2 0 0 0.05 -0.2 0z"/>
            <path class="fil1" d="M3.26 2.95c-0.02,0 -0.04,0 -0.07,-0.01 -0.02,-0.01 -0.04,-0.01 -0.05,-0.02l0.03 -0.05c0.01,0 0.03,0.01 0.04,0.02 0.02,0 0.04,0 0.06,0 0.02,0 0.03,0 0.04,0 0.01,-0.01 0.02,-0.02 0.02,-0.03 0,-0.01 0,-0.01 -0.01,-0.02 -0.01,0 -0.02,0 -0.03,-0.01 -0.01,0 -0.02,0 -0.03,0 -0.01,0 -0.03,-0.01 -0.04,-0.01 -0.01,0 -0.03,-0.01 -0.04,-0.01 -0.01,-0.01 -0.01,-0.02 -0.02,-0.03 -0.01,-0.01 -0.01,-0.02 -0.01,-0.04 0,-0.02 0,-0.03 0.01,-0.04 0.02,-0.02 0.03,-0.03 0.05,-0.04 0.02,0 0.04,-0.01 0.07,-0.01 0.02,0 0.04,0 0.06,0.01 0.02,0 0.03,0.01 0.05,0.02l-0.03 0.05c-0.01,-0.01 -0.03,-0.01 -0.04,-0.02 -0.02,0 -0.03,0 -0.04,0 -0.02,0 -0.04,0 -0.05,0.01 -0.01,0 -0.01,0.01 -0.01,0.02 0,0.01 0,0.02 0.01,0.02 0,0 0.01,0.01 0.02,0.01 0.01,0 0.02,0 0.04,0.01 0.01,0 0.02,0 0.03,0 0.02,0.01 0.03,0.01 0.04,0.02 0.01,0 0.02,0.01 0.02,0.02 0.01,0.01 0.01,0.02 0.01,0.04 0,0.02 0,0.03 -0.01,0.05 -0.01,0.01 -0.03,0.02 -0.05,0.03 -0.02,0.01 -0.04,0.01 -0.07,0.01z"/>
            <path class="fil1" d="M3.69 2.96l-0.13 -0.3 0.07 0 0.1 0.25 -0.04 0.05zm-0.06 0.1c-0.02,0 -0.03,-0.01 -0.05,-0.01 -0.01,-0.01 -0.02,-0.01 -0.03,-0.02l0.03 -0.05c0,0.01 0.01,0.01 0.02,0.01 0.01,0.01 0.02,0.01 0.03,0.01 0.01,0 0.02,0 0.03,-0.01 0,-0.01 0.01,-0.02 0.02,-0.03l0.01 -0.04 0.01 -0.01 0.11 -0.25 0.06 0 -0.13 0.31c-0.01,0.02 -0.02,0.04 -0.03,0.05 -0.01,0.01 -0.02,0.02 -0.04,0.03 -0.01,0 -0.03,0.01 -0.04,0.01z"/>
@@ -415,4 +432,5 @@
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
+    <script src="../static/scripts/slider.js"></script>
 {% endblock %}

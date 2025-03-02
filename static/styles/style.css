@@ -86,7 +86,15 @@ Header Settings
   border-radius: 2rem;
 }
 
-/***************************
+.nav-icon {
+  display: none;
+}
+
+.sidebar {
+  display: none;
+}
+
+/***************  ************
 hero Settings
 ***************************/
 .banner {
@@ -131,6 +139,7 @@ hero Settings
   cursor: pointer;
   text-decoration: none;
   margin: 0 0.2rem;
+  text-align: center;
 }
 /***************************
 Service provider Settings
@@ -171,6 +180,7 @@ Services Settings
   font-weight: 600;
   color: #115f31;
   text-align: center;
+  margin-bottom: 4rem;
 }
 
 .service-icon {
@@ -231,11 +241,24 @@ health plan Settings
 }
 
 .health-plan-item-container .btn {
-  display: inline-block;
+  /* display: inline-block; */
+
   margin-bottom: 2.4rem;
   position: absolute;
   bottom: 0;
 }
+
+.slider-btn {
+  display: none;
+}
+
+.health-plan-items {
+  display: flex;
+  gap: 2rem;
+  /* overflow: hidden; */
+  position: relative;
+}
+
 /***************************
 cta Settings
 ***************************/
@@ -519,9 +542,9 @@ login header Settings
   text-decoration: underline;
 }
 
-/***************************
+/****
 signup settings
-***************************/
+*****/
 .signup-container {
   max-width: 40rem;
   margin: 5rem auto;
@@ -588,4 +611,607 @@ orders settings
 .orders-header {
   font-size: 2.4rem;
   font-weight: 600;
+}
+/***************************
+responsive design settings
+***************************/
+@media (max-width: 1250px) {
+  .cta-container {
+    max-width: 100rem;
+    padding: 3.2rem 2.4rem;
+    margin: 0 auto;
+    outline-width: 0.1rem;
+  }
+  .grid {
+    display: grid;
+    column-gap: 3.2rem;
+    row-gap: 4.8rem;
+  }
+
+  .services {
+    row-gap: 4.8rem;
+    column-gap: 4.8rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    display: grid;
+    column-gap: 3.2rem;
+    row-gap: 4.8rem;
+  }
+  /***************************
+hero-section
+***************************/
+  .hero {
+    padding: 6.4rem 3.2rem 6.4rem 3.2rem !important;
+  }
+  .primary-header {
+    font-size: 4.8rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 2.4rem;
+    line-height: 1.2;
+  }
+
+  .primary-para {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin-bottom: 2.4rem;
+  }
+
+  .btn {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #e7efea;
+    background-color: #343a40;
+    border: none;
+    border-radius: 1.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 0 0.2rem;
+  }
+  /***************************
+  services settings
+  ***************************/
+
+  .services {
+    row-gap: 4.8rem;
+    column-gap: 4.8rem;
+  }
+
+  .service-header {
+    font-size: 3.2rem;
+  }
+
+  .service-primary-heading {
+    font-size: 2rem;
+  }
+
+  .service-description {
+    font-size: 1.4rem;
+  }
+
+  .service-icon {
+    width: 4.8rem;
+    height: 4.8rem;
+    font-weight: 300;
+    fill: #115f31;
+    margin-bottom: 1.8rem;
+  }
+
+  /***************************
+health plan Settings
+***************************/
+  .popular-health-plans {
+    padding: 3.2rem 3.2rem 6.2rem 3.2rem;
+  }
+
+  .popular-plan-header {
+    margin-bottom: 4.8rem;
+  }
+
+  .health-plan-item-header {
+    font-size: 1.6rem !important;
+    margin-bottom: 2.4rem;
+  }
+
+  .health-plan-item-desc {
+    margin-bottom: 2.4rem;
+  }
+
+  .health-plan-item-container {
+    padding: 1.2rem 1.2rem 4.2rem 1.2rem;
+    box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+    border-radius: 12px;
+    position: relative;
+  }
+
+  .health-plan-item-container .btn {
+    display: inline-block;
+    margin-bottom: 1.8rem;
+    position: absolute;
+    bottom: 0;
+  }
+
+  /***************************
+  cta Settings
+  ***************************/
+  .cta {
+    margin-top: 4.8rem;
+    margin-bottom: 3.2rem !important;
+    color: #0c4322;
+    box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cta-container {
+    max-width: 100rem;
+    padding: 4.8rem 3.2rem;
+    margin: 0 auto;
+    outline-width: 0.1rem;
+  }
+
+  .cta-input {
+    display: inline-block;
+    padding: 1rem 2rem;
+  }
+
+  .form-fields {
+    display: flex !important;
+    flex-direction: column;
+    gap: 1.8rem;
+    margin-bottom: 2.4rem;
+  }
+
+  .cta-img {
+    width: 100%;
+    height: auto;
+    opacity: 0.7;
+  }
+
+  .btn--cta {
+    display: inline-block;
+  }
+
+  /*************************** 
+  Footer Settings 
+  ***************************/
+  .footer {
+    background-color: #cfdfd6;
+    color: #417f5a;
+    padding: 3.2rem 3.2rem 3.2rem 3.2rem;
+  }
+  /***************************
+  service provider settings
+  ***************************/
+  .service-provider-header {
+    font-size: 2.4rem;
+    font-weight: 600;
+    padding: 4.8rem 3.2rem 3.2rem 3.2rem;
+  }
+
+  /******************************
+  header settings
+  ******************************/
+  .header {
+    display: flex;
+    padding: 1rem 1.2rem;
+    margin: 3rem 2rem 3rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+    border-radius: 3rem;
+  }
+}
+
+@media (max-width: 830px) {
+  .grid {
+    display: grid;
+    column-gap: 3.2rem;
+    row-gap: 4.8rem;
+  }
+  /***************************
+  services settings
+  ***************************/
+  .services {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4.8rem;
+  }
+  /***************************
+  popular-health-plans settings
+  ***************************/
+  .popular-health-plans {
+    overflow: hidden;
+    position: relative;
+  }
+  .popular-health-plans .container {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    gap: 2rem;
+  }
+  .health-plan-item-container {
+    flex: 0 0 50%;
+    max-width: 50%;
+    box-sizing: border-box;
+    padding: 1.2rem;
+    box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+    border-radius: 12px;
+
+    position: relative;
+  }
+  .slider-btn {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #0c4322;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .slider-btn--prev {
+    left: 0;
+  }
+  .slider-btn--next {
+    right: 0;
+  }
+  .health-plan-item-desc {
+    padding-bottom: 2.4rem;
+    font-size: 1.4rem;
+  }
+
+  /***************************
+  cta Settings
+  ***************************/
+
+  .cta {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 5%;
+    margin: 5%;
+  }
+  .cta-img {
+    grid-row: 1/2;
+  }
+
+  .cta-header {
+    font-size: 2.4rem;
+  }
+  .form-fields {
+    display: flex !important;
+    font-size: 1.6rem;
+    flex-direction: column;
+    gap: 1.8rem;
+    margin-bottom: 2.4rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /***************************
+  nav settings
+  ***************************/
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-list {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+    border-radius: 0 0 1.2rem 1.2rem;
+    z-index: 1000;
+  }
+
+  .nav-list.show {
+    display: block;
+  }
+
+  .nav-icon {
+    display: block;
+    cursor: pointer;
+
+    font-size: 2.4rem;
+    color: var(--secondary-color);
+  }
+
+  .sidebar {
+    display: block;
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+  }
+
+  .sidebar a {
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: white;
+    display: block;
+    transition: 0.2s;
+  }
+
+  .sidebar a:hover {
+    background-color: #575757;
+  }
+
+  .closebtn {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+  /***************************
+  hero-section
+  ***************************/
+  .hero {
+    padding: 6.4rem 3.2rem 6.4rem 3.2rem !important;
+  }
+
+  .primary-header {
+    font-size: 3.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 2.4rem;
+    line-height: 1.2;
+  }
+
+  .primary-para {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin-bottom: 2.4rem;
+  }
+
+  .btn {
+    padding: 1rem 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #e7efea;
+    background-color: #343a40;
+    border: none;
+    border-radius: 1.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 0 0rem;
+  }
+
+  /***************************
+  service provider settings
+  ***************************/
+
+  .service-provider-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  /***************************
+  popular-health-plans settings
+  ***************************/
+  .popular-health-plans {
+    overflow: hidden;
+    position: relative;
+  }
+  .popular-health-plans .container {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    gap: 2rem;
+  }
+  .health-plan-item-container {
+    flex: 0 0 50%;
+    max-width: 50%;
+    box-sizing: border-box;
+    padding: 1.2rem;
+    box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+    border-radius: 12px;
+
+    position: relative;
+  }
+  .slider-btn {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #0c4322;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .slider-btn--prev {
+    left: 0;
+  }
+  .slider-btn--next {
+    right: 0;
+  }
+
+  .popular-plan-header {
+    font-size: 2.4rem;
+
+    padding: 1.2rem 0rem !important;
+  }
+
+  .health-plan-item-header {
+    font-size: 1.6rem !important;
+    margin-bottom: 2.4rem;
+  }
+  .health-plan-item-desc {
+    padding-bottom: 2.4rem;
+    font-size: 1.2rem;
+  }
+
+  /***************************
+  services settings
+  ***************************/
+  .service-header {
+    font-size: 2.4rem;
+    font-weight: 600;
+    padding: 4.8rem 3.2rem 3.2rem 3.2rem;
+  }
+
+  .service-primary-heading {
+    font-size: 1.6rem;
+  }
+
+  .service-description {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .cta {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 5%;
+    margin: 5%;
+  }
+  .cta-img {
+    grid-row: 1/2;
+  }
+
+  .cta-header {
+    font-size: 2.4rem;
+  }
+  .form-fields {
+    display: flex !important;
+    font-size: 1.6rem;
+    flex-direction: column;
+    gap: 1.8rem;
+    margin-bottom: 2.4rem;
+  }
+  .cta-input {
+    display: inline-block;
+    padding: 1rem 2rem;
+  }
+  .btn--cta {
+    display: inline-block;
+  }
+  .cta-container {
+    max-width: 100rem;
+    padding: 4.8rem 3.2rem;
+    margin: 0 auto;
+    outline-width: 0.1rem;
+  }
+  .grid {
+    display: grid;
+    column-gap: 3.2rem;
+    row-gap: 4.8rem;
+  }
+  /***************************
+  services settings
+  ***************************/
+  .services {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4.8rem;
+  }
+  /***************************
+  popular-health-plans settings
+  ***************************/
+  .popular-health-plans {
+    overflow: hidden;
+    position: relative;
+  }
+  .popular-health-plans .container {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    gap: 2rem;
+  }
+  .health-plan-item-container {
+    flex: 0 0 50%;
+    max-width: 50%;
+    box-sizing: border-box;
+    padding: 1.2rem;
+    box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+    border-radius: 12px;
+
+    position: relative;
+  }
+  .slider-btn {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #0c4322;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .slider-btn--prev {
+    left: 0;
+  }
+  .slider-btn--next {
+    right: 0;
+  }
+
+  .popular-plan-header {
+    font-size: 2.4rem;
+
+    padding: 1.2rem 0rem !important;
+  }
+
+  .health-plan-item-header {
+    font-size: 1.6rem !important;
+    margin-bottom: 2.4rem;
+  }
+
+  .health-plan-item-desc {
+    padding-bottom: 2.4rem;
+    font-size: 1.2rem;
+  }
+
+  /***************************
+services settings   
+***************************/
+  .service-header {
+    font-size: 2.4rem;
+    font-weight: 600;
+    padding: 4.8rem 3.2rem 3.2rem 3.2rem;
+  }
+
+  .service-primary-heading {
+    font-size: 1.6rem;
+  }
+
+  .service-description {
+    font-size: 1.2rem;
+  }
+
+  /***************************
+hero-section
+***************************/
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 6.4rem 3.2rem 6.4rem 3.2rem !important;
+  }
 }
