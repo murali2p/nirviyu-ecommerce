@@ -20,7 +20,8 @@
     description: "Test Transaction",
     image: "../static/img/logo/logo",
     order_id: "{{ payment['razorpay_order_id']}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    callback_url: "http://localhost:5000/payment_success", //Pass the callback URL dynamically
+    callback_url:
+      "http://localhost:5000/payment_success/{{payment['order_id']}}", //Pass the callback URL dynamically
     prefill: {
       //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
       name: "Mohan Murali Behera", //your customer's name

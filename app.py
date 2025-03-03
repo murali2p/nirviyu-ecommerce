@@ -390,30 +390,49 @@ def orders():
 
 
 
-@app.route('/payment_success', methods=['POST'])
-def payment_success():
+@app.route('/payment_success/<int:id>', methods=['POST'])
+def payment_success(id):
     try:
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
         data = request.form
-        cursor.execute('UPDATE order_generate SET razorpay_payment_id = %s, razorpay_signature = %s WHERE razorpay_order_id = %s', (data['razorpay_payment_id'], data['razorpay_signature'], data['razorpay_order_id']))
-        connection.commit()
+        # GETTING THE ORDER DETAILS
+        cursor.execute('SELECT og.*,o.cust_id FROM orders as o inner join order_generate as og on o.order_id =og.order_id WHERE o.order_id = %s', (id,))
+        order = cursor.fetchone()
+        cursor.close()
+        cursor = connection.cursor(dictionary=True)
+        print(order['razorpay_order_id'])
+        print(data['razorpay_order_id'])
         
+        if order['razorpay_order_id'] == data['razorpay_order_id']:
+        
+            if razorpay_client.utility.verify_payment_signature({
+                                                                'razorpay_order_id': data['razorpay_order_id'],
+                                                                'razorpay_payment_id': data['razorpay_payment_id'],
+                                                                'razorpay_signature': data['razorpay_signature']
+                                                                }):
+                print("payment verified")
+                cursor.execute('UPDATE order_generate SET razorpay_payment_id = %s, razorpay_signature = %s WHERE razorpay_order_id = %s', (data['razorpay_payment_id'], data['razorpay_signature'], data['razorpay_order_id']))
+                connection.commit()
+            else:  
+                return jsonify({'error': 'Payment verification failed'})
+        else:
+            return jsonify({'error': 'order mismatched with last order'})
         # login in the user who has placed the order
         
-        cursor.execute('SELECT cust_id FROM orders as o inner join order_generate as og on o.order_id =og.order_id WHERE og.razorpay_order_id = %s', (data['razorpay_order_id'],))
-        user_id = cursor.fetchone()
+        # cursor.execute('SELECT cust_id FROM orders as o inner join order_generate as og on o.order_id =og.order_id WHERE og.razorpay_order_id = %s', (data['razorpay_order_id'],))
+        # user_id = cursor.fetchone()
         
-        print("found the user id")
-        print(user_id)
-        cursor.close()
-        connection.close()
+        # print("found the user id")
+        # print(user_id)
+        # cursor.close()
+        # connection.close()
         
         
         # create the user object
-        connection = mysql.connector.connect(**db_config)
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE cust_id = %s", (user_id['cust_id'],))
+        # # connection = mysql.connector.connect(**db_config)
+        # cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE cust_id = %s", (order['cust_id'],))
         customer = cursor.fetchone()
 
         print("found the user object")

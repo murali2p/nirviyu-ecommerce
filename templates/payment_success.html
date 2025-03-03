@@ -1,9 +1,11 @@
 {% extends 'base.html'%} {% block title %}Nirviyu : Stay Healthy{% endblock %}
 {% block content %}
-<div class="container">
+<div class="container payment-success">
+  <ion-icon name="checkmark-circle-outline"></ion-icon>
   <h1>Payment Success</h1>
-  <p>Your payment was successful. Thank you for shopping with us.</p>
-  <p>Your order id is generated :{{ data['razorpay_payment_id'] }}</p>
+  <p>Your payment was successful.</p>
+  <p>Your order id is generated :{{ data['razorpay_order_id'] }}</p>
+  <p>Thank you for shopping with us.</p>
 </div>
 <script
   type="module"
