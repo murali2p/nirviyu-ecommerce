@@ -397,7 +397,7 @@ def payment_success(id):
         cursor = connection.cursor(dictionary=True)
         data = request.form
         # GETTING THE ORDER DETAILS
-        cursor.execute('SELECT og.*,o.cust_id FROM orders as o inner join order_generate as og on o.order_id =og.order_id WHERE o.order_id = %s', (id,))
+        cursor.execute('SELECT og.*,o.cust_id FROM orders as o inner join order_generate as og on o.order_id =og.order_id WHERE o.order_id = %s limit 1', (id,))
         order = cursor.fetchone()
         cursor.close()
         cursor = connection.cursor(dictionary=True)
