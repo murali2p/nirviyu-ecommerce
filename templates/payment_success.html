@@ -1,11 +1,18 @@
 {% extends 'base.html'%} {% block title %}Nirviyu : Stay Healthy{% endblock %}
 {% block content %}
 <div class="container payment-success">
-  <ion-icon name="checkmark-circle-outline"></ion-icon>
-  <h1>Payment Success</h1>
-  <p>Your payment was successful.</p>
-  <p>Your order id is generated :{{ data['razorpay_order_id'] }}</p>
-  <p>Thank you for shopping with us.</p>
+  <div class="payment-header-container">
+    <ion-icon
+      class="icon-payment-success"
+      name="checkmark-circle-outline"
+    ></ion-icon>
+    <h1 class="payment-header">Payment Success</h1>
+  </div>
+  <p class="payment-para">Your payment was successful.</p>
+  <p class="payment-para">
+    Your order id is generated :{{ data['razorpay_order_id'] }}
+  </p>
+  <p class="payment-para">Thank you for shopping with us❤️.</p>
 </div>
 <script
   type="module"
@@ -15,4 +22,5 @@
   nomodule
   src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
 ></script>
+<script src="../static/scripts/nav.js"></script>
 {% endblock %}

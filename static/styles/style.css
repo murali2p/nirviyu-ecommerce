@@ -618,6 +618,40 @@ orders settings
   font-size: 2.4rem;
   font-weight: 600;
 }
+
+/******************
+payment success settings
+*******************/
+.icon-payment-success {
+  width: 5rem;
+  height: 5rem;
+
+  color: #0c4322;
+}
+
+.payment-header-container {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  justify-self: center;
+  gap: 1rem;
+}
+
+.payment-header {
+  font-size: 2.4rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.payment-para {
+  font-size: 1.6rem;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 /***************************
 responsive design settings
 ***************************/
