@@ -317,6 +317,10 @@ def add_to_order():
         order_id = cursor.fetchone()
         print(order_id)
         
+        # insert the order_id into the order_checkout table
+        query = "INSERT INTO order_checkout (order_id,razorpay_order_id, cust_id, checkout) VALUES (%s, %s,%s, %s)"
+        cursor.execute(query, (order_id['order_id'],payment['id'], current_user.id, current_time))
+        
         # insert the items in cart into orders table
         for item in cart:
             query = "INSERT INTO orders (order_id,cust_id, prod_id, qty, price, subtotal, cart_updated_at,created_at) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)"
@@ -418,20 +422,7 @@ def payment_success(id):
                 return jsonify({'error': 'Payment verification failed'})
         else:
             return jsonify({'error': 'order mismatched with last order'})
-        # login in the user who has placed the order
-        
-        # cursor.execute('SELECT cust_id FROM orders as o inner join order_generate as og on o.order_id =og.order_id WHERE og.razorpay_order_id = %s', (data['razorpay_order_id'],))
-        # user_id = cursor.fetchone()
-        
-        # print("found the user id")
-        # print(user_id)
-        # cursor.close()
-        # connection.close()
-        
-        
-        # create the user object
-        # # connection = mysql.connector.connect(**db_config)
-        # cursor = connection.cursor(dictionary=True)
+
         cursor.execute("SELECT * FROM users WHERE cust_id = %s", (order['cust_id'],))
         customer = cursor.fetchone()
 
@@ -451,6 +442,26 @@ def payment_success(id):
         return jsonify({'Sql error': str(err)})
     except Exception as e:
         return jsonify({'exception error': str(e)})
+    
+@app.route('/webhook_nirviyu', methods=['POST'])
+def webhook_nirviyu():
+    try:
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        data = request.get_json()
+        print(data)
+        cursor.execute('SELECT * FROM order_generate WHERE razorpay_order_id = %s', (data['payload']['order']['entity']['id'],))
+        order = cursor.fetchone()
+        if order:
+            cursor.execute('UPDATE order_check_out SET payment_status = %s WHERE razorpay_order_id = %s', (data['payload']['payment']['entity']['id'],"success", data['payload']['order']['entity']['id']))
+            connection.commit()
+        cursor.close()
+        connection.close()
+        return jsonify({'status': 'success'})
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)})
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 
 if __name__ == '__main__':

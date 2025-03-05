@@ -631,6 +631,7 @@ payment success settings
 
 .payment-header-container {
   display: flex;
+  justify-content: center;
   justify-items: center;
   align-items: center;
   text-align: center;
