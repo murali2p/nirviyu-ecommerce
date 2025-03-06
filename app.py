@@ -20,6 +20,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 #razorpay payment gateway configuration
 RAZORPAY_KEY_ID ="rzp_test_JxBtA5Uv71LgLO"
 RAZORPAY_KEY_SECRET ="OXGcRV5G9t5kkoMFwskVjui2"
+RAZORPAY_WEBHOOK_SECRET = "Maruti@123"
 
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
@@ -449,11 +450,11 @@ def webhook_nirviyu():
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
         data = request.get_json()
-        print(data)
-        cursor.execute('SELECT * FROM order_generate WHERE razorpay_order_id = %s', (data['payload']['order']['entity']['id'],))
+        #print(data)
+        cursor.execute('SELECT * FROM order_generate WHERE razorpay_order_id = %s', (data['payload']['payment']['entity']['order_id'],))
         order = cursor.fetchone()
         if order:
-            cursor.execute('UPDATE order_check_out SET payment_status = %s WHERE razorpay_order_id = %s', (data['payload']['payment']['entity']['id'],"success", data['payload']['order']['entity']['id']))
+            cursor.execute('UPDATE order_checkout SET payment_status = %s WHERE razorpay_order_id = %s', ("success", data['payload']['payment']['entity']['order_id']))
             connection.commit()
         cursor.close()
         connection.close()
@@ -463,6 +464,20 @@ def webhook_nirviyu():
     except Exception as e:
         return jsonify({'error': str(e)})
 
+
+@app.route('/order_history', methods=['GET','POST'])
+@login_required
+def order_history():
+    try:
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("select  og.order_id, og.updated_at as order_date, oc.payment_status,cast(avg(og.amount) as decimal(20,2)) as amount, group_concat(p.prod_name separator ', ') as product_details from order_generate as og inner join orders as o on o.order_id = og.order_id inner join products as p on p.prod_id = o.prod_id inner join order_checkout as oc on oc.order_id = og.order_id where o.cust_id = %s and oc.payment_status ='success' group by 1,2,3", (current_user.id,))
+        orders = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return render_template('order_history.html', orders=orders)
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)  # run the Flask app in debug mode

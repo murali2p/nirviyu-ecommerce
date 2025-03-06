@@ -1,0 +1,42 @@
+{% extends 'base.html'%} {% block title %}Nirviyu : Stay Healthy{% endblock %}
+{% block content %}
+
+<div class="container tbl-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Order History</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Order Date</th>
+            <th>Order Status</th>
+            <th>Order Total</th>
+            <th>Order Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.order_date }}</td>
+            <td>{{ order.payment_status }}</td>
+            <td>{{ order.amount }}</td>
+            <td>{{ order.product_details }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script
+  type="module"
+  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+  nomodule
+  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+
+{% endblock %}

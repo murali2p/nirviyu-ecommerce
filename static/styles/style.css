@@ -489,6 +489,47 @@ CART Settings
 }
 
 /***************************
+order details 
+***************************/
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+thead {
+  background: var(--tertiary-color);
+  color: white;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  text-transform: uppercase;
+}
+
+tbody tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+tbody tr:hover {
+  background: #ddd;
+  transition: 0.3s ease;
+}
+
+td {
+  color: #333;
+}
+
+/***************************
 login header Settings
 ***************************/
 .login-container {
@@ -1327,5 +1368,13 @@ hero-section
     max-width: 100%;
     height: 20rem;
     display: block;
+  }
+
+  /***************************
+  table orders
+  ***************************/
+
+  .tbl-container {
+    padding: 1rem !important;
   }
 }

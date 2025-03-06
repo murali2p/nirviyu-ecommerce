@@ -38,6 +38,9 @@
               >Contact Us</a
             >
           </li>
+          <li>
+            <a class="nav-el" href="{{ url_for('order_history') }}">Orders</a>
+          </li>
           <li><a class="nav-el login-bar" href="login"> Login </a></li>
         </ul>
       </nav>
@@ -55,7 +58,9 @@
         <a href="{{ url_for('products') }}">Products</a>
         <a href="{{ url_for('index')}}#services">Services</a>
         <a href="{{ url_for('cart') }}">Cart</a>
+        <a href="{{ url_for('order_history') }}">Orders</a>
         <a href="{{ url_for('index') }}#know_more">Contact Us</a>
+        <a href="{{ url_for('login') }}">Login</a>
       </div>
     </header>
     {% block content %}{% endblock %}
