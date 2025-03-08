@@ -342,11 +342,12 @@ def add_to_order():
             state = request.form['state']
             postal_code = request.form['postal_code']
             country = request.form['country']
+            email=request.form['email']
 
             cursor.execute("""
-                INSERT INTO addresses (user_id, full_name, phone, address_line1, address_line2, city, state, postal_code, country, is_default)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
-            """, (current_user.id, full_name, phone, address_line1, address_line2, city, state, postal_code, country, True))
+                INSERT INTO addresses (user_id, full_name, phone, address_line1, address_line2, city, state, postal_code, country, is_default,email)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)
+            """, (current_user.id, full_name, phone, address_line1, address_line2, city, state, postal_code, country, True,email))
             connection.commit()
      
             address_id = cursor.lastrowid  # Get the ID of the newly inserted address
@@ -499,8 +500,11 @@ def payment_success(id):
               
         cursor.close()
         connection.close()
-        
-        msg = Message(f'Nirviyu: Order Placed - {id}', sender='info@nirviyu.com', recipients=recipients)
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor()
+        cursor.execute("select email from addresses where user_id =%s",(order['cust_id'],))       
+        email=cursor.fetchone()
+        msg = Message(f'Nirviyu: Order Placed - {id}', sender='info@nirviyu.com', recipients=[email[0]])
         msg.body = (f'Hi {current_user.username} \n\n You order has been placed. \n\n regards \n Team Nirivyu \n This is an auto generated email.Do not Reply.****')
         mail.send(msg)
         
