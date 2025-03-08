@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete Product</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      input,
+      button {
+        padding: 8px;
+        margin: 5px;
+      }
+      .search-results {
+        border: 1px solid #ddd;
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .search-results th,
+      .search-results td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+      .success {
+        color: green;
+      }
+    </style>
+    <a class="nav-el" href="{{ url_for('index_admin') }}">Home</a>
+  </head>
+  <body>
+    <h2>Delete Product</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <p class="{{ category }}">{{ message }}</p>
+    {% endfor %} {% endif %} {% endwith %}
+
+    <!-- Search Bar -->
+    <input
+      type="text"
+      id="search"
+      placeholder="Search product by name..."
+      onkeyup="searchProduct()"
+    />
+
+    <!-- Search Results Table -->
+    <table class="search-results" id="results-table">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody id="results-body">
+        <!-- Search results will be inserted here -->
+      </tbody>
+    </table>
+
+    <script>
+      function searchProduct() {
+        let query = document.getElementById("search").value;
+
+        if (query.length > 1) {
+          $.getJSON("/search-products", { query: query }, function (data) {
+            let resultsBody = document.getElementById("results-body");
+            resultsBody.innerHTML = "";
+
+            data.forEach((product) => {
+              let row = `<tr>
+                            <td>${product.prod_id}</td>
+                            <td>${product.prod_name}</td>
+                            <td>${product.price}</td>
+                            <td>
+                                <form method="POST" action="/admin/delete-product">
+                                    <input type="hidden" name="product_id" value="${product.prod_id}">
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this product?');">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>`;
+              resultsBody.innerHTML += row;
+            });
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Product</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      form {
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      input,
+      select,
+      button {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 8px;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        padding: 5px;
+      }
+      .success {
+        color: green;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+    <a class="nav-el" href="{{ url_for('index_admin') }}">Home</a>
+  </head>
+  <body>
+    <h2>Add Product</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <p class="{{ category }}">{{ message }}</p>
+    {% endfor %} {% endif %} {% endwith %}
+
+    <form
+      action="{{ url_for('add_product') }}"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <label>Product Name:</label>
+      <input type="text" name="name" required />
+
+      <label>Price (INR):</label>
+      <input type="number" name="price" required />
+
+      <label>description</label>
+      <input type="text" name="category" required />
+
+      <label>Upload Image:</label>
+      <input
+        type="file"
+        name="image"
+        id="imageUpload"
+        accept="image/*"
+        required
+      />
+      <img id="imagePreview" src="" style="display: none" />
+
+      <button type="submit">Add Product</button>
+    </form>
+
+    <script>
+      document
+        .getElementById("imageUpload")
+        .addEventListener("change", function (event) {
+          let reader = new FileReader();
+          reader.onload = function () {
+            let preview = document.getElementById("imagePreview");
+            preview.src = reader.result;
+            preview.style.display = "block";
+          };
+          reader.readAsDataURL(event.target.files[0]);
+        });
+    </script>
+  </body>
+</html>

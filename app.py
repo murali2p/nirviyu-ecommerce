@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template,session,redirect,url_for,abort
+from flask import Flask, request, jsonify, render_template,session,redirect,url_for,abort,flash
 from flask_login import login_user, LoginManager, login_required, UserMixin, logout_user, current_user
 from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
@@ -10,12 +10,19 @@ import mysql.connector
 import razorpay
 from datetime import timedelta
 import datetime
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)  # create a new Flask app
 app.secret_key = 'your_secret_key' 
 # Set a longer session lifetime (e.g., 30 minutes)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
-
+# upload config
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+# Check if uploaded file is an image
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #razorpay payment gateway configuration
 RAZORPAY_KEY_ID ="rzp_test_JxBtA5Uv71LgLO"
@@ -37,6 +44,22 @@ db_config = {
     'database': 'nirviyu',
     'auth_plugin': 'mysql_native_password'
 }
+
+
+# email configuration
+
+app.config['MAIL_SERVER'] = 'smtpout.secureserver.net'
+app.config['MAIL_PORT'] = 465  # For TLS
+# Alternatively, you can use port 465 for SSL
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'info@nirviyu.com'
+app.config['MAIL_PASSWORD'] = 'Payal@1989'
+recipients = ['mohanmurali.behera@gmail.com']
+
+#initialize the Mail
+
+mail = Mail(app)
+
 
 @app.template_filter('to_float')
 def to_float(value):
@@ -123,29 +146,6 @@ def load_user(user_id):
     return None
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-#routes for the website    
-
-@app.route('/', methods=('GET','POST'))  # define a route
-def index():
-    return render_template('index.html')
-
 #Handle Login
 @app.route('/login', methods=["GET","POST"])  # define a route
 def login():
@@ -157,11 +157,18 @@ def login():
         user = cur.fetchone()
         cur.close()
         connection.close()
+        
         if user and check_password_hash(user[2], form.password.data):  # user[2] is password in DB
             user_obj = User(id=user[0], username=user[1], password=user[2], role=user[3])
             login_user(user_obj)
             session.permanent = True  # Ensure session persists
-            return redirect(url_for('index'))
+            msg = Message('User Logged in', sender='info@nirviyu.com', recipients=recipients)
+            msg.body = (f'Hi, \n\n User  {current_user.username} has logged. \n This is an auto generated email.Do not Reply.****')
+            mail.send(msg)
+            if current_user.role == 'admin':
+                return redirect(url_for('index_admin'))
+            else:
+                return redirect(url_for('index'))
         else:
             return 'user_not_found'
     return render_template('login.html', form=form)
@@ -187,6 +194,25 @@ def register():
         cur.close()
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
+
+ 
+#routes for the website    
+
+@app.route('/', methods=('GET','POST'))  # define a route
+def index():
+
+    return render_template('index.html')
+
+@app.route('/admin', methods=('GET','POST'))  # define a route
+@login_required
+@roles_required('admin')
+def index_admin():
+
+    return render_template('index_admin.html')
+
+
+
+
 
 @app.route('/products', methods=['GET','POST'])  # define a route
 def products():
@@ -478,6 +504,91 @@ def order_history():
         return render_template('order_history.html', orders=orders)
     except Exception as e:
         return jsonify({'error': str(e)})
+
+
+# Route for managing product deletion
+@app.route('/admin/delete-product', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin')
+def delete_product():
+    if request.method == 'POST':
+        product_id = request.form.get('product_id')
+
+        if product_id:
+            connection = mysql.connector.connect(**db_config)
+            cursor = connection.cursor(dictionary=True)
+            
+            cursor.execute("SELECT path FROM products WHERE prod_id = %s", (product_id,))
+            product = cursor.fetchone()
+            if product:
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], product['path'])
+                if os.path.exists(image_path):
+                    os.remove(image_path)
+            cursor.execute("DELETE FROM products WHERE prod_id = %s", (product_id,))
+            connection.commit()
+            cursor.close()
+            connection.close()
+
+            flash("Product deleted successfully!", "success")
+            return redirect(url_for('delete_product'))
+
+    return render_template('remove_products.html')
+
+# AJAX search for products
+@app.route('/search-products', methods=['GET'])
+def search_products():
+    query = request.args.get('query', '')
+    print(query)
+    if query:
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT prod_id, prod_name, price FROM products WHERE prod_name LIKE %s LIMIT 10", (f"%{query}%",))
+        products = cursor.fetchall()
+        print(products)
+        cursor.close()
+        connection.close()
+
+        return jsonify(products)
+
+    return jsonify([])
+
+# Route to add a new product
+@app.route('/admin/add-product', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin')
+def add_product():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        price = request.form.get('price')
+        category = request.form.get('category')
+        image = request.files.get('image')
+
+        if not name or not price or not category:
+            flash("All fields are required!", "error")
+            return redirect(url_for('add_product'))
+
+        if image and allowed_file(image.filename):
+            filename = secure_filename(image.filename)
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            image.save(image_path)  # Save image to the uploads folder
+        else:
+            flash("Invalid image format! Please upload PNG, JPG, or JPEG.", "error")
+            return redirect(url_for('add_product'))
+
+        # Insert into database
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("INSERT INTO products (prod_name, price, description, path) VALUES (%s, %s, %s, %s)",
+                       (name, price, category, filename))
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        flash("Product added successfully!", "success")
+        return redirect(url_for('add_product'))
+
+    return render_template('add_products.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)  # run the Flask app in debug mode

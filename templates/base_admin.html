@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}My Website{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../static/styles/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <logo class="logo">
+        <img
+          class="logo-img"
+          src="{{ url_for('static', filename='img/logo/logo-removebg-preview.png') }}"
+          alt="Nirviyu"
+        />
+      </logo>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li>
+            <a class="nav-el" href="{{ url_for('index_admin') }}">Home</a>
+          </li>
+          <li>
+            <a class="nav-el" href="{{ url_for('delete_product') }}"
+              >Delete Product</a
+            >
+          </li>
+          <li>
+            <a class="nav-el" href="{{ url_for('add_product') }}"
+              >Add Product</a
+            >
+          </li>
+          <!--li><a class="nav-el" href="{{ url_for('cart') }}">Cart</a></li>
+          <li>
+            <a class="nav-el" href="{{ url_for('index_admin') }}#know_more"
+              >Contact Us</a
+            >
+          </li>
+          <li>
+            <a class="nav-el" href="{{ url_for('order_history') }}">Orders</a>
+          </li-->
+          <li><a class="nav-el login-bar" href="login"> Login </a></li>
+        </ul>
+      </nav>
+      <ion-icon
+        class="nav-icon"
+        name="menu-outline"
+        onclick="toggleNav()"
+      ></ion-icon>
+
+      <div id="sidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()"
+          >&times;</a
+        >
+        <a href="{{ url_for('index_admin') }}">Home</a>
+        <a href="{{ url_for('delete_product') }}"> Delete Product</a>
+        <a href="{{ url_for('add_product')}}#services">Add Product</a>
+        <!--a href="{{ url_for('cart') }}">Cart</a>
+        <a href="{{ url_for('order_history') }}">Orders</a>
+        <a href="{{ url_for('index_admin') }}#know_more">Contact Us</a-->
+        <a href="{{ url_for('login') }}">Login</a>
+      </div>
+    </header>
+    {% block content %}{% endblock %}
+    <script src="../static/scripts/nav.js"></script>
+  </body>
+</html>
