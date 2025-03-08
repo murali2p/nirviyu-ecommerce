@@ -162,9 +162,9 @@ def login():
             user_obj = User(id=user[0], username=user[1], password=user[2], role=user[3])
             login_user(user_obj)
             session.permanent = True  # Ensure session persists
-            msg = Message('User Logged in', sender='info@nirviyu.com', recipients=recipients)
-            msg.body = (f'Hi, \n\n User  {current_user.username} has logged. \n This is an auto generated email.Do not Reply.****')
-            mail.send(msg)
+            # msg = Message('User Logged in', sender='info@nirviyu.com', recipients=recipients)
+            # msg.body = (f'Hi, \n\n User  {current_user.username} has logged. \n This is an auto generated email.Do not Reply.****')
+            # mail.send(msg)
             if current_user.role == 'admin':
                 return redirect(url_for('index_admin'))
             else:
@@ -320,6 +320,41 @@ def cart():
 def add_to_order():
    # caculate the total amount
     try:
+        
+
+        if not current_user.username:
+            flash("Please log in to place an order.", "warning")
+            return redirect(url_for('login'))
+
+        address_id = request.form.get('address_id')
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)        
+        if address_id:  # User selected an existing address
+
+            cursor.execute("SELECT * FROM addresses WHERE add_id = %s AND user_id = %s", (address_id, current_user.id))
+            address = cursor.fetchone()
+        else:  # User entered a new address
+            full_name = request.form['full_name']
+            phone = request.form['phone']
+            address_line1 = request.form['address_line1']
+            address_line2 = request.form.get('address_line2', '')
+            city = request.form['city']
+            state = request.form['state']
+            postal_code = request.form['postal_code']
+            country = request.form['country']
+
+            cursor.execute("""
+                INSERT INTO addresses (user_id, full_name, phone, address_line1, address_line2, city, state, postal_code, country, is_default)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
+            """, (current_user.id, full_name, phone, address_line1, address_line2, city, state, postal_code, country, True))
+            connection.commit()
+     
+            address_id = cursor.lastrowid  # Get the ID of the newly inserted address
+            cursor.close()
+            connection.close()
+            flash("Address added successfully!", "success")
+            
+        
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
         cursor.execute('SELECT * FROM cart inner join products on cart.prod_id =products.prod_id WHERE cart.cust_id = %s', (current_user.id,))
@@ -345,8 +380,8 @@ def add_to_order():
         print(order_id)
         
         # insert the order_id into the order_checkout table
-        query = "INSERT INTO order_checkout (order_id,razorpay_order_id, cust_id, checkout) VALUES (%s, %s,%s, %s)"
-        cursor.execute(query, (order_id['order_id'],payment['id'], current_user.id, current_time))
+        query = "INSERT INTO order_checkout (order_id,razorpay_order_id, cust_id, checkout,add_id) VALUES (%s, %s,%s, %s,%s)"
+        cursor.execute(query, (order_id['order_id'],payment['id'], current_user.id, current_time,address_id))
         
         # insert the items in cart into orders table
         for item in cart:
@@ -464,6 +499,11 @@ def payment_success(id):
               
         cursor.close()
         connection.close()
+        
+        msg = Message(f'Nirviyu: Order Placed - {id}', sender='info@nirviyu.com', recipients=recipients)
+        msg.body = (f'Hi {current_user.username} \n\n You order has been placed. \n\n regards \n Team Nirivyu \n This is an auto generated email.Do not Reply.****')
+        mail.send(msg)
+        
         return render_template('payment_success.html', data=data)
     except mysql.connector.Error as err:
         return jsonify({'Sql error': str(err)})
@@ -588,6 +628,20 @@ def add_product():
         return redirect(url_for('add_product'))
 
     return render_template('add_products.html')
+
+# confirm address
+@app.route('/address', methods=['GET', 'POST'])
+def address():
+    # Ensure user is logged in
+    if not current_user.username:
+        flash("Please log in to place an order.", "warning")
+        return redirect(url_for('login'))
+    connection = mysql.connector.connect(**db_config)
+    cursor = connection.cursor(dictionary=True)    
+    cursor.execute("SELECT * FROM addresses WHERE user_id = %s", (current_user.id,))
+    addresses = cursor.fetchall()
+
+    return render_template('address.html', addresses=addresses)
 
 
 if __name__ == '__main__':

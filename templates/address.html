@@ -1,0 +1,110 @@
+{% extends 'base.html'%} {% block title %}Shopping Cart{% endblock %} {% block
+content %}
+<div class="existing-add-container container">
+  <div class="container">
+    <form action="{{ url_for('add_to_order') }}" method="POST">
+      <h3 class="existing-address-header">Select Shipping Address</h3>
+      <div class="address container grid grid--2-cols">
+        {% for address in addresses %}
+
+        <div>
+          <input
+            type="radio"
+            name="address_id"
+            value="{{ address.add_id }}"
+            {%
+            if
+            address.is_default
+            %}checked{%
+            endif
+            %}
+          />
+          <label class="address-label">
+            {{ address.full_name }}, <br />
+            {{ address.phone }}<br />
+            {{ address.address_line1 }}, {{ address.address_line2 }}<br />
+            {{ address.city }}, {{ address.state }} - {{ address.postal_code }},
+            {{ address.country }}
+          </label>
+        </div>
+
+        {% endfor %}
+      </div>
+      <button class="address-submit" type="submit">Place Order</button>
+    </form>
+  </div>
+</div>
+<div class="new-add-container container">
+  <form action="{{ url_for('add_to_order') }}" method="POST">
+    <h3 class="new-address-header">Or Enter a New Address</h3>
+    <div class="new-add container grid grid--2-cols">
+      <input
+        class="new-add-el"
+        type="text"
+        name="full_name"
+        placeholder="Full Name"
+        required
+      />
+      <input
+        class="new-add-el"
+        type="text"
+        name="phone"
+        placeholder="Phone"
+        required
+      />
+      <input
+        class="new-add-el"
+        type="text"
+        name="address_line1"
+        placeholder="Address Line 1"
+        required
+      />
+      <input
+        class="new-add-el"
+        type="text"
+        name="address_line2"
+        placeholder="Address Line 2 (Optional)"
+      />
+      <input
+        class="new-add-el"
+        type="text"
+        name="city"
+        placeholder="City"
+        required
+      />
+      <input
+        class="new-add-el"
+        type="text"
+        name="state"
+        placeholder="State"
+        required
+      />
+      <input
+        class="new-add-el"
+        type="text"
+        name="postal_code"
+        placeholder="Postal Code"
+        required
+      />
+      <input
+        class="new-add-el"
+        type="text"
+        name="country"
+        placeholder="Country"
+        required
+      />
+    </div>
+    <button class="address-submit" type="submit">Place Order</button>
+  </form>
+</div>
+
+<script
+  type="module"
+  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+  nomodule
+  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+
+{% endblock %}

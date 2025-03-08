@@ -5,6 +5,7 @@ Color Settings
   --primary-color: #1a1a1a;
   --secondary-color: #4d4d4d;
   --tertiary-color: #808080;
+  --fourth-color: #e6fcf5;
 
   --primary-bg-color: #cfdfd6;
 }
@@ -529,6 +530,76 @@ td {
   color: #333;
 }
 
+/***************************
+address settings
+***************************/
+.existing-add-container {
+  background: linear-gradient(to bottom, white, #a9e34b);
+  padding: 2rem;
+}
+
+.new-add-container {
+  padding: 4rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container .address {
+  max-width: 80%;
+  padding: 4rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f4fce3;
+  margin-bottom: 4rem;
+  row-gap: 2.4rem;
+}
+
+.address-label {
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  color: #1a1a1a !important;
+}
+
+.existing-address-header {
+  font-size: 2.4rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.new-address-header {
+  font-size: 2.4rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.new-add {
+  row-gap: 1.6rem;
+  column-gap: 1.6rem;
+  padding: 2%;
+}
+
+.new-add-el {
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+}
+
+.address-submit {
+  display: block;
+  cursor: pointer;
+  justify-self: center;
+  box-sizing: border-box;
+  margin-bottom: 3rem;
+  list-style: none;
+  outline: none;
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  border: none;
+  background-color: #115f31;
+  color: white;
+}
 /***************************
 login header Settings
 ***************************/
