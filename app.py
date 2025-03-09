@@ -462,7 +462,10 @@ def orders():
         cursor.close()
         connection.close()
         
-        return render_template('orders.html',order_id=order_id['order_id'], orders=orders, payment=payment)
+        test_id= os.getenv('RAZORPAY_KEY_ID')
+        domain=os.getenv('domain')
+        
+        return render_template('orders.html',order_id=order_id['order_id'], orders=orders, payment=payment, domain=domain, test_id=test_id)
     except Exception as e:
         return jsonify({'error': str(e)})
 

@@ -15,15 +15,14 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
   var options = {
-    key: "rzp_test_JxBtA5Uv71LgLO", // Enter the Key ID generated from the Dashboard
+    key: "{{test_id}}", // Enter the Key ID generated from the Dashboard
     amount: "{{ payment['amount'] }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
     currency: "INR",
     name: "Nirviyu", //your business name
     description: "Test Transaction",
     image: "../static/img/logo/logo",
     order_id: "{{ payment['razorpay_order_id']}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    callback_url:
-      "http://localhost:5000/payment_success/{{payment['order_id']}}", //Pass the callback URL dynamically
+    callback_url: "{{domain}}//payment_success/{{payment['order_id']}}", //Pass the callback URL dynamically
     prefill: {
       //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
       name: "Mohan Murali Behera", //your customer's name
