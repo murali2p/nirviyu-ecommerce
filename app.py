@@ -11,23 +11,34 @@ import razorpay
 from datetime import timedelta
 import datetime
 import os
+from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 
+# Determine the environment (default: development)
+env = os.getenv('FLASK_ENV', 'prod')
+
+# Load the corresponding .env file
+dotenv_file = f".env.{env}"
+
+load_dotenv(dotenv_file)
+
 app = Flask(__name__)  # create a new Flask app
-app.secret_key = 'your_secret_key' 
-# Set a longer session lifetime (e.g., 30 minutes)
+# app.secret_key = 'your_secret_key' 
+app.config['SECRET_KEY']= os.getenv('SECRET_KEY')
+# # Set a longer session lifetime (e.g., 30 minutes)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
-# upload config
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+# # upload config
+# app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['UPLOAD_FOLDER'] =os.getenv('UPLOAD_FOLDER')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 # Check if uploaded file is an image
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #razorpay payment gateway configuration
-RAZORPAY_KEY_ID ="rzp_test_JxBtA5Uv71LgLO"
-RAZORPAY_KEY_SECRET ="OXGcRV5G9t5kkoMFwskVjui2"
-RAZORPAY_WEBHOOK_SECRET = "Maruti@123"
+RAZORPAY_KEY_ID =os.getenv('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET =os.getenv('RAZORPAY_KEY_SECRET')
+RAZORPAY_WEBHOOK_SECRET = os.getenv('RAZORPAY_WEBHOOK_SECRET')
 
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
@@ -38,11 +49,11 @@ payment = razorpay_client.order.create(data=data)
 
 # SQl Database Configuration #
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'murali123',
-    'database': 'nirviyu',
-    'auth_plugin': 'mysql_native_password'
+    'host': os.getenv('host'),
+    'user': os.getenv('user'),
+    'password': os.getenv('password'),
+    'database': os.getenv('database'),
+    'auth_plugin': os.getenv('auth_plugin')
 }
 
 
@@ -52,8 +63,8 @@ app.config['MAIL_SERVER'] = 'smtpout.secureserver.net'
 app.config['MAIL_PORT'] = 465  # For TLS
 # Alternatively, you can use port 465 for SSL
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'info@nirviyu.com'
-app.config['MAIL_PASSWORD'] = 'Payal@1989'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 recipients = ['mohanmurali.behera@gmail.com']
 
 #initialize the Mail
@@ -649,5 +660,5 @@ def address():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)  # run the Flask app in debug mode
+    app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode
     

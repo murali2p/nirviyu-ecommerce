@@ -1448,4 +1448,83 @@ hero-section
   .tbl-container {
     padding: 1rem !important;
   }
+  /***********************
+  cart settings
+  **********************/
+
+  .cart-container {
+    padding: 5%;
+  }
+
+  .cart-item-name {
+    font-size: 1.4rem;
+  }
+
+  .cart-item-desc {
+    font-size: 1.2rem !important;
+  }
+
+  .cart-item-price {
+    font-size: 1.2rem !important;
+  }
+  .cart-item-quantity {
+    font-size: 1.2rem !important;
+  }
+  .cart-total {
+    font-size: 1.2rem !important;
+    margin-bottom: 2rem;
+  }
+  .cart-header {
+    font-size: 2.4rem;
+  }
+
+  .cart-img {
+    width: 4rem !important;
+    height: auto !important;
+  }
+
+  .btn--primary {
+    margin-left: 1rem;
+  }
+
+  /*********************
+  address settings
+  **********************/
+
+  .existing-add-container {
+    padding: 5%;
+  }
+
+  .new-add-container {
+    padding: 5%;
+  }
+
+  .address-submit {
+    margin-top: 2rem;
+  }
+
+  .address {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  /****************************
+  Orders container
+  ******************************/
+
+  .orders-container {
+    padding: 5%;
+  }
+
+  .orders-header {
+    padding: 0 5%;
+  }
+
+  .order-desc {
+    font-size: 1.4rem;
+  }
+
+  .order-button {
+    margin: 0;
+  }
 }

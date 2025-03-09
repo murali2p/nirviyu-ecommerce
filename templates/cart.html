@@ -1,10 +1,11 @@
 {% extends 'base.html'%} {% block title %}Shopping Cart{% endblock %} {% block
 content %}
-<div class="cart-container">
+<div class="cart-container container">
   <h2 class="cart-header">Shopping Cart</h2>
   {% if cart %} {% for item in cart %}
   <div class="cart-item">
     <img
+      class="cart-img"
       src="{{ url_for('static', filename='uploads/' + item.path) }}"
       alt="{{ item.name }}"
     />
@@ -13,7 +14,7 @@ content %}
       <p class="cart-item-desc">{{ item.description }}</p>
     </div>
     <p class="cart-item-price">₹ {{ item.price }}</p>
-    <p class="cart-item-quantity">Quantity: {{ item.qty }}</p>
+    <p class="cart-item-quantity">Qty: {{ item.qty }}</p>
   </div>
   {% endfor %}
   <p class="cart-total">Total: ₹ {{total_amt}}</p>
