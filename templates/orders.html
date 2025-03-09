@@ -2,13 +2,15 @@
 %}
 
 <h2 class="container orders-header">Order Summary</h2>
-<div class="container">
+<div class="orders-container container">
   <p class="order-desc">
     Your order id is generated :{{ order_id }} and the
     <strong>Total Price to pay is : ₹ {{ payment['amount'] }}</strong>
   </p>
 
-  <button id="rzp-button1" class="btn btn--primary">Pay Now</button>
+  <button id="rzp-button1" class="btn btn--primary order-button">
+    Pay Now
+  </button>
 </div>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
