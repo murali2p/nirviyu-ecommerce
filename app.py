@@ -13,6 +13,7 @@ import datetime
 import os
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
+from rapidfuzz import process,fuzz
 
 # Determine the environment (default: development)
 env = os.getenv('FLASK_ENV', 'prod')
@@ -31,6 +32,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 # app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['UPLOAD_FOLDER'] =os.getenv('UPLOAD_FOLDER')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10 MB
 # Check if uploaded file is an image
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -356,9 +358,9 @@ def add_to_order():
             email=request.form['email']
 
             cursor.execute("""
-                INSERT INTO addresses (user_id, full_name, phone, address_line1, address_line2, city, state, postal_code, country, is_default,email)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)
-            """, (current_user.id, full_name, phone, address_line1, address_line2, city, state, postal_code, country, True,email))
+                INSERT INTO addresses (user_id, full_name, phone, address_line1, address_line2, city, state, postal_code, is_default,email)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
+            """, (current_user.id, full_name, phone, address_line1, address_line2, city, state, postal_code, True,email))
             connection.commit()
      
             address_id = cursor.lastrowid  # Get the ID of the newly inserted address
@@ -519,7 +521,8 @@ def payment_success(id):
         cursor.execute("select email from addresses where user_id =%s",(order['cust_id'],))       
         email=cursor.fetchone()
         msg = Message(f'Nirviyu: Order Placed - {id}', sender='info@nirviyu.com', recipients=[email[0]])
-        msg.body = (f'Hi {current_user.username} \n\n You order has been placed. \n\n regards \n Team Nirivyu \n This is an auto generated email.Do not Reply.****')
+        #msg.body = (f'Hi {current_user.username} \n\n You order has been placed. \n\n regards \n Team Nirivyu \n This is an auto generated email.Do not Reply.****')
+        msg.html = render_template("email_template.html", name=current_user.username)
         mail.send(msg)
         
         return render_template('payment_success.html', data=data)
@@ -599,14 +602,27 @@ def search_products():
     print(query)
     if query:
         connection = mysql.connector.connect(**db_config)
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT prod_id, prod_name, price FROM products WHERE prod_name LIKE %s LIMIT 10", (f"%{query}%",))
-        products = cursor.fetchall()
-        print(products)
+        cursor = connection.cursor()
+        cursor.execute("SELECT prod_id, prod_name,description, price, discount FROM products")
+        products = cursor.fetchall()  # Returns list of tuples (id, name)
+
+        # Apply fuzzy matching
+        product_names = [p[1] for p in products]
+        matches = process.extract(query, product_names, limit=5, scorer=fuzz.partial_ratio, score_cutoff=60)
+
+        # Get product IDs of the best matches
+        results = [{"prod_id": products[product_names.index(match[0])][0], "prod_name": match[0], "description":products[product_names.index(match[0])][2],"price":products[product_names.index(match[0])][3],"discount":products[product_names.index(match[0])][4]   } for match in matches]
+        
+        
+        #connection = mysql.connector.connect(**db_config)
+        #cursor = connection.cursor(dictionary=True)
+        #cursor.execute("SELECT prod_id, prod_name, price FROM products WHERE prod_name LIKE %s LIMIT 10", (f"%{query}%",))
+        #products = cursor.fetchall()
+        #print(products)
         cursor.close()
         connection.close()
 
-        return jsonify(products)
+        return jsonify(results)
 
     return jsonify([])
 
@@ -618,6 +634,7 @@ def add_product():
     if request.method == 'POST':
         name = request.form.get('name')
         price = request.form.get('price')
+        discount = request.form.get('discount')
         category = request.form.get('category')
         image = request.files.get('image')
 
@@ -636,8 +653,8 @@ def add_product():
         # Insert into database
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("INSERT INTO products (prod_name, price, description, path) VALUES (%s, %s, %s, %s)",
-                       (name, price, category, filename))
+        cursor.execute("INSERT INTO products (prod_name, price, description, path, discount) VALUES (%s, %s, %s, %s,%s)",
+                       (name, price, category, filename,discount))
         connection.commit()
         cursor.close()
         connection.close()
@@ -646,6 +663,35 @@ def add_product():
         return redirect(url_for('add_product'))
 
     return render_template('add_products.html')
+
+
+
+@app.route('/update_products')
+@login_required
+@roles_required('admin')
+def update_products():
+    return render_template('update_products.html')
+
+
+@app.route('/update_product', methods=['POST'])
+def update_product():
+    product_id = request.form['product_id']
+    name = request.form['product_name']
+    description = request.form['description']
+    price = request.form['price']
+    discount = request.form['discount']
+
+    connection = mysql.connector.connect(**db_config)
+    cursor = connection.cursor()
+    cursor.execute("UPDATE products SET prod_name=%s, description =%s, price=%s, discount=%s WHERE prod_id=%s",
+                   (name, description, price, discount, product_id))
+    connection.commit()
+    cursor.close()
+    connection.close()
+    flash("product Updated Successfully!",'success')
+
+    return redirect(url_for('update_products'))
+
 
 # confirm address
 @app.route('/address', methods=['GET', 'POST'])

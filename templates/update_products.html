@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <a class="nav-el" href="{{ url_for('index_admin') }}">Home</a>
+    <title>Update Products</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .hidden {
+        display: none;
+      }
+      .container {
+        max-width: 600px;
+        margin: auto;
+      }
+      input,
+      select,
+      button {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        padding: 8px;
+      }
+    </style>
+    <script>
+      function showUpdateForm(product) {
+        document.getElementById("updateForm").classList.remove("hidden");
+        document.getElementById("product_id").value = product.prod_id;
+        document.getElementById("product_name").value = product.prod_name;
+        document.getElementById("product_id").value = product.prod_id;
+        document.getElementById("description").value = product.description;
+        document.getElementById("price").value = product.price;
+        document.getElementById("discount").value = product.discount;
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Update Product</h2>
+
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <p class="{{ category }}">{{ message }}</p>
+      {% endfor %} {% endif %} {% endwith %}
+      <input
+        type="text"
+        id="search"
+        placeholder="Search product..."
+        oninput="searchProduct()"
+      />
+      <div id="searchResults"></div>
+
+      <form
+        id="updateForm"
+        class="hidden"
+        method="POST"
+        action="/update_product"
+      >
+        <input type="hidden" name="product_id" id="product_id" />
+        <label>Product Name:</label>
+        <input type="text" name="product_name" id="product_name" required />
+        <label>Description:</label>
+        <input type="text" name="description" id="description" required />
+        <label>Price:</label>
+        <input type="number" name="price" id="price" required />
+        <label>discount:</label>
+        <input type="number" name="discount" id="discount" required />
+        <button type="submit">Confirm Update</button>
+      </form>
+    </div>
+
+    <script>
+      function searchProduct() {
+        let query = document.getElementById("search").value;
+        if (query.length < 2) return;
+        fetch(`/search-products?query=${query}`)
+          .then((response) => response.json())
+          .then((data) => {
+            let resultsDiv = document.getElementById("searchResults");
+            resultsDiv.innerHTML = "";
+            data.forEach((product) => {
+              let btn = document.createElement("button");
+              btn.textContent = product.prod_name;
+              btn.onclick = () => showUpdateForm(product);
+              resultsDiv.appendChild(btn);
+            });
+          });
+      }
+    </script>
+  </body>
+</html>

@@ -24,7 +24,6 @@ content %}
             {{ address.phone }}<br />
             {{ address.address_line1 }}, {{ address.address_line2 }}<br />
             {{ address.city }}, {{ address.state }} - {{ address.postal_code }},
-            {{ address.country }}
           </label>
         </div>
 
@@ -53,12 +52,12 @@ content %}
         required
       />
       <input
-      class="new-add-el"
-      type="email"
-      name="email"
-      placeholder="Email"
-      required
-    />
+        class="new-add-el"
+        type="email"
+        name="email"
+        placeholder="Email"
+        required
+      />
       <input
         class="new-add-el"
         type="text"
@@ -93,13 +92,13 @@ content %}
         placeholder="Postal Code"
         required
       />
-      <input
+      <!--input
         class="new-add-el"
         type="text"
         name="country"
         placeholder="Country"
         required
-      />
+      /-->
     </div>
     <button class="address-submit" type="submit">Place Order</button>
   </form>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background-color: rgb(0, 0, 0);
+        color: white;
+        padding: 5px;
+        text-align: center;
+        border-radius: 8px 8px 0 0;
+      }
+      .content {
+        padding: 20px;
+        font-size: 16px;
+        color: #333;
+      }
+      .footer {
+        text-align: center;
+        font-size: 12px;
+        color: #777;
+        margin-top: 20px;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 0;
+        font-size: 16px;
+        color: white;
+        background-color: #007bff;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>Order Placed</h2>
+      </div>
+      <div class="content">
+        <p>Hello {{ name }},</p>
+        <p>
+          Thank you for Availing our service. We're excited to have you on
+          board!
+        </p>
+
+        <p>If you have any questions, feel free to contact us.</p>
+      </div>
+      <div class="footer">
+        <p>© 2025 Nirviyu. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

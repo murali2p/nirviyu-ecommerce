@@ -54,7 +54,7 @@
         <tr>
           <th>Product ID</th>
           <th>Name</th>
-          <th>Price</th>
+          <th>Description</th>
           <th>Delete</th>
         </tr>
       </thead>
@@ -76,7 +76,7 @@
               let row = `<tr>
                             <td>${product.prod_id}</td>
                             <td>${product.prod_name}</td>
-                            <td>${product.price}</td>
+                            <td>${product.description}</td>
                             <td>
                                 <form method="POST" action="/admin/delete-product">
                                     <input type="hidden" name="product_id" value="${product.prod_id}">

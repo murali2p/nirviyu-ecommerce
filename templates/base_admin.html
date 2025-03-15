@@ -36,6 +36,12 @@
               >Add Product</a
             >
           </li>
+
+          <li>
+            <a class="nav-el" href="{{ url_for('update_products') }}"
+              >Update Product</a
+            >
+          </li>
           <!--li><a class="nav-el" href="{{ url_for('cart') }}">Cart</a></li>
           <li>
             <a class="nav-el" href="{{ url_for('index_admin') }}#know_more"
@@ -61,6 +67,7 @@
         <a href="{{ url_for('index_admin') }}">Home</a>
         <a href="{{ url_for('delete_product') }}"> Delete Product</a>
         <a href="{{ url_for('add_product')}}#services">Add Product</a>
+        <a href="{{ url_for('update_products')}}#services">Update Product</a>
         <!--a href="{{ url_for('cart') }}">Cart</a>
         <a href="{{ url_for('order_history') }}">Orders</a>
         <a href="{{ url_for('index_admin') }}#know_more">Contact Us</a-->
