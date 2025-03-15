@@ -1,8 +1,17 @@
-{% extends "base.html" %} {% block title %}Products{% endblock %} {% block
-content %}
+{% extends "base.html" %} {% block title %}Nirviyu: Products{% endblock %} {%
+block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <h2 class="container product-header">Health Supplements</h2>
-<div class="product-container container grid grid--3-cols">
+
+<input
+  class="container product-search"
+  type="text"
+  id="searchBox"
+  placeholder="Search products..."
+/>
+
+<div id="productList" class="product-container container grid grid--3-cols">
   {% for product in products %}
   <div class="product-card">
     <form action="/products/{{product.prod_id}}" method="post">
@@ -25,6 +34,46 @@ content %}
   </div>
   {% endfor %}
 </div>
+
+<script>
+  $(document).ready(function () {
+    $("#searchBox").on("input", function () {
+      let originalProducts = $("#productList").html();
+      let query = $(this).val();
+      if (query.length > 2) {
+        $.getJSON("/search-products?query=" + query, function (data) {
+          let resultHtml = "";
+          data.forEach(function (product) {
+            resultHtml += `
+                          <div class="product-card">
+                            <form action="/products/${product.prod_id}" method="post">
+                              <button type="submit" class="product-image-button">
+                                <img
+                                  class="product-image"
+                                  src= "/static/uploads/${product.path}"
+                                  alt="${product.prod_name}"
+                                />
+                              </button>
+                            </form>
+                              <h3 class="product-name">${product.prod_name}</h3>
+                              <p class="product-desc">${product.description}</p>
+                              <p class="product-price">
+                                <strong>Price: ₹ ${product.price}</strong>
+                              </p>
+                            <form action="/add_to_cart/${product.prod_id}" method="post">
+                              <button class="product-image-button btn btn--primary">Add to Cart</button>
+                            </form>
+                        </div>`;
+          });
+          $("#productList").html(resultHtml);
+        });
+      } else {
+        // Reload original products if search is cleared
+        $("#productList").html(originalProducts);
+      }
+    });
+  });
+</script>
 <script
   type="module"
   src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -33,5 +82,4 @@ content %}
   nomodule
   src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
 ></script>
-
 {% endblock %}

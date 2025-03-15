@@ -389,6 +389,16 @@ Product Settings
   cursor: pointer;
 }
 
+.product-search {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  margin-top: 0rem;
+  margin-bottom: 3.2rem;
+  border-radius: 10px;
+  padding: 10px;
+}
+
 /*************************** 
 Product Details Settings 
 ***************************/

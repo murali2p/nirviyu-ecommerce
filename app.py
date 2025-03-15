@@ -599,11 +599,11 @@ def delete_product():
 @app.route('/search-products', methods=['GET'])
 def search_products():
     query = request.args.get('query', '')
-    print(query)
+    #print(query)
     if query:
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor()
-        cursor.execute("SELECT prod_id, prod_name,description, price, discount FROM products")
+        cursor.execute("SELECT prod_id, prod_name,description, price, discount,path FROM products")
         products = cursor.fetchall()  # Returns list of tuples (id, name)
 
         # Apply fuzzy matching
@@ -611,8 +611,14 @@ def search_products():
         matches = process.extract(query, product_names, limit=5, scorer=fuzz.partial_ratio, score_cutoff=60)
 
         # Get product IDs of the best matches
-        results = [{"prod_id": products[product_names.index(match[0])][0], "prod_name": match[0], "description":products[product_names.index(match[0])][2],"price":products[product_names.index(match[0])][3],"discount":products[product_names.index(match[0])][4]   } for match in matches]
-        
+        results = [{"prod_id": products[product_names.index(match[0])][0],
+                    "prod_name": match[0],
+                    "description":products[product_names.index(match[0])][2],
+                    "price":products[product_names.index(match[0])][3],
+                    "discount":products[product_names.index(match[0])][4],
+                    
+                    "path":products[product_names.index(match[0])][5]} for match in matches]
+        #print(results)
         
         #connection = mysql.connector.connect(**db_config)
         #cursor = connection.cursor(dictionary=True)
