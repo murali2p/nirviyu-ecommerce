@@ -322,7 +322,7 @@ def cart():
     # caculate the total amount
     connection = mysql.connector.connect(**db_config)
     cursor = connection.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM cart inner join products on cart.prod_id =products.prod_id WHERE cart.cust_id = %s', (current_user.id,))
+    cursor.execute('SELECT * FROM cart inner join products on cart.prod_id =products.prod_id inner join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as c on c.product_id=products.prod_id WHERE cart.cust_id = %s', (current_user.id,))
     cart = cursor.fetchall()
     print(cart)
     cursor.close()
@@ -360,7 +360,7 @@ def add_to_order():
             city = request.form['city']
             state = request.form['state']
             postal_code = request.form['postal_code']
-            country = request.form['country']
+            #country = request.form['country']
             email=request.form['email']
 
             cursor.execute("""
@@ -585,16 +585,19 @@ def delete_product():
             connection = mysql.connector.connect(**db_config)
             cursor = connection.cursor(dictionary=True)
             
-            cursor.execute("SELECT path FROM products WHERE prod_id = %s", (product_id,))
-            product = cursor.fetchone()
+            # delete the images from static folder
+            cursor.execute("SELECT image_url FROM product_images WHERE product_id = %s", (product_id,))
+            product = cursor.fetchall()
             if product:
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], product['path'])
-                if os.path.exists(image_path):
-                    os.remove(image_path)
+                for image_url in product:
+                    [d,url]=image_url['image_url'].split("/", maxsplit=1)
+                    if os.path.exists(url):
+                        os.remove(url)
             cursor.execute("DELETE FROM products WHERE prod_id = %s", (product_id,))
             connection.commit()
             cursor.close()
             connection.close()
+
 
             flash("Product deleted successfully!", "success")
             return redirect(url_for('delete_product'))

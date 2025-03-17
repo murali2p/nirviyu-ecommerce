@@ -41,7 +41,11 @@
           <li>
             <a class="nav-el" href="{{ url_for('order_history') }}">Orders</a>
           </li>
-          <li><a class="nav-el login-bar" href="login"> Login </a></li>
+          <li>
+            <a class="nav-el login-bar" href="{{ url_for('login') }}">
+              Login
+            </a>
+          </li>
         </ul>
       </nav>
       <ion-icon

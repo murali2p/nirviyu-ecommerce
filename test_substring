@@ -1,0 +1,10 @@
+
+test = "../abc/123"
+
+print(len(test))
+
+test1 = test.rsplit("/",maxsplit=1)
+
+[test2, test3] = test.split("/", maxsplit=1)
+
+print(test3)
