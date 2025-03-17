@@ -235,7 +235,7 @@ def products():
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
         # execute the SQL query
-        cursor.execute('SELECT * FROM products')
+        cursor.execute('SELECT a.*,b.image_url FROM products as a inner join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as b on a.prod_id=b.product_id')
         # fetch the results
         results = cursor.fetchall()
         # close the cursor and the connection
@@ -252,15 +252,21 @@ def product_detail(id):
         # connect to the MySQL server
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
-        # execute the SQL query
+        # getting the details of products
         cursor.execute('SELECT * FROM products WHERE prod_id = %s', (id,))
         # fetch the result
         result = cursor.fetchone()
+        
+        # getting the details of images
+        cursor.execute("SELECT image_url FROM product_images WHERE product_id = %s", (id,))
+        images = cursor.fetchall()
+        
+        
         # close the cursor and the connection
         cursor.close()
         connection.close()
         # return the response
-        return render_template('product_details.html', product=result)
+        return render_template('product_details.html', product=result, images=images)
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -595,6 +601,14 @@ def delete_product():
 
     return render_template('remove_products.html')
 
+# route for viewing products
+@app.route('/admin/view-product', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin')
+def view_product():
+    
+    return render_template('view_product.html')
+
 # AJAX search for products
 @app.route('/search-products', methods=['GET'])
 def search_products():
@@ -642,25 +656,30 @@ def add_product():
         price = request.form.get('price')
         discount = request.form.get('discount')
         category = request.form.get('category')
-        image = request.files.get('image')
+        highlight1=request.form.get('highlight1')
+        highlight2=request.form.get('highlight2')
+        highlight3=request.form.get('highlight3')
+        highlight4=request.form.get('highlight4')
+        highlight5=request.form.get('highlight5')
+        #image = request.files.get('image')
 
         if not name or not price or not category:
             flash("All fields are required!", "error")
             return redirect(url_for('add_product'))
 
-        if image and allowed_file(image.filename):
-            filename = secure_filename(image.filename)
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            image.save(image_path)  # Save image to the uploads folder
-        else:
-            flash("Invalid image format! Please upload PNG, JPG, or JPEG.", "error")
-            return redirect(url_for('add_product'))
+        # if image and allowed_file(image.filename):
+        #     filename = secure_filename(image.filename)
+        #     image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        #     image.save(image_path)  # Save image to the uploads folder
+        # else:
+        #     flash("Invalid image format! Please upload PNG, JPG, or JPEG.", "error")
+        #     return redirect(url_for('add_product'))
 
         # Insert into database
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("INSERT INTO products (prod_name, price, description, path, discount) VALUES (%s, %s, %s, %s,%s)",
-                       (name, price, category, filename,discount))
+        cursor.execute("INSERT INTO products (prod_name, price, description, discount) VALUES (%s, %s, %s, %s)",
+                       (name, price, category,discount))
         connection.commit()
         cursor.close()
         connection.close()
@@ -712,6 +731,45 @@ def address():
     addresses = cursor.fetchall()
 
     return render_template('address.html', addresses=addresses)
+
+
+# upload photos
+@app.route("/admin/upload-photos/<int:product_id>", methods=["GET", "POST"])
+@login_required
+@roles_required('admin')
+def upload_photos(product_id):
+    if request.method == "POST":
+        files = [
+            request.files.get(f"photo{i}") for i in range(1, 11)
+            if request.files.get(f"photo{i}") and allowed_file(request.files.get(f"photo{i}").filename)
+        ]
+
+        if not files:
+            flash("No valid files selected.", "error")
+            return redirect(request.url)
+
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor()
+
+        for file in files:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            file.save(filepath)
+
+            # Save file path in database
+            cursor.execute(
+                "INSERT INTO product_images (product_id, image_url) VALUES (%s, %s)",
+                (product_id, f"../static/uploads/{filename}"),
+            )
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        flash("Photos uploaded successfully", "success")
+        return redirect(url_for("upload_photos", product_id=product_id))
+
+    return render_template("upload_images.html", product_id=product_id)
 
 
 if __name__ == '__main__':

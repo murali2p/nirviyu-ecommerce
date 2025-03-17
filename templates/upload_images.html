@@ -1,0 +1,23 @@
+
+    <h2>Upload Photos for Product {{ product_id }}</h2>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        <p>You can upload up to 10 images.</p>
+
+        {% for i in range(1, 11) %}
+            <label for="photo{{ i }}">Image {{ i }}:</label>
+            <input type="file" name="photo{{ i }}" accept="image/*"><br><br>
+        {% endfor %}
+
+        <button type="submit">Upload</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="{{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

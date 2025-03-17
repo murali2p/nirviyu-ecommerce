@@ -1,37 +1,63 @@
-{%extends 'base.html' %} {% block title %}{{ product.prod_name }}{% endblock %}
-{% block content %}
-<section class="product-details">
-  <h1 class="container service-header product-details-header">
-    {{ product.prod_name }}
-  </h1>
-  <div class="container grid grid--2-cols">
-    <div class="product-details__image">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ product['name'] }}</title>
+    <style>
+      .main-image {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      .thumbnail-container {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-top: 10px;
+      }
+      .thumbnail {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: transform 0.2s;
+      }
+      .thumbnail:hover {
+        transform: scale(1.1);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{{ product['name'] }}</h1>
+    <p>{{ product['description'] }}</p>
+
+    {% if images %}
+    <img
+      id="mainImage"
+      src="{{ images[0]['image_url'] }}"
+      class="main-image"
+      alt="Product Image"
+    />
+    <div class="thumbnail-container">
+      {% for img in images %}
       <img
-        src="{{ url_for('static', filename='uploads/' + product.path) }}"
-        alt="{{ product.prod_name }}"
-        width="200"
+        src="{{ img['image_url'] }}"
+        class="thumbnail"
+        onclick="changeMainImage(this)"
       />
+      {% endfor %}
     </div>
-    <div class="product-details__info">
-      <p class="product_details_el">
-        <strong>Description:</strong> {{ product.description }}
-      </p>
-      <p class="product_details_el">
-        <strong>Price:</strong> ${{ product.price }}
-      </p>
-      <form action="/add_to_cart/{{ product.prod_id }}" method="post">
-        <button class="btn btn--primary">Add to Cart</button>
-      </form>
-      <a href="{{ url_for('products') }}">Back to Products</a>
-    </div>
-  </div>
-</section>
-<script
-  type="module"
-  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-></script>
-<script
-  nomodule
-  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-></script>
-{% endblock %}
+    {% else %}
+    <p>No images available for this product.</p>
+    {% endif %}
+
+    <script>
+      function changeMainImage(thumbnail) {
+        document.getElementById("mainImage").src = thumbnail.src;
+      }
+    </script>
+  </body>
+</html>
