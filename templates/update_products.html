@@ -29,12 +29,16 @@
     <script>
       function showUpdateForm(product) {
         document.getElementById("updateForm").classList.remove("hidden");
-        document.getElementById("product_id").value = product.prod_id;
         document.getElementById("product_name").value = product.prod_name;
         document.getElementById("product_id").value = product.prod_id;
         document.getElementById("description").value = product.description;
         document.getElementById("price").value = product.price;
         document.getElementById("discount").value = product.discount;
+        document.getElementById("highlight1").value = product.highlight1;
+        document.getElementById("highlight2").value = product.highlight2;
+        document.getElementById("highlight3").value = product.highlight3;
+        document.getElementById("highlight4").value = product.highlight4;
+        document.getElementById("highlight5").value = product.highlight5;
       }
     </script>
   </head>
@@ -69,6 +73,16 @@
         <input type="number" name="price" id="price" required />
         <label>discount:</label>
         <input type="number" name="discount" id="discount" required />
+        <label>highlight1:</label>
+        <input type="text" name="highlight1" id="highlight1" required />
+        <label>highlight2:</label>
+        <input type="text" name="highlight2" id="highlight2" required />
+        <label>highlight3:</label>
+        <input type="text" name="highlight3" id="highlight3" required />
+        <label>highlight4:</label>
+        <input type="text" name="highlight4" id="highlight4" required />
+        <label>highlight5:</label>
+        <input type="text" name="highlight5" id="highlight5" required />
         <button type="submit">Confirm Update</button>
       </form>
     </div>

@@ -620,7 +620,7 @@ def search_products():
     if query:
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor()
-        cursor.execute("SELECT prod_id, prod_name,description, price, discount,path FROM products")
+        cursor.execute("SELECT prod_id, prod_name,description, price,path, discount,highlight1,highlight2,highlight3,highlight4,highlight5 FROM products")
         products = cursor.fetchall()  # Returns list of tuples (id, name)
 
         # Apply fuzzy matching
@@ -632,9 +632,14 @@ def search_products():
                     "prod_name": match[0],
                     "description":products[product_names.index(match[0])][2],
                     "price":products[product_names.index(match[0])][3],
-                    "discount":products[product_names.index(match[0])][4],
-                    
-                    "path":products[product_names.index(match[0])][5]} for match in matches]
+                    "path":products[product_names.index(match[0])][4],
+                    "discount":products[product_names.index(match[0])][5],
+                    "highlight1":products[product_names.index(match[0])][6],
+                    "highlight2":products[product_names.index(match[0])][7],
+                    "highlight3":products[product_names.index(match[0])][8],
+                    "highlight4":products[product_names.index(match[0])][9],
+                    "highlight5":products[product_names.index(match[0])][10]
+                    } for match in matches]
         #print(results)
         
         #connection = mysql.connector.connect(**db_config)
@@ -681,8 +686,8 @@ def add_product():
         # Insert into database
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("INSERT INTO products (prod_name, price, description, discount) VALUES (%s, %s, %s, %s)",
-                       (name, price, category,discount))
+        cursor.execute("INSERT INTO products (prod_name, price, description, discount,highlight1,highlight2,highlight3,highlight4,highlight5) VALUES (%s, %s, %s, %s,%s,%s,%s,%s,%s)", (name, price, category,discount,highlight1,highlight2,highlight3,highlight4,highlight5))
+                       
         connection.commit()
         cursor.close()
         connection.close()
@@ -708,11 +713,16 @@ def update_product():
     description = request.form['description']
     price = request.form['price']
     discount = request.form['discount']
+    highlight1=request.form['highlight1']
+    highlight2=request.form['highlight2']
+    highlight3=request.form['highlight3']
+    highlight4=request.form['highlight4']
+    highlight5=request.form['highlight5']
 
     connection = mysql.connector.connect(**db_config)
     cursor = connection.cursor()
-    cursor.execute("UPDATE products SET prod_name=%s, description =%s, price=%s, discount=%s WHERE prod_id=%s",
-                   (name, description, price, discount, product_id))
+    cursor.execute("UPDATE products SET prod_name=%s, description =%s, price=%s, discount=%s, highlight1=%s, highlight2=%s, highlight3=%s, highlight4=%s, highlight5=%s WHERE prod_id=%s",
+                   (name, description, price, discount,highlight1,highlight2,highlight3,highlight4,highlight5, product_id))
     connection.commit()
     cursor.close()
     connection.close()

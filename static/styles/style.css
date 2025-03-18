@@ -402,8 +402,17 @@ Product Settings
 /*************************** 
 Product Details Settings 
 ***************************/
+.product-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 3.2rem 3.2rem;
+}
+
 .product-details-header {
   margin-bottom: 4rem !important;
+  grid-column: 1 / -1;
+  text-align: center;
 }
 
 .product-details__image {
@@ -411,15 +420,48 @@ Product Details Settings
   justify-self: right;
 }
 
-.product-details__info {
+.product-details-info {
   align-self: center;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 }
 
 .product_details_el {
   font-size: 1.6rem;
+}
+
+.product-details-description {
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: #4d4d4d;
+  margin-bottom: 2rem;
+}
+
+.main-image {
+  width: auto;
+  max-height: 25rem;
+  grid-column: 1/2;
+  grid-row: 2/2;
+  justify-self: right;
+
+  border-radius: 10px;
+}
+.thumbnail-container {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  justify-self: right;
+}
+.thumbnail {
+  width: auto;
+  height: 5rem;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: transform 0.2s;
+}
+.thumbnail:hover {
+  transform: scale(1.2);
 }
 /*************************** 
 CART Settings 
