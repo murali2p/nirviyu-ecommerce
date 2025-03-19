@@ -620,7 +620,7 @@ def search_products():
     if query:
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor()
-        cursor.execute("SELECT prod_id, prod_name,description, price,path, discount,highlight1,highlight2,highlight3,highlight4,highlight5 FROM products")
+        cursor.execute("SELECT a.*,b.image_url FROM products as a inner join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as b on a.prod_id=b.product_id")
         products = cursor.fetchall()  # Returns list of tuples (id, name)
 
         # Apply fuzzy matching
@@ -638,7 +638,9 @@ def search_products():
                     "highlight2":products[product_names.index(match[0])][7],
                     "highlight3":products[product_names.index(match[0])][8],
                     "highlight4":products[product_names.index(match[0])][9],
-                    "highlight5":products[product_names.index(match[0])][10]
+                    "highlight5":products[product_names.index(match[0])][10],
+                    "image_url":products[product_names.index(match[0])][11]
+                    
                     } for match in matches]
         #print(results)
         
@@ -784,6 +786,31 @@ def upload_photos(product_id):
 
     return render_template("upload_images.html", product_id=product_id)
 
+
+@app.route('/enquiry', methods=['GET','POST'])
+def enquiry():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        #phone = request.form.get('phone')
+        message = request.form.get('message')
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("INSERT INTO enquiry (enquiry_name, enquiry_email, enquiry_content) VALUES (%s, %s, %s)", (name, email, message))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        flash("Enquiry submitted successfully!", "success")
+        
+        #send email to admin
+        
+        msg = Message(f'Nirviyu: New Enquiry ', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com'])
+        msg.body = (f'Hi \n\nNew Enquiry Received. \n\nName: {name}\nEmail: {email}\nQuery:{message}\n\nregards \nTeam Nirivyu \nThis is an auto generated email.Do not Reply.****')
+        # msg.html = render_template("email_template.html", name=current_user.username)
+        mail.send(msg)
+        
+        return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode

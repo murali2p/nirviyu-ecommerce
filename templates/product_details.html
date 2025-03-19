@@ -32,6 +32,13 @@ block content %}
   {% else %}
   <p>No images available for this product.</p>
   {% endif %}
+  <form action="/add_to_cart/{{product['prod_id']}}" method="post">
+    <button
+      class="product-image-button btn btn--primary product-details-button"
+    >
+      Add to Cart
+    </button>
+  </form>
 </div>
 
 <script>

@@ -42,7 +42,7 @@
 
       </div>
 
-      <section class="services-list" id="services">
+      <!--section class="services-list" id="services">
         <h2 class="service-header">Our Services</h2>
         <ul class="services">
           <li class="service-item">
@@ -143,21 +143,21 @@
 
         </div>
         <button class="slider-btn slider-btn--next">&gt;</button>
-      </section>
+      </section-->
       <section class="cta cta-container grid grid--2-cols" id="know_more">
-        <form class="cta-form">
+        <form class="cta-form" method="post" action="/enquiry">
 
           <h2 class="cta-header">Get in touch with us</h2>
           <div class = "form-fields">
 
             <label> Full Name </label>
-            <input type="text" class="cta-input" placeholder="Enter your full name" />
+            <input type="text" name="name" id="name" class="cta-input" placeholder="Enter your full name" required />
             <label> Email </label>
-            <input type="email" class="cta-input" placeholder="Enter your email" />
+            <input type="email" name="email" id="email" class="cta-input" placeholder="Enter your email" required />
             <label> Enquiry </label>
-            <input type="text" class="cta-input" placeholder="Enter your query" />
+            <input type="text" name="message" id="message"  class="cta-input" placeholder="Enter your query" required />
             
-            <a href="#" class="btn btn--cta">Contact Us</a>
+            <button type="submit" class="btn btn--cta">Contact Us</button>
           </div>
         </form>
           <img class="cta-img" src="../static/img/hero/lab-test.jpg" alt="Contact Us" />
