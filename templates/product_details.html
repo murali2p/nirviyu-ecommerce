@@ -13,13 +13,25 @@ block content %}
       <li class="product_details_el">{{ product['highlight5'] }}</li>
     </ul>
   </div>
-  {% if images %}
-  <img
-    id="mainImage"
-    src="{{ images[0]['image_url'] }}"
-    class="main-image"
-    alt="Product Image"
-  />
+  <div
+    class="main-image-container"
+    onmouseover="showZoom()"
+    onmouseout="hideZoom()"
+    onmousemove="moveZoom(event)"
+  >
+    <img
+      id="mainImage"
+      src="{{ images[0]['image_url'] }}"
+      class="main-image"
+      alt="Product Image"
+    />
+    <div class="zoom-lens" id="zoomLens"></div>
+    <div class="zoom-result" id="zoomResult">
+      <img id="zoomImage" src="{{ images[0]['image_url'] }}" />
+    </div>
+  </div>
+
+  <!-- Thumbnails -->
   <div class="thumbnail-container">
     {% for img in images %}
     <img
@@ -29,10 +41,10 @@ block content %}
     />
     {% endfor %}
   </div>
-  {% else %}
-  <p>No images available for this product.</p>
-  {% endif %}
+
   <form action="/add_to_cart/{{product['prod_id']}}" method="post">
+    <p class="product-price prod-el">MRP: ₹ <span class="price-strike">{{ product['price'] }} </span><span class="price-discount">( {{ product['discount'] }}% Off )</span></p>
+    <p class="product-price prod-el">Final Price: ₹{{ product['price'] - (product['price'] * product['discount'] / 100) }}</p>
     <button
       class="product-image-button btn btn--primary product-details-button"
     >
@@ -40,10 +52,63 @@ block content %}
     </button>
   </form>
 </div>
+<div class="container product-info-container">
+  <h2 class="product-details-description product-information">
+    Product Information
+  </h2>
+  <p class="product_details_el">{{product['product_info']}}</p></br>
+
+  <h2 class="product-details-description ingredients">Key Ingredients</h2>
+  <p class="product_details_el">{{product['ingredients']}}</p></br>
+
+  <h2 class="product-details-description allergens">Allergens</h2>
+  <p class="product_details_el">{{product['allergens']}}</p></br>
+
+  <h2 class="product-details-description disclaimer">Disclaimer</h2>
+  <p class="product_details_el">{{product['disclaimer']}}</p></br>
+</div>
 
 <script>
   function changeMainImage(thumbnail) {
-    document.getElementById("mainImage").src = thumbnail.src;
+    let mainImage = document.getElementById("mainImage");
+    let zoomImage = document.getElementById("zoomImage");
+    mainImage.src = thumbnail.src;
+    zoomImage.src = thumbnail.src;
+  }
+
+  function showZoom() {
+    document.getElementById("zoomLens").style.display = "block";
+    document.getElementById("zoomResult").style.display = "block";
+  }
+
+  function hideZoom() {
+    document.getElementById("zoomLens").style.display = "none";
+    document.getElementById("zoomResult").style.display = "none";
+  }
+
+  function moveZoom(event) {
+    let mainImage = document.getElementById("mainImage");
+    let zoomLens = document.getElementById("zoomLens");
+    let zoomResult = document.getElementById("zoomResult");
+    let zoomImage = document.getElementById("zoomImage");
+
+    let rect = mainImage.getBoundingClientRect();
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+
+    let lensSize = 100; // Size of the zoom lens
+    let zoomFactor = 2; // How much to zoom
+
+    // Ensure lens stays within the image
+    x = Math.max(0, Math.min(x - lensSize / 2, rect.width - lensSize));
+    y = Math.max(0, Math.min(y - lensSize / 2, rect.height - lensSize));
+
+    zoomLens.style.left = x + "px";
+    zoomLens.style.top = y + "px";
+
+    // Move zoomed-in image inside zoomResult
+    zoomImage.style.left = -x * zoomFactor + "px";
+    zoomImage.style.top = -y * zoomFactor + "px";
   }
 </script>
 <script

@@ -13,28 +13,67 @@ block content %}
 
 <div id="productList" class="product-container container grid grid--3-cols">
   {% for product in products %}
+
   <div class="product-card">
-    <form action="/products/{{product.prod_id}}" method="post">
-      <button type="submit" class="product-image-button">
-        <img
-          class="product-image"
-          src="{{ product.image_url}}"
-          alt="{{ product.name }}"
-        />
-      </button>
-    </form>
-    <h3 class="product-name">{{ product.prod_name }}</h3>
-    <p class="product-desc">{{ product.description }}</p>
-    <p class="product-price">
-      <strong>Price: ₹ {{ product.price }}</strong>
-    </p>
+    <div>
+      <div class="product-img">
+        <form action="/products/{{product.prod_id}}" method="post">
+          <button type="submit" class="product-image-button">
+            <img
+              class="product-image"
+              src="{{ product.image_url}}"
+              alt="{{ product.name }}"
+            />
+          </button>
+        </form>
+      </div class="product-points">
+      <h3 class="product-name">{{ product.prod_name }}</h3>
+      <p class="product-desc">{{ product.description }}</p>
+
+      {% if product.discount > 0 %}
+      <p class="product-price">MRP: ₹ <span class="price-strike">{{ product.price }} </span> (<span class="price-discount">{{product.discount}}% off</span>)
+      </p>
+
+      <p class="product-price">
+        Final Price: ₹{{ product.price - (product.price * product.discount /
+        100) }}
+      </p>
+      {% else %}
+      <p class="product-price">
+        <strong>MRP: ₹ {{ product.price }}</strong>
+      </p>
+      {% endif %}
+    </div>
     <form action="/add_to_cart/{{ product.prod_id }}" method="post">
       <button class="product-image-button btn btn--primary">Add to Cart</button>
     </form>
   </div>
+
   {% endfor %}
 </div>
 
+</section class='bottom-footer'>
+<footer class="footer">
+  <section>
+    <logo class="logo">
+      <img class="logo-img" src="../static/img/logo/logo-removebg-preview.png" alt="Nirviyu" />
+    </logo>
+    <h2>Contact Us</h2>
+    <!-- ul class="social-links">
+      <li><a href="#" class="social-icon" ><ion-icon class="social-icon" name="logo-instagram"></a></ion-icon></li>
+      <li><a href ="#" class="social-icon"><ion-icon class="social-icon" name="logo-facebook"></ion-icon></a></li>
+      <li><a href="#" class="social-icon"><ion-icon class="social-icon"name="logo-twitter"></ion-icon></a></li>
+    </ul -->
+    
+    <p>
+      Email:
+      <a class="email-link" href="mailto:info@nirviyu.com"
+        >info@nirviyu.com</a
+      >
+    </p>
+  
+</footer>
+</section>
 <script>
   $(document).ready(function () {
     $("#searchBox").on("input", function () {

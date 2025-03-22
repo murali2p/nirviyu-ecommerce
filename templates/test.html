@@ -1,32 +1,51 @@
-{%extends 'base.html' %} {% block title %}{{ product.prod_name }}{% endblock %}
-{% block content %}
-<section class="product-details">
-  <h1 class="container service-header product-details-header">
-    {{ product.prod_name }}
-  </h1>
-  <div class="container grid grid--2-cols">
-    <div class="product-details__image">
-      <img
-        src="{{product.image_url}}"
-        alt="{{ product.prod_name }}"
-        width="200"
-      />
-    </div>
-    <div class="product-details__info">
-      <p class="product_details_el">
-        <strong>Description:</strong> {{ product.description }}
-      </p>
+{% extends "base.html" %} {% block title %}Nirviyu: Products{% endblock %} {%
+block content %}
 
-      <p class="product_details_el">
-        <strong>Price:</strong> ${{ product.price }}
-      </p>
-      <form action="/add_to_cart/{{ product.prod_id }}" method="post">
-        <button class="btn btn--primary">Add to Cart</button>
-      </form>
-      <a href="{{ url_for('products') }}">Back to Products</a>
-    </div>
+<div class="container product-details">
+  <h1 class="product-details-header">{{ product['prod_name'] }}</h1>
+  <div class="product-details-info">
+    <p class="product-details-description">{{ product['description'] }}</p>
+    <ul>
+      <li class="product_details_el">{{ product['highlight1'] }}</li>
+      <li class="product_details_el">{{ product['highlight2'] }}</li>
+      <li class="product_details_el">{{ product['highlight3'] }}</li>
+      <li class="product_details_el">{{ product['highlight4'] }}</li>
+      <li class="product_details_el">{{ product['highlight5'] }}</li>
+    </ul>
   </div>
-</section>
+  {% if images %}
+  <img
+    id="mainImage"
+    src="{{ images[0]['image_url'] }}"
+    class="main-image"
+    alt="Product Image"
+  />
+  <div class="thumbnail-container">
+    {% for img in images %}
+    <img
+      src="{{ img['image_url'] }}"
+      class="thumbnail"
+      onclick="changeMainImage(this)"
+    />
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No images available for this product.</p>
+  {% endif %}
+  <form action="/add_to_cart/{{product['prod_id']}}" method="post">
+    <button
+      class="product-image-button btn btn--primary product-details-button"
+    >
+      Add to Cart
+    </button>
+  </form>
+</div>
+
+<script>
+  function changeMainImage(thumbnail) {
+    document.getElementById("mainImage").src = thumbnail.src;
+  }
+</script>
 <script
   type="module"
   src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"

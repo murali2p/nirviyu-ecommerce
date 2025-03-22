@@ -235,7 +235,7 @@ def products():
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
         # execute the SQL query
-        cursor.execute('SELECT a.*,b.image_url FROM products as a inner join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as b on a.prod_id=b.product_id')
+        cursor.execute('SELECT a.*,b.image_url FROM products as a left join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as b on a.prod_id=b.product_id')
         # fetch the results
         results = cursor.fetchall()
         # close the cursor and the connection
@@ -301,7 +301,7 @@ def add_to_cart(id):
         connection.commit()
         
         #update the sub total fiedl in the cart table
-        cursor.execute('UPDATE cart SET subtotal = qty * price WHERE cust_id = %s and prod_id =%s', (current_user.id,product['prod_id']))
+        cursor.execute('UPDATE cart SET subtotal = qty * price *(1-(%s/100))  WHERE cust_id = %s and prod_id =%s', (product['discount'],current_user.id,product['prod_id']))
         connection.commit()
         
         cursor.close()
@@ -324,14 +324,18 @@ def cart():
     cursor = connection.cursor(dictionary=True)
     cursor.execute('SELECT * FROM cart inner join products on cart.prod_id =products.prod_id inner join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as c on c.product_id=products.prod_id WHERE cart.cust_id = %s', (current_user.id,))
     cart = cursor.fetchall()
-    print(cart)
+    #print(cart)
     cursor.close()
     connection.close()
     total_amt = 0
+    mrp=0
+   
     for item in cart:
+        mrp+=item['price']*item['qty']
         total_amt+=item['subtotal']
 
-    return render_template('cart.html', cart=cart, total_amt=total_amt)
+    discount=mrp-total_amt
+    return render_template('cart.html', cart=cart, total_amt=total_amt, mrp=mrp, discount=discount)
  
 
 @app.route('/add_to_order', methods=['POST'])
@@ -379,12 +383,12 @@ def add_to_order():
         cursor = connection.cursor(dictionary=True)
         cursor.execute('SELECT * FROM cart inner join products on cart.prod_id =products.prod_id WHERE cart.cust_id = %s', (current_user.id,))
         cart = cursor.fetchall()
-        print(cart)
+        #print(cart)
         total_amt = 0
         for item in cart:
             total_amt+=item['subtotal']
         
-        print(total_amt)
+        #print(total_amt)
     
         current_time = datetime.datetime.now()
         data = { "amount": int(total_amt*100), "currency": "INR", "receipt": "order_rcptid_11" }
@@ -397,7 +401,7 @@ def add_to_order():
         #get the latest order id which is generated with payment[id ]
         cursor.execute('SELECT order_id FROM order_generate WHERE razorpay_order_id = %s', (payment['id'],))
         order_id = cursor.fetchone()
-        print(order_id)
+        #print(order_id)
         
         # insert the order_id into the order_checkout table
         query = "INSERT INTO order_checkout (order_id,razorpay_order_id, cust_id, checkout,add_id) VALUES (%s, %s,%s, %s,%s)"
@@ -414,7 +418,7 @@ def add_to_order():
         connection.commit()
         cursor.close()
         connection.close()
-        print("the order is placed")
+        #print("the order is placed")
         return redirect(url_for('orders'))
     
     except mysql.connector.Error as err:
@@ -490,8 +494,8 @@ def payment_success(id):
         order = cursor.fetchone()
         cursor.close()
         cursor = connection.cursor(dictionary=True)
-        print(order['razorpay_order_id'])
-        print(data['razorpay_order_id'])
+        #print(order['razorpay_order_id'])
+        #print(data['razorpay_order_id'])
         
         if order['razorpay_order_id'] == data['razorpay_order_id']:
         
@@ -500,7 +504,7 @@ def payment_success(id):
                                                                 'razorpay_payment_id': data['razorpay_payment_id'],
                                                                 'razorpay_signature': data['razorpay_signature']
                                                                 }):
-                print("payment verified")
+                #print("payment verified")
                 cursor.execute('UPDATE order_generate SET razorpay_payment_id = %s, razorpay_signature = %s WHERE razorpay_order_id = %s', (data['razorpay_payment_id'], data['razorpay_signature'], data['razorpay_order_id']))
                 connection.commit()
             else:  
@@ -511,14 +515,14 @@ def payment_success(id):
         cursor.execute("SELECT * FROM users WHERE cust_id = %s", (order['cust_id'],))
         customer = cursor.fetchone()
 
-        print("found the user object")
+        #print("found the user object")
         # Re-authenticate user
         user = User(id=customer['cust_id'], username=customer['username'], password=customer['password'], role=customer['role'])
         if user:
             login_user(user)  # Restore Flask-Login session
         
-        print("logged in the user")
-        print(current_user.username)
+        #print("logged in the user")
+        #print(current_user.username)
               
         cursor.close()
         connection.close()
@@ -620,7 +624,7 @@ def search_products():
     if query:
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor()
-        cursor.execute("SELECT a.*,b.image_url FROM products as a inner join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as b on a.prod_id=b.product_id")
+        cursor.execute("SELECT a.*,b.image_url FROM products as a left join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as b on a.prod_id=b.product_id")
         products = cursor.fetchall()  # Returns list of tuples (id, name)
 
         # Apply fuzzy matching
@@ -639,7 +643,11 @@ def search_products():
                     "highlight3":products[product_names.index(match[0])][8],
                     "highlight4":products[product_names.index(match[0])][9],
                     "highlight5":products[product_names.index(match[0])][10],
-                    "image_url":products[product_names.index(match[0])][11]
+                    "product_info":products[product_names.index(match[0])][11],
+                    "ingredients":products[product_names.index(match[0])][12],
+                    "allergens":products[product_names.index(match[0])][13],
+                    "disclaimer":products[product_names.index(match[0])][14],
+                    "image_url":products[product_names.index(match[0])][15]
                     
                     } for match in matches]
         #print(results)
@@ -720,11 +728,16 @@ def update_product():
     highlight3=request.form['highlight3']
     highlight4=request.form['highlight4']
     highlight5=request.form['highlight5']
+    product_info=request.form['product_info']
+    ingredients=request.form['ingredients']
+    allergens=request.form['allergens']
+    disclaimer=request.form['disclaimer']
+    
 
     connection = mysql.connector.connect(**db_config)
     cursor = connection.cursor()
-    cursor.execute("UPDATE products SET prod_name=%s, description =%s, price=%s, discount=%s, highlight1=%s, highlight2=%s, highlight3=%s, highlight4=%s, highlight5=%s WHERE prod_id=%s",
-                   (name, description, price, discount,highlight1,highlight2,highlight3,highlight4,highlight5, product_id))
+    cursor.execute("UPDATE products SET prod_name=%s, description =%s, price=%s, discount=%s, highlight1=%s, highlight2=%s, highlight3=%s, highlight4=%s, highlight5=%s,product_info=%s,ingredients=%s,allergens=%s,disclaimer=%s WHERE prod_id=%s",
+                   (name, description, price, discount,highlight1,highlight2,highlight3,highlight4,highlight5,product_info,ingredients,allergens,disclaimer, product_id))
     connection.commit()
     cursor.close()
     connection.close()
