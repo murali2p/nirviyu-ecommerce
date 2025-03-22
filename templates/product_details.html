@@ -69,6 +69,10 @@ block content %}
 </div>
 
 <script>
+  function isMobile() {
+    return window.innerWidth <= 768; // Adjust breakpoint if needed
+  }
+
   function changeMainImage(thumbnail) {
     let mainImage = document.getElementById("mainImage");
     let zoomImage = document.getElementById("zoomImage");
@@ -77,6 +81,7 @@ block content %}
   }
 
   function showZoom() {
+    if (isMobile()) return;
     document.getElementById("zoomLens").style.display = "block";
     document.getElementById("zoomResult").style.display = "block";
   }
@@ -87,6 +92,7 @@ block content %}
   }
 
   function moveZoom(event) {
+    if (isMobile()) return;
     let mainImage = document.getElementById("mainImage");
     let zoomLens = document.getElementById("zoomLens");
     let zoomResult = document.getElementById("zoomResult");
