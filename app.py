@@ -95,10 +95,11 @@ def get_order_items(order_id):
     connection = mysql.connector.connect(**db_config)
     cursor = connection.cursor(dictionary=True)
     
-    query = "select p.prod_name as product_name, p.sku as sku,o.qty as quantity, cast(p.price * (1-(p.discount/100)) as decimal(10,2)) as price,p.discount as discount  from orders as o inner join products as p on o.prod_id=p.prod_id where order_id= %s" #review this query to get the order items
+    query = "select p.prod_name as product_name, p.sku as sku,o.qty as quantity, cast((p.price * (1-(p.discount/100))) as decimal(10,2)) as final_price,p.discount as discount,round(((p.price * (1-(p.discount/100))) / 1.18), 2) as taxable_price,round((((p.price * (1-(p.discount/100))) / 1.18)+(p.price*p.discount/100))*1.18,2) as selling_price,round((p.price*p.discount/100)*1.18,2) as item_discount  from orders as o inner join products as p on o.prod_id=p.prod_id where order_id=%s" #review this query to get the order items
     cursor.execute(query, (order_id,))
     items = cursor.fetchall()
-    
+    print("getting order items")
+    print(items)
     cursor.close()
     connection.close()
     
@@ -108,12 +109,14 @@ def get_order_items(order_id):
             "name": item["product_name"],
             "sku": item["sku"],
             "units": item["quantity"],
-            "selling_price": float(item["price"]/(1.18*(100-item["discount"])/100)),
-            "discount": float(item["discount"]*(item["price"]/(1.18*(100-item["discount"])/100))),
+            "selling_price": float(item["selling_price"]),
+            "discount": float(item["item_discount"]),
             "tax": 18 
         }
         for item in items
     ]
+    
+    print(order_items)
     
     return order_items
 
@@ -173,12 +176,15 @@ def create_shiprocket_order(order_details):
         "shipping_is_billing": True,
         "order_items": order_items,
         "payment_method": "Prepaid",
-        "sub_total": order_details["sub_total"],
+        "sub_total": float(order_details["sub_total"]),
         "length": order_details["length"],
         "breadth": order_details["breadth"],
         "height": order_details["height"],
         "weight": order_details["weight"]
     }
+    
+    print("printing payload")
+    print(payload)
 
     response = requests.post(url, json=payload, headers=headers)
     shiprocket_response = response.json()
@@ -740,7 +746,7 @@ def webhook_nirviyu():
             "email": order_info['email'],
             "phone": order_info['phone'],
             "cod": False,
-            "sub_total": order_info['amount'],
+            "sub_total": float(order_info['amount']),
             "length": order_info['length'],
             "breadth": order_info['width'],
             "height": order_info['height'],
