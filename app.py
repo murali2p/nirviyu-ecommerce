@@ -14,6 +14,7 @@ import os
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from rapidfuzz import process,fuzz
+import requests,json
 
 # Determine the environment (default: development)
 env = os.getenv('FLASK_ENV', 'prod')
@@ -72,6 +73,117 @@ recipients = ['mohanmurali.behera@gmail.com']
 #initialize the Mail
 
 mail = Mail(app)
+
+
+#shiprocet configurations
+SHIPROCKET_API_URL = os.getenv('SHIPROCKET_API_URL')
+SR_EMAIL = os.getenv('SR_EMAIL')
+SR_PASSWORD = os.getenv('SR_PASSWORD')
+
+def get_shiprocket_token():
+    url = f"{SHIPROCKET_API_URL}/auth/login"
+    payload = {"email": SR_EMAIL, "password": SR_PASSWORD}
+    headers = {"Content-Type": "application/json"}
+    
+    response = requests.post(url, json=payload, headers=headers)
+    if response.status_code == 200:
+        return response.json().get("token")
+    return None
+#getting the order items
+def get_order_items(order_id):
+    """Fetch order items from the database for a given order_id."""
+    connection = mysql.connector.connect(**db_config)
+    cursor = connection.cursor(dictionary=True)
+    
+    query = "select p.prod_name as product_name, 'sku001' as sku,o.qty as quantity, cast(p.price * (1-(p.discount/100)) as decimal(10,2)) as price  from orders as o inner join products as p on o.prod_id=p.prod_id where order_id= %s" #review this query to get the order items
+    cursor.execute(query, (order_id,))
+    items = cursor.fetchall()
+    
+    cursor.close()
+    connection.close()
+    
+    # Convert items into Shiprocket format
+    order_items = [
+        {
+            "name": item["product_name"],
+            "sku": item["sku"],
+            "units": item["quantity"],
+            "selling_price": float(item["price"])
+        }
+        for item in items
+    ]
+    
+    return order_items
+
+
+# Function to store shipment details in MySQL
+def save_shipment_to_db(order_id, shiprocket_response):
+    try:
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor()
+        sr_order_id = shiprocket_response.get("order_id", None)
+        shipment_id = shiprocket_response.get("shipment_id", None)
+        awb_code = shiprocket_response.get("awb_code", None)
+        courier_name = shiprocket_response.get("courier_name", None)
+        status = shiprocket_response.get("status", None)
+
+        query = """
+            INSERT INTO shipment (internal_order_id, sr_order_id,shipment_id, awb_code, courier_name, status)
+            VALUES (%s,%s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, (order_id, sr_order_id, shipment_id, awb_code, courier_name, status))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        
+        return True
+    except Exception as e:
+        print(f"Error saving shipment: {e}")
+        return False
+
+def create_shiprocket_order(order_details):
+    token = get_shiprocket_token()
+    if not token:
+        return {"error": "Authentication failed"}
+    
+    order_items = get_order_items(order_details["order_id"])
+    
+    url = f"{SHIPROCKET_API_URL}/orders/create/adhoc"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {token}"
+    }
+    
+    payload = {
+        "order_id": order_details["order_id"],
+        "order_date": order_details["order_date"],
+        "pickup_location": "Office",
+        "channel_id": "",
+        "billing_customer_name": order_details["customer_name"],
+        "billing_last_name": "",
+        "billing_address": order_details["billing_address"],
+        "billing_city": order_details["billing_city"],
+        "billing_pincode": order_details["billing_pincode"],
+        "billing_state": order_details["billing_state"],
+        "billing_country": "India",
+        "billing_email": order_details["email"],
+        "billing_phone": order_details["phone"],
+        "order_items": order_items,
+        "payment_method": "Prepaid",
+        "sub_total": order_details["sub_total"],
+        "length": order_details["length"],
+        "breadth": order_details["breadth"],
+        "height": order_details["height"],
+        "weight": order_details["weight"]
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+    shiprocket_response = response.json()
+    # Save response in shipment table
+    save_shipment_to_db(order_details["order_id"], shiprocket_response)
+    
+    return response.json()
+
 
 
 @app.template_filter('to_float')
@@ -387,6 +499,56 @@ def add_to_order():
         total_amt = 0
         for item in cart:
             total_amt+=item['subtotal']
+            
+        total_qty = 0
+        for item in cart:
+            total_qty+=item['qty']
+            
+        weight=0.2*total_qty
+        
+        
+        
+        if total_qty>1:
+            if total_qty ==2:
+                length=10
+                width=5
+                height=10
+            elif total_qty <=4:
+                length=10
+                width=10
+                height=10
+            elif total_qty <=6:
+                length=15
+                width=10
+                height=10
+            elif total_qty <=8:
+                length=20
+                width=10
+                height=10
+            elif total_qty <=10:
+                length=25
+                width=10
+                height=10
+            elif total_qty <=15:
+                length=25
+                width=15
+                height=10
+            elif total_qty <=20:
+                length=25
+                width=20
+                height=10
+            elif total_qty <=40:
+                length=25
+                width=25
+                height=20
+            else:
+                length=25
+                width=25
+                height=30
+        else:
+            length=5
+            width=5
+            height=10 
         
         #print(total_amt)
     
@@ -404,8 +566,8 @@ def add_to_order():
         #print(order_id)
         
         # insert the order_id into the order_checkout table
-        query = "INSERT INTO order_checkout (order_id,razorpay_order_id, cust_id, checkout,add_id) VALUES (%s, %s,%s, %s,%s)"
-        cursor.execute(query, (order_id['order_id'],payment['id'], current_user.id, current_time,address_id))
+        query = "INSERT INTO order_checkout (order_id,razorpay_order_id, cust_id, checkout,add_id, total_qty,length, width, height, weight) VALUES (%s, %s,%s, %s,%s,%s,%s,%s,%s,%s)"
+        cursor.execute(query, (order_id['order_id'],payment['id'], current_user.id, current_time,address_id,total_qty,length, width, height, weight))
         
         # insert the items in cart into orders table
         for item in cart:
@@ -547,12 +709,45 @@ def webhook_nirviyu():
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
         data = request.get_json()
+      
         #print(data)
         cursor.execute('SELECT * FROM order_generate WHERE razorpay_order_id = %s', (data['payload']['payment']['entity']['order_id'],))
         order = cursor.fetchone()
         if order:
             cursor.execute('UPDATE order_checkout SET payment_status = %s WHERE razorpay_order_id = %s', ("success", data['payload']['payment']['entity']['order_id']))
             connection.commit()
+            
+            #fetch the details of the order which you want to pass for shipment
+            query='''select oc.order_id,oc.payment_status,oc.razorpay_order_id,oc.checkout,oc.total_qty,oc.length,oc.width,oc.height,oc.weight,og.amount,ad.* from order_checkout as oc inner join addresses as ad on oc.add_id=ad.add_id inner join order_generate as og on og.razorpay_order_id=oc.razorpay_order_id where oc.razorpay_order_id=%s and oc.payment_status="success"'''         
+            cursor.execute(query,(data['payload']['payment']['entity']['order_id'],))
+            order_info = cursor.fetchone()
+            # get the order details
+            
+            order_details = {
+            "order_id": order_info['order_id'],
+            "order_date": order_info['checkout'],
+            "customer_name": order_info['full_name'],
+            "billing_address": order_info['address_line1']+", "+order_info['address_line2'],
+            "billing_city": order_info['city'],
+            "billing_pincode": order_info['postal_code'],
+            "billing_state": order_info['state'],
+            "email": order_info['email'],
+            "phone": order_info['phone'],
+            "cod": False,
+            "sub_total": order_info['amount'],
+            "length": order_info['length'],
+            "breadth": order_info['width'],
+            "height": order_info['height'],
+            "weight": order_info['weight']
+            }
+       
+
+        # Create order in Shiprocket
+        shiprocket_response = create_shiprocket_order(order_details)
+              
+            
+            
+            
         cursor.close()
         connection.close()
         return jsonify({'status': 'success'})
@@ -813,15 +1008,19 @@ def enquiry():
         connection.commit()
         cursor.close()
         connection.close()
-        flash("Enquiry submitted successfully!", "success")
+        
         
         #send email to admin
         
         msg = Message(f'Nirviyu: New Enquiry ', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com'])
-        msg.body = (f'Hi \n\nNew Enquiry Received. \n\nName: {name}\nEmail: {email}\nQuery:{message}\n\nregards \nTeam Nirivyu \nThis is an auto generated email.Do not Reply.****')
+        msg.body = (f'Hi \n\nNew Enquiry Received. \n\nName: {name}\nEmail: {email}\nQuery:{message}\n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.***')
         # msg.html = render_template("email_template.html", name=current_user.username)
         mail.send(msg)
         
+        #send email to user
+        msg = Message(f'Nirviyu: Enquiry Received',sender='info@nirviyu.com', recipients=[f'{email}'])
+        msg.body = (f'Hi {name}, \n\nYour enquiry has been received.\n\nEnquiry: {message} \n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.****')
+        mail.send(msg)
         return redirect(url_for('index'))
     return redirect(url_for('index'))
 
