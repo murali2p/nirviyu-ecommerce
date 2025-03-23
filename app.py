@@ -95,7 +95,7 @@ def get_order_items(order_id):
     connection = mysql.connector.connect(**db_config)
     cursor = connection.cursor(dictionary=True)
     
-    query = "select p.prod_name as product_name, 'sku001' as sku,o.qty as quantity, cast(p.price * (1-(p.discount/100)) as decimal(10,2)) as price  from orders as o inner join products as p on o.prod_id=p.prod_id where order_id= %s" #review this query to get the order items
+    query = "select p.prod_name as product_name, p.sku as sku,o.qty as quantity, cast(p.price * (1-(p.discount/100)) as decimal(10,2)) as price  from orders as o inner join products as p on o.prod_id=p.prod_id where order_id= %s" #review this query to get the order items
     cursor.execute(query, (order_id,))
     items = cursor.fetchall()
     
@@ -135,7 +135,7 @@ def save_shipment_to_db(order_id, shiprocket_response):
         connection.commit()
         cursor.close()
         connection.close()
-        
+        print("Shipment saved successfully")
         return True
     except Exception as e:
         print(f"Error saving shipment: {e}")
@@ -168,6 +168,7 @@ def create_shiprocket_order(order_details):
         "billing_country": "India",
         "billing_email": order_details["email"],
         "billing_phone": order_details["phone"],
+        "shipping_is_billing": True,
         "order_items": order_items,
         "payment_method": "Prepaid",
         "sub_total": order_details["sub_total"],
@@ -179,6 +180,7 @@ def create_shiprocket_order(order_details):
 
     response = requests.post(url, json=payload, headers=headers)
     shiprocket_response = response.json()
+    print(shiprocket_response)
     # Save response in shipment table
     save_shipment_to_db(order_details["order_id"], shiprocket_response)
     
@@ -721,11 +723,13 @@ def webhook_nirviyu():
             query='''select oc.order_id,oc.payment_status,oc.razorpay_order_id,oc.checkout,oc.total_qty,oc.length,oc.width,oc.height,oc.weight,og.amount,ad.* from order_checkout as oc inner join addresses as ad on oc.add_id=ad.add_id inner join order_generate as og on og.razorpay_order_id=oc.razorpay_order_id where oc.razorpay_order_id=%s and oc.payment_status="success"'''         
             cursor.execute(query,(data['payload']['payment']['entity']['order_id'],))
             order_info = cursor.fetchone()
+            print("fetched the order_info")
+            print(order_info)
             # get the order details
             
             order_details = {
-            "order_id": order_info['order_id'],
-            "order_date": order_info['checkout'],
+            "order_id": str(order_info['order_id']),
+            "order_date": order_info['checkout'].strftime("%Y-%m-%d"),
             "customer_name": order_info['full_name'],
             "billing_address": order_info['address_line1']+", "+order_info['address_line2'],
             "billing_city": order_info['city'],
@@ -738,7 +742,7 @@ def webhook_nirviyu():
             "length": order_info['length'],
             "breadth": order_info['width'],
             "height": order_info['height'],
-            "weight": order_info['weight']
+            "weight": float(order_info['weight'])
             }
        
 
@@ -842,7 +846,8 @@ def search_products():
                     "ingredients":products[product_names.index(match[0])][12],
                     "allergens":products[product_names.index(match[0])][13],
                     "disclaimer":products[product_names.index(match[0])][14],
-                    "image_url":products[product_names.index(match[0])][15]
+                    "sku":products[product_names.index(match[0])][15],
+                    "image_url":products[product_names.index(match[0])][16]
                     
                     } for match in matches]
         #print(results)

@@ -39,6 +39,11 @@
         document.getElementById("highlight3").value = product.highlight3;
         document.getElementById("highlight4").value = product.highlight4;
         document.getElementById("highlight5").value = product.highlight5;
+        document.getElementById("product_info").value = product.product_info;
+        document.getElementById("ingredients").value = product.ingredients;
+        document.getElementById("allergens").value = product.allergens;
+        document.getElementById("disclaimer").value = product.disclaimer;
+        document.getElementById("sku").value = product.sku;
       }
     </script>
   </head>
@@ -91,6 +96,8 @@
         <input type="text" name="allergens" id="allergens" required />
         <label>disclaimer:</label>
         <input type="text" name="disclaimer" id="disclaimer" required />
+        <label>SKU:</label>
+        <input type="text" name="sku" id="sku" required />
 
         <button type="submit">Confirm Update</button>
       </form>
