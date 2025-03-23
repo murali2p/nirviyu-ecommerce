@@ -95,7 +95,7 @@ def get_order_items(order_id):
     connection = mysql.connector.connect(**db_config)
     cursor = connection.cursor(dictionary=True)
     
-    query = "select p.prod_name as product_name, p.sku as sku,o.qty as quantity, cast(p.price * (1-(p.discount/100)) as decimal(10,2)) as price  from orders as o inner join products as p on o.prod_id=p.prod_id where order_id= %s" #review this query to get the order items
+    query = "select p.prod_name as product_name, p.sku as sku,o.qty as quantity, cast(p.price * (1-(p.discount/100)) as decimal(10,2)) as price,p.discount as discount  from orders as o inner join products as p on o.prod_id=p.prod_id where order_id= %s" #review this query to get the order items
     cursor.execute(query, (order_id,))
     items = cursor.fetchall()
     
@@ -108,7 +108,9 @@ def get_order_items(order_id):
             "name": item["product_name"],
             "sku": item["sku"],
             "units": item["quantity"],
-            "selling_price": float(item["price"])
+            "selling_price": float(item["price"]/(1.18*(100-item["discount"])/100)),
+            "discount": float(item["discount"]*(item["price"]/(1.18*(100-item["discount"])/100))),
+            "tax": 18 
         }
         for item in items
     ]
@@ -932,12 +934,14 @@ def update_product():
     ingredients=request.form['ingredients']
     allergens=request.form['allergens']
     disclaimer=request.form['disclaimer']
+    sku=request.form['sku']
+    
     
 
     connection = mysql.connector.connect(**db_config)
     cursor = connection.cursor()
-    cursor.execute("UPDATE products SET prod_name=%s, description =%s, price=%s, discount=%s, highlight1=%s, highlight2=%s, highlight3=%s, highlight4=%s, highlight5=%s,product_info=%s,ingredients=%s,allergens=%s,disclaimer=%s WHERE prod_id=%s",
-                   (name, description, price, discount,highlight1,highlight2,highlight3,highlight4,highlight5,product_info,ingredients,allergens,disclaimer, product_id))
+    cursor.execute("UPDATE products SET prod_name=%s, description =%s, price=%s, discount=%s, highlight1=%s, highlight2=%s, highlight3=%s, highlight4=%s, highlight5=%s,product_info=%s,ingredients=%s,allergens=%s,disclaimer=%s,sku=%s WHERE prod_id=%s",
+                   (name, description, price, discount,highlight1,highlight2,highlight3,highlight4,highlight5,product_info,ingredients,allergens,disclaimer,sku, product_id))
     connection.commit()
     cursor.close()
     connection.close()
