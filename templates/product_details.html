@@ -43,8 +43,8 @@ block content %}
   </div>
 
   <form action="/add_to_cart/{{product['prod_id']}}" method="post">
-    <p class="product-price prod-el">MRP: ₹ <span class="price-strike">{{ product['price'] }} </span><span class="price-discount">( {{ product['discount'] }}% Off )</span></p>
-    <p class="product-price prod-el">Final Price: ₹{{ product['price'] - (product['price'] * product['discount'] / 100) }}</p>
+    <p class="product-price1 prod-el">MRP: ₹ <span class="price-strike">{{ product['price'] }} </span><span class="price-discount">( {{ product['discount'] }}% Off )</span></p>
+    <p class="product-price1 prod-el">Final Price: ₹{{ product['price'] - (product['price'] * product['discount'] / 100) }}</p>
     <button
       class="product-image-button btn btn--primary product-details-button"
     >

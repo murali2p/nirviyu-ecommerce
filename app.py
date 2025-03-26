@@ -1031,7 +1031,7 @@ def upload_photos(product_id):
 def enquiry():
     if request.method == 'POST':
         secret_response=request.form['g-recaptcha-response']
-        print(secret_response)
+        #print(secret_response)
         
         verify_response = requests.post(url=f"{verify_url}?secret={RECAPTCHA_PRIVATE_KEY}&response={secret_response}").json()
         if not verify_response['success']:

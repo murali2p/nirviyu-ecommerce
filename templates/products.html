@@ -1,6 +1,12 @@
 {% extends "base.html" %} {% block title %}Nirviyu: Products{% endblock %} {%
 block content %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
 
 <h2 class="container product-header">Health Supplements</h2>
 
@@ -10,6 +16,38 @@ block content %}
   id="searchBox"
   placeholder="Search products..."
 />
+
+
+<section class="products-banner">
+  <div class="product-banner-img-container">
+    <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{{ url_for('static', filename='uploads/calcium_brand1.png') }}" class="d-block w-100" alt="Banner 1">
+            </div>
+            <div class="carousel-item">
+                <img src="{{ url_for('static', filename='uploads/multi_mineral_brand1.png') }}" class="d-block w-100" alt="Banner 2">
+            </div>
+            <div class="carousel-item">
+                <img src="{{ url_for('static', filename='uploads/women_multi_brand1.jpg') }}" class="d-block w-100" alt="Banner 3">
+            </div>
+        </div>
+
+        <!-- Previous & Next Buttons -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>
+
+
+</section>
+
+
+
 
 <div id="productList" class="product-container container grid grid--3-cols">
   {% for product in products %}
@@ -45,7 +83,7 @@ block content %}
       {% endif %}
     </div>
     <form action="/add_to_cart/{{ product.prod_id }}" method="post">
-      <button class="product-image-button btn btn--primary">Add to Cart</button>
+      <button class="product-image-button  product-details-button btn btn--primary">Add to Cart</button>
     </form>
   </div>
 
@@ -65,11 +103,11 @@ block content %}
       <li><a href="#" class="social-icon"><ion-icon class="social-icon"name="logo-twitter"></ion-icon></a></li>
     </ul -->
     
-    <p>
+    <p class="email-link">
       Email:
       <a class="email-link" href="mailto:info@nirviyu.com"
         >info@nirviyu.com</a
-      >
+      >  | <a class="email-link" href="privacy_policy"> Privacy Policy</a>
     </p>
   
 </footer>

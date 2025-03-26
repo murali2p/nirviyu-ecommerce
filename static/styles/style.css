@@ -315,6 +315,19 @@ index-products
   padding-bottom: 0.2rem;
 }
 
+.product-banner-img-container {
+  width: 60%;
+  align-items: center;
+  margin: auto;
+  margin-bottom: 4rem;
+  box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+}
+
+.carousel-inner {
+  height: 100%;
+  width: auto;
+  justify-items: center;
+}
 /***************************
 cta Settings
 ***************************/
@@ -355,7 +368,14 @@ cta Settings
 .btn--cta {
   display: inline-block;
 }
-
+/***************************
+privacy policy settings
+***************************/
+.container privacy_policy {
+  padding: 3.2rem 3.2rem;
+  margin: 0 auto;
+  outline-width: 0.1rem;
+}
 /*************************** 
 Footer Settings 
 ***************************/
@@ -390,10 +410,13 @@ Footer Settings
   fill: #115f31;
 }
 
-.email-link {
-  font: 1.8rem;
-  color: #fff;
+.email-link,
+.email-link p {
+  font-size: 1.2rem;
+  color: #fff !important;
   text-decoration: none;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
 }
 /***************************
 privacy policy settings
@@ -523,7 +546,7 @@ Product Settings
 }
 
 .product-search {
-  width: 30%;
+  width: 30% !important;
   display: flex;
   justify-content: center;
   margin-top: 0rem;
@@ -1953,6 +1976,14 @@ health plan Settings
     display: block;
   }
 
+  .product-price1 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #02040f;
+    text-align: left;
+    padding-bottom: 0.4rem;
+  }
+
   .product-price {
     font-size: 1.2rem;
     font-weight: 500;
@@ -2038,7 +2069,13 @@ hero-section
     height: 20rem;
     display: block;
   }
-
+  .product-header {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: center;
+    padding: 3.2rem 3.2rem !important;
+  }
   /***************************
   table orders
   ***************************/
@@ -2245,5 +2282,16 @@ hero-section
     width: 250px; /* Adjust based on your image resolution */
     height: auto;
     background-color: #fff;
+  }
+
+  /***************************
+privacy policy settings
+***************************/
+  .privacy_policy,
+  .product-info-container,
+  .product-details {
+    padding: 3.2rem 3.2rem;
+    margin: 0 auto;
+    outline-width: 0.1rem;
   }
 }
