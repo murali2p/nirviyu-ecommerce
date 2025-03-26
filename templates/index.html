@@ -144,9 +144,53 @@
         </div>
         <button class="slider-btn slider-btn--next">&gt;</button>
       </section-->
-      <section class="cta cta-container grid grid--2-cols" id="know_more">
-        <form class="cta-form" method="post" action="/enquiry">
+      <section class="index-product container">   
+        <h2 class="container product-header">Our Products</h2>   
+    
+        <div class="slider-container1">
+            <button class="slider-btn1 slider-btn--prev1">&lt;</button>
+    
+            <div id="productList" class="product-container1">
+                {% for product in products %}
+                <div class="product-card1">
+                    <div>
+                        <div class="product-img">
+                            <form action="/products/{{product.prod_id}}" method="post">
+                                <button type="submit" class="product-image-button">
+                                    <img class="product-image1" src="{{ product.image_url}}" alt="{{ product.name }}" />
+                                </button>
+                            </form>
+                        </div>
+                        <h3 class="product-name1">{{ product.prod_name }}</h3>
+                        <p class="product-desc1">{{ product.description }}</p>
+    
+                        {% if product.discount > 0 %}
+                        <p class="product-price">
+                            MRP: ₹ <span class="price-strike">{{ product.price }}</span> 
+                            (<span class="price-discount">{{product.discount}}% off</span>)
+                        </p>
+                        <p class="product-price">
+                            Final Price: ₹{{ product.price - (product.price * product.discount / 100) }}
+                        </p>
+                        {% else %}
+                        <p class="product-price"><strong>MRP: ₹ {{ product.price }}</strong></p>
+                        {% endif %}
+                    </div>
+                    <form action="/add_to_cart/{{ product.prod_id }}" method="post">
+                        <button class="product-image-button btn btn--primary">Add to Cart</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+    
+            <button class="slider-btn1 slider-btn--next1">&gt;</button>
+        </div>
+    </section>
+    
 
+      <section class="cta cta-container grid grid--2-cols" id="know_more">
+        <form id="cta-enquiry" class="cta-form" method="post" action="/enquiry">
+          
           <h2 class="cta-header">Get in touch with us</h2>
           <div class = "form-fields">
 
@@ -157,7 +201,9 @@
             <label> Enquiry </label>
             <input type="text" name="message" id="message"  class="cta-input" placeholder="Enter your query" required />
             
-            <button type="submit" class="btn btn--cta">Contact Us</button>
+            
+            <!--button type="submit" class="btn btn--cta">Contact Us</button-->
+            <button type="submit" class="g-recaptcha btn btn--cta" data-sitekey="{{ recaptcha_key }}" data-callback='onSubmit' data-action='submit'>Contact Us</button>
           </div>
         </form>
           <img class="cta-img" src="../static/img/hero/lab-test.jpg" alt="Contact Us" />
@@ -420,7 +466,7 @@
           Email:
           <a class="email-link" href="mailto:info@nirviyu.com"
             >info@nirviyu.com</a
-          >
+          > | <a class="email-link" href="privacy_policy"> Privacy Policy</a
         </p>
       
     </footer>
@@ -434,4 +480,5 @@
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
     <script src="../static/scripts/slider.js"></script>
+    <script src="../static/scripts/product_slider.js"></script>
 {% endblock %}

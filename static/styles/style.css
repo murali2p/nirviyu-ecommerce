@@ -260,6 +260,60 @@ health plan Settings
   /* overflow: hidden; */
   position: relative;
 }
+/***************************
+index-products
+***************************/
+.index-product {
+  margin-top: 6rem;
+  margin-bottom: 12rem;
+}
+
+.product-container1 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  justify-items: center;
+  align-items: center;
+}
+.product-image1 {
+  width: auto; /*Ensures full width of container */
+  max-width: 250px; /*Prevents oversized images */
+  height: 20rem; /* Keeps aspect ratio */
+  display: block;
+}
+.product-card1 {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  align-items: center;
+  justify-items: center;
+  padding: 2rem 2rem !important;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 90%;
+  height: 100%;
+}
+/* Hide slider buttons by default */
+.slider-btn1 {
+  display: none;
+}
+
+.product-desc1 {
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: #4d4d4d;
+  text-align: center;
+  padding-bottom: 0.2rem;
+}
+
+.product-name1 {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #333333;
+  text-align: center;
+  padding-bottom: 0.2rem;
+}
 
 /***************************
 cta Settings
@@ -340,6 +394,58 @@ Footer Settings
   font: 1.8rem;
   color: #fff;
   text-decoration: none;
+}
+/***************************
+privacy policy settings
+***************************/
+.pp-header {
+  font-size: 3.6rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: center;
+  padding: 3.2rem 3.2rem !important;
+}
+.pp_subheader {
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--secondary-color);
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.pp_date {
+  font-size: 2rem !important;
+  font-weight: 300;
+  color: var(--secondary-color);
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.privacy_policy a,
+.privacy_policy p,
+.privacy_policy ul {
+  font-size: 1.6rem;
+  margin: 1rem 0;
+  font-weight: 300;
+}
+.privacy_policy ul {
+  padding-left: 2rem;
+}
+
+.privacy_policy h4 {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.privacy_policy {
+  box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+
+  border-radius: 12px;
+}
+
+.last-el {
+  margin-bottom: 3rem !important;
+  padding-bottom: 3rem !important;
 }
 /*************************** 
 Product Settings 
@@ -1201,7 +1307,13 @@ health plan Settings
   /***********************
   product settings
   ***********************/
-
+  .product-container1 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    justify-items: center;
+    align-items: center;
+  }
   .product-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1748,7 +1860,116 @@ health plan Settings
   }
 
   /***************************
-services settings   
+  index-product setting
+  /***************************
+
+  /* Wrapper for the slider */
+  .slider-container1 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Product container scrolls horizontally */
+  .product-container1 {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 20px;
+    padding: 10px;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    scrollbar-width: none; /* Hide scrollbar */
+
+    margin-left: 2rem;
+  }
+
+  /* Hide default scrollbar for Webkit browsers */
+  .product-container1::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Individual product cards */
+  .product-card1 {
+    /* Adjust as needed */
+    width: 250px;
+    height: 50rem; /* Ensures equal height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensures uniform layout */
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Slider buttons */
+  .slider-btn1 {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 10;
+    font-size: 20px;
+    border-radius: 50%;
+  }
+
+  .slider-btn--prev1 {
+    left: 10px;
+  }
+
+  .slider-btn--next1 {
+    right: 10px;
+  }
+
+  .product-desc1 {
+    font-size: 1rem;
+    font-weight: 300;
+    color: #4d4d4d;
+    text-align: center;
+    padding-bottom: 0.2rem;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .product-name1 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333333;
+    text-align: center;
+    padding-bottom: 0.2rem;
+    white-space: normal;
+  }
+
+  .product-image1 {
+    width: auto; /*Ensures full width of container */
+    max-width: 250px; /*Prevents oversized images */
+    height: 20rem; /* Keeps aspect ratio */
+    display: block;
+  }
+
+  .product-price {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #02040f;
+    text-align: center;
+    padding-bottom: 0.4rem;
+  }
+
+  .price-strike {
+    text-decoration: line-through;
+  }
+
+  .price-discount {
+    color: #38b000;
+  }
+  /***************************
+  services settings 
 ***************************/
   .service-header {
     font-size: 1.8rem;
@@ -1803,6 +2024,7 @@ hero-section
 
   .product-image-button {
     display: flex;
+
     justify-content: center;
     align-items: center;
     border: none;

@@ -16,6 +16,8 @@ from werkzeug.utils import secure_filename
 from rapidfuzz import process,fuzz
 import requests,json
 
+
+
 # Determine the environment (default: development)
 env = os.getenv('FLASK_ENV', 'prod')
 
@@ -74,6 +76,10 @@ recipients = ['mohanmurali.behera@gmail.com']
 
 mail = Mail(app)
 
+#reCaptcha configuration
+RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
+verify_url= os.getenv('verify_url')
 
 #shiprocet configurations
 SHIPROCKET_API_URL = os.getenv('SHIPROCKET_API_URL')
@@ -335,8 +341,19 @@ def register():
 
 @app.route('/', methods=('GET','POST'))  # define a route
 def index():
+    # connect to the MySQL server
+    connection = mysql.connector.connect(**db_config)
+    cursor = connection.cursor(dictionary=True)
+    # execute the SQL query
+    cursor.execute('SELECT a.*,b.image_url FROM products as a left join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as b on a.prod_id=b.product_id limit 3')
+    # fetch the results
+    results = cursor.fetchall()
+    # close the cursor and the connection
+    cursor.close()
+    connection.close()
+    # return the response
 
-    return render_template('index.html')
+    return render_template('index.html', products=results, recaptcha_key=RECAPTCHA_PUBLIC_KEY) 
 
 @app.route('/admin', methods=('GET','POST'))  # define a route
 @login_required
@@ -1013,31 +1030,43 @@ def upload_photos(product_id):
 @app.route('/enquiry', methods=['GET','POST'])
 def enquiry():
     if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        #phone = request.form.get('phone')
-        message = request.form.get('message')
-        connection = mysql.connector.connect(**db_config)
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("INSERT INTO enquiry (enquiry_name, enquiry_email, enquiry_content) VALUES (%s, %s, %s)", (name, email, message))
-        connection.commit()
-        cursor.close()
-        connection.close()
+        secret_response=request.form['g-recaptcha-response']
+        print(secret_response)
         
-        
-        #send email to admin
-        
-        msg = Message(f'Nirviyu: New Enquiry ', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com'])
-        msg.body = (f'Hi \n\nNew Enquiry Received. \n\nName: {name}\nEmail: {email}\nQuery:{message}\n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.***')
-        # msg.html = render_template("email_template.html", name=current_user.username)
-        mail.send(msg)
-        
-        #send email to user
-        msg = Message(f'Nirviyu: Enquiry Received',sender='info@nirviyu.com', recipients=[f'{email}'])
-        msg.body = (f'Hi {name}, \n\nYour enquiry has been received.\n\nEnquiry: {message} \n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.****')
-        mail.send(msg)
-        return redirect(url_for('index'))
+        verify_response = requests.post(url=f"{verify_url}?secret={RECAPTCHA_PRIVATE_KEY}&response={secret_response}").json()
+        if not verify_response['success']:
+            abort(400)
+        else:
+    
+            name = request.form.get('name')
+            email = request.form.get('email')
+            #phone = request.form.get('phone')
+            message = request.form.get('message')
+            connection = mysql.connector.connect(**db_config)
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute("INSERT INTO enquiry (enquiry_name, enquiry_email, enquiry_content) VALUES (%s, %s, %s)", (name, email, message))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            
+            
+            #send email to admin
+            
+            msg = Message(f'Nirviyu: New Enquiry ', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com'])
+            msg.body = (f'Hi \n\nNew Enquiry Received. \n\nName: {name}\nEmail: {email}\nQuery:{message}\n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.***')
+            # msg.html = render_template("email_template.html", name=current_user.username)
+            mail.send(msg)
+            
+            #send email to user
+            msg = Message(f'Nirviyu: Enquiry Received',sender='info@nirviyu.com', recipients=[f'{email}'])
+            msg.body = (f'Hi {name}, \n\nYour enquiry has been received.\n\nEnquiry: {message} \n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.****')
+            mail.send(msg)
+            return redirect(url_for('index'))
     return redirect(url_for('index'))
+
+@app.route('/privacy_policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode
