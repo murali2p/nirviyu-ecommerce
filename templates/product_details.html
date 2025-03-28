@@ -43,8 +43,8 @@ block content %}
   </div>
 
   <form action="/add_to_cart/{{product['prod_id']}}" method="post">
-    <p class="product-price1 prod-el">MRP: ₹ <span class="price-strike">{{ product['price'] }} </span><span class="price-discount">( {{ product['discount'] }}% Off )</span></p>
-    <p class="product-price1 prod-el">Final Price: ₹{{ product['price'] - (product['price'] * product['discount'] / 100) }}</p>
+    <p class="product-price prod-el">MRP: ₹ <span class="price-strike">{{ product['price'] }} </span><span class="price-discount">( {{ product['discount'] }}% Off )</span></p>
+    <p class="product-price prod-el">Final Price: ₹{{ product['price'] - (product['price'] * product['discount'] / 100) }}</p>
     <button
       class="product-image-button btn btn--primary product-details-button"
     >
@@ -67,7 +67,27 @@ block content %}
   <h2 class="product-details-description disclaimer">Disclaimer</h2>
   <p class="product_details_el">{{product['disclaimer']}}</p></br>
 </div>
+</section class='bottom-footer'>
+<footer class="footer">
+  <section>
+    <logo class="logo">
+      <img class="logo-img" src="../static/img/logo/logo-removebg-preview.png" alt="Nirviyu" />
+    </logo>
+    <h2>Contact Us</h2>
+    <!-- ul class="social-links">
+      <li><a href="#" class="social-icon" ><ion-icon class="social-icon" name="logo-instagram"></a></ion-icon></li>
+      <li><a href ="#" class="social-icon"><ion-icon class="social-icon" name="logo-facebook"></ion-icon></a></li>
+      <li><a href="#" class="social-icon"><ion-icon class="social-icon"name="logo-twitter"></ion-icon></a></li>
+    </ul -->
 
+    <p class="email-link" >
+      Email:
+      <a class="email-link" href="mailto:info@nirviyu.com"
+        >info@nirviyu.com</a
+      > | <a class="email-link" href="{{ url_for('privacy_policy') }}"> Privacy Policy</a>
+    </p>
+
+</footer>
 <script>
   function isMobile() {
     return window.innerWidth <= 768; // Adjust breakpoint if needed

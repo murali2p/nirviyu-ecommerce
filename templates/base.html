@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}My Website{% endblock %}</title>
+    <title>{% block title %}Nirviyu: Stay Healthy{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -11,13 +11,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../static/styles/style.css" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-    <script src="https://www.google.com/recaptcha/api.js"></script>
 
-    <script>
-      function onSubmit(token) {
-        document.getElementById("cta-enquiry").submit();
-      }
     </script>
   </head>
   <body>
@@ -76,6 +72,8 @@
       </div>
     </header>
     {% block content %}{% endblock %}
+
+  
     <script src="../static/scripts/nav.js"></script>
   </body>
 </html>

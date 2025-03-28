@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template,session,redirect,url_
 from flask_login import login_user, LoginManager, login_required, UserMixin, logout_user, current_user
 from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, EmailField
 from wtforms.validators import InputRequired, Length, ValidationError,Email
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -228,7 +228,15 @@ class User(UserMixin):
         self.username = username
         self.password = password
         self.role = role
-        
+
+#cta-form
+
+class ContactForm(FlaskForm):
+    name = StringField('name', validators=[InputRequired(), Length(min=4, max=20)])
+    email = EmailField('email', validators=[InputRequired(), Email()])
+    message = StringField('message', validators=[InputRequired(),Length(min=10, max=3000)])
+    submit = SubmitField('submit')
+   
 # registration_form
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(min=4, max=20)])
@@ -341,6 +349,7 @@ def register():
 
 @app.route('/', methods=('GET','POST'))  # define a route
 def index():
+    form=ContactForm()
     # connect to the MySQL server
     connection = mysql.connector.connect(**db_config)
     cursor = connection.cursor(dictionary=True)
@@ -353,7 +362,7 @@ def index():
     connection.close()
     # return the response
 
-    return render_template('index.html', products=results, recaptcha_key=RECAPTCHA_PUBLIC_KEY) 
+    return render_template('index.html', products=results, recaptcha_key=RECAPTCHA_PUBLIC_KEY, form=form) 
 
 @app.route('/admin', methods=('GET','POST'))  # define a route
 @login_required
@@ -719,11 +728,16 @@ def payment_success(id):
         cursor = connection.cursor()
         cursor.execute("select email from addresses where user_id =%s",(order['cust_id'],))       
         email=cursor.fetchone()
+        # send email to customer
         msg = Message(f'Nirviyu: Order Placed - {id}', sender='info@nirviyu.com', recipients=[email[0]])
         #msg.body = (f'Hi {current_user.username} \n\n You order has been placed. \n\n regards \n Team Nirivyu \n This is an auto generated email.Do not Reply.****')
         msg.html = render_template("email_template.html", name=current_user.username)
         mail.send(msg)
         
+        # send email to admin
+        msg = Message(f'Nirviyu: New Order Placed - {id}', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com','tusharbpt@yahoo.in'])
+        msg.body = (f'Hi Admin, \n\nNew order has been placed. \nReview the Order: {id} for fulfillment. \n\n regards \n Team Nirivyu \n ***This is an auto generated email.Do not Reply.***')
+        mail.send(msg)
         return render_template('payment_success.html', data=data)
     except mysql.connector.Error as err:
         return jsonify({'Sql error': str(err)})
@@ -1029,7 +1043,10 @@ def upload_photos(product_id):
 
 @app.route('/enquiry', methods=['GET','POST'])
 def enquiry():
-    if request.method == 'POST':
+    form=ContactForm()
+    # if request.method == 'POST':
+        
+    if form.validate_on_submit():
         secret_response=request.form['g-recaptcha-response']
         #print(secret_response)
         
@@ -1038,30 +1055,34 @@ def enquiry():
             abort(400)
         else:
     
-            name = request.form.get('name')
-            email = request.form.get('email')
-            #phone = request.form.get('phone')
-            message = request.form.get('message')
+            # name = request.form.get('name')
+            # email = request.form.get('email')
+            # #phone = request.form.get('phone')
+            # message = request.form.get('message')
             connection = mysql.connector.connect(**db_config)
             cursor = connection.cursor(dictionary=True)
-            cursor.execute("INSERT INTO enquiry (enquiry_name, enquiry_email, enquiry_content) VALUES (%s, %s, %s)", (name, email, message))
+            cursor.execute("INSERT INTO enquiry (enquiry_name, enquiry_email, enquiry_content) VALUES (%s, %s, %s)", (form.name.data, form.email.data, form.message.data))
             connection.commit()
             cursor.close()
             connection.close()
             
-            
+        
             #send email to admin
             
-            msg = Message(f'Nirviyu: New Enquiry ', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com'])
-            msg.body = (f'Hi \n\nNew Enquiry Received. \n\nName: {name}\nEmail: {email}\nQuery:{message}\n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.***')
+            msg = Message(f'Nirviyu: New Enquiry ', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com','tusharbpt@yahoo.in'])
+            msg.body = (f'Hi \n\nNew Enquiry Received. \n\nName: {form.name.data}\nEmail: {form.email.data}\nQuery:{form.message.data}\n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.***')
             # msg.html = render_template("email_template.html", name=current_user.username)
             mail.send(msg)
             
             #send email to user
-            msg = Message(f'Nirviyu: Enquiry Received',sender='info@nirviyu.com', recipients=[f'{email}'])
-            msg.body = (f'Hi {name}, \n\nYour enquiry has been received.\n\nEnquiry: {message} \n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.****')
+            msg = Message(f'Nirviyu: Enquiry Received',sender='info@nirviyu.com', recipients=[f'{form.email.data}'])
+            msg.body = (f'Hi {form.name.data}, \n\nYour enquiry has been received.\n\nEnquiry: {form.message.data} \n\nregards \nTeam Nirivyu \n***This is an auto generated email.Do not Reply.****')
             mail.send(msg)
-            return redirect(url_for('index'))
+            flash('Enquiry Captured! Our team will get back to you.','success')
+            return redirect(url_for('index',_anchor='know_more'))
+    else:
+        flash('Please enter the correct details','error')
+        return redirect(url_for('index',_anchor='know_more'))
     return redirect(url_for('index'))
 
 @app.route('/privacy_policy')

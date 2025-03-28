@@ -368,6 +368,30 @@ cta Settings
 .btn--cta {
   display: inline-block;
 }
+
+.close {
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.alert .close {
+  color: red; /* Default red */
+}
+
+.alert-success {
+  color: blue; /* Blue for success */
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.alert-danger {
+  color: red; /* Red for error */
+  font-size: 1.4rem;
+  text-align: center;
+}
 /***************************
 privacy policy settings
 ***************************/
@@ -380,7 +404,7 @@ privacy policy settings
 Footer Settings 
 ***************************/
 .footer {
-  background-color: #588157;
+  background: linear-gradient(to top, #000000, #4e4e4e);
   color: #dad7cd;
   padding: 3.2rem 6.4rem 3.2rem 6.4rem;
   justify-content: center;
@@ -412,8 +436,8 @@ Footer Settings
 
 .email-link,
 .email-link p {
-  font-size: 1.2rem;
-  color: #fff !important;
+  font-size: 1.4rem;
+  color: #c8a961 !important;
   text-decoration: none;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
@@ -1213,8 +1237,8 @@ health plan Settings
   Footer Settings 
   ***************************/
   .footer {
-    background-color: #dad7cd;
-    color: #417f5a;
+    background: linear-gradient(to top, #000000, #4e4e4e);
+    color: #dad7cd;
     padding: 3.2rem 3.2rem 3.2rem 3.2rem;
     margin-top: 10rem;
   }

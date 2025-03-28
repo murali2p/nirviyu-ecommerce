@@ -102,16 +102,15 @@ block content %}
       <li><a href ="#" class="social-icon"><ion-icon class="social-icon" name="logo-facebook"></ion-icon></a></li>
       <li><a href="#" class="social-icon"><ion-icon class="social-icon"name="logo-twitter"></ion-icon></a></li>
     </ul -->
-    
-    <p class="email-link">
+
+    <p class="email-link" >
       Email:
       <a class="email-link" href="mailto:info@nirviyu.com"
         >info@nirviyu.com</a
-      >  | <a class="email-link" href="privacy_policy"> Privacy Policy</a>
+      > | <a class="email-link" href="{{ url_for('privacy_policy') }}"> Privacy Policy</a>
     </p>
-  
+
 </footer>
-</section>
 <script>
   $(document).ready(function () {
     $("#searchBox").on("input", function () {
