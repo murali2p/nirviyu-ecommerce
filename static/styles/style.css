@@ -89,6 +89,7 @@ Header Settings
 
 .nav-icon {
   display: none;
+  z-index: 1000;
 }
 
 .sidebar {
@@ -1512,6 +1513,8 @@ health plan Settings
 
     font-size: 2.4rem;
     color: var(--secondary-color);
+    width: 2rem;
+    height: 2rem;
   }
 
   .sidebar {
