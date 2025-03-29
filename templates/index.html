@@ -49,9 +49,11 @@
             <a class="nav-el" href="{{ url_for('order_history') }}">Orders</a>
           </li>
           <li>
-            <a class="nav-el login-bar" href="{{ url_for('login') }}">
-              Login
-            </a>
+            {% if current_user.is_authenticated %}
+            <li><a  class="nav-el login-bar" href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+            <li><a  class="nav-el login-bar" href="{{ url_for('login') }}">Login</a></li>
+        {% endif %}
           </li>
         </ul>
       </nav>
@@ -68,7 +70,11 @@
         <a href="{{ url_for('cart') }}">Cart</a>
         <a href="{{ url_for('order_history') }}">Orders</a>
         <a href="{{ url_for('index') }}#know_more">Contact Us</a>
-        <a href="{{ url_for('login') }}">Login</a>
+        {% if current_user.is_authenticated %}
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    {% else %}
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+    {% endif %}
       </div>
     </header>
  <body>

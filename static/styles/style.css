@@ -43,6 +43,10 @@ html {
 .grid--3-cols {
   grid-template-columns: repeat(3, 1fr);
 }
+
+.grid--4-cols {
+  grid-template-columns: repeat(4, 1fr);
+}
 /***************************
 colors
 ***************************/
@@ -72,6 +76,14 @@ Header Settings
   display: flex;
   font-size: 1.5rem;
   gap: 2rem;
+  margin-bottom: 0rem !important;
+}
+
+.nav {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  justify-items: center;
 }
 
 .nav-el {
@@ -1478,6 +1490,15 @@ health plan Settings
     height: auto;
     background-color: #fff;
   }
+
+  /***************************
+  dashboard settings
+   ***************************/
+  .summary-container,
+  .graph-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1780,6 +1801,11 @@ health plan Settings
     width: 250px; /* Adjust based on your image resolution */
     height: auto;
     background-color: #fff;
+  }
+
+  .graph-container {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
   }
 }
 
@@ -2320,5 +2346,33 @@ privacy policy settings
     padding: 3.2rem 3.2rem;
     margin: 0 auto;
     outline-width: 0.1rem;
+  }
+
+  /***************************
+  dashboard settings
+  ***************************/
+  .chart-container {
+    font-size: 1rem !important;
+  }
+  .summary-container {
+    font-size: 1rem !important;
+    margin: 1rem !important;
+    padding: 1rem !important;
+    width: 100% !important;
+    row-gap: 1rem !important;
+    column-gap: 1rem !important;
+  }
+
+  .graph-el {
+    font-size: 1rem !important;
+    margin: 0rem;
+    padding: 0rem;
+  }
+
+  .card {
+    font-size: 1rem !important;
+    margin: 0rem !important;
+    padding: 1rem !important;
+    width: 100% !important;
   }
 }

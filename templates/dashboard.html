@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../static/styles/style.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        width: 90%;
+        margin: auto;
+        justify-content: center;
+        text-align: center;
+      }
+      .card {
+        display: inline-block;
+        width: 100%;
+        padding: 10px;
+        background: #f8f8f8;
+        margin: 10px;
+        text-align: center;
+        font-size: 1.5rem;
+      }
+
+      .graph-container {
+        column-gap: 20px;
+        row-gap: 20px;
+      }
+      .graph-el {
+        width: 50rem !important;
+        height: auto !important;
+        margin: 10px !important;
+        font-size: 2.5rem !important;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        background: #fff; /* White background */
+        padding: 20px; /* Space around the graph */
+        border-radius: 12px; /* Rounded edges */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        margin: 20px auto; /* Space between graphs */
+        max-width: 100%; /* Adjust width */
+      }
+      .graph-header {
+        padding: 3rem 3rem 3rem 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="container service-provider-header graph-header">Dashboard</h2>
+
+      <!-- Summary Cards -->
+      <div class="container grid grid--4-cols summary-container">
+        <div class="card">Orders Today: <span id="orders_today">0</span></div>
+        <div class="card">
+          Shipped Orders: <span id="shipped_orders">0</span>
+        </div>
+        <div class="card">
+          Pending Shipments: <span id="pending_shipments">0</span>
+        </div>
+        <div class="card">Revenue: ₹<span id="revenue">0</span></div>
+      </div>
+      <div class="container grid grid--2-cols graph-container">
+        <!-- Order Trends -->
+        <div class="chart-container">
+          <canvas class="graph-el" id="ordersChart"></canvas>
+        </div>
+        <!-- Shipment Status -->
+        <div class="chart-container">
+          <canvas class="graph-el" id="shipmentChart"></canvas>
+        </div>
+        <!-- Top-Selling Products -->
+        <div class="chart-container">
+          <canvas class="graph-el" id="productsChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function getFontSize() {
+        if (window.innerWidth < 600) {
+          return 10; // Small screen
+        } else if (window.innerWidth < 1024) {
+          return 14; // Medium screen
+        } else {
+          return 18; // Large screen
+        }
+      }
+      // Update font size on window resize
+      window.addEventListener("resize", () => {
+        ordersChart.options.scales.x.ticks.font.size = getFontSize();
+        ordersChart.options.scales.y.ticks.font.size = getFontSize();
+        ordersChart.options.plugins.legend.labels.font.size = getFontSize();
+        ordersChart.update();
+      });
+
+      fetch("/dashboard-data")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data); // For debugging
+          // Update Summary Cards
+          document.getElementById("orders_today").innerText =
+            data.summary.total_orders_today;
+          document.getElementById("shipped_orders").innerText =
+            data.summary.total_shipped;
+          document.getElementById("pending_shipments").innerText =
+            data.summary.pending_shipments;
+          let revenue = Number(data.summary.revenue) || 0;
+          document.getElementById("revenue").innerText = data.summary.revenue;
+
+          // Orders per Day Chart
+          const ordersCtx = document
+            .getElementById("ordersChart")
+            .getContext("2d");
+          new Chart(ordersCtx, {
+            type: "line",
+            data: {
+              labels: data.orders_per_day.map((item) => item.order_day),
+              datasets: [
+                {
+                  label: "Orders per Day",
+                  data: data.orders_per_day.map((item) => item.total_orders),
+                  borderColor: "blue",
+                  fill: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: "Date",
+                    font: { size: getFontSize() }, // ⬆ Increase X-axis title font size
+                  },
+                  ticks: { font: { size: getFontSize() } }, // ⬆ Increase X-axis labels font size
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: "Total Orders",
+                    font: { size: getFontSize() }, // ⬆ Increase Y-axis title font size
+                  },
+                  ticks: { font: { size: getFontSize() } }, // ⬆ Increase Y-axis labels font size
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    font: { size: getFontSize() }, // ⬆ Increase legend font size
+                  },
+                },
+              },
+            },
+          });
+
+          // Shipment Status Chart
+          const shipmentCtx = document
+            .getElementById("shipmentChart")
+            .getContext("2d");
+          const statuses = [
+            ...new Set(data.orders_by_status.map((item) => item.status)),
+          ];
+          const groupedData = statuses.map((status) => ({
+            label: status,
+            data: data.orders_by_status
+              .filter((item) => item.status === status)
+              .map((item) => item.count),
+            backgroundColor:
+              status === "Pending"
+                ? "red"
+                : status === "Shipped"
+                ? "orange"
+                : "green",
+          }));
+
+          new Chart(shipmentCtx, {
+            type: "bar",
+            data: {
+              labels: [
+                ...new Set(data.orders_by_status.map((item) => item.order_day)),
+              ],
+              datasets: groupedData,
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: "Shipping Status",
+                    font: { size: getFontSize() }, // ⬆ X-axis title font size
+                  },
+                  ticks: { font: { size: getFontSize() } }, // ⬆ X-axis labels font size
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: "Order Count",
+                    font: { size: getFontSize() }, // ⬆ Y-axis title font size
+                  },
+                  ticks: { font: { size: getFontSize() } }, // ⬆ Y-axis labels font size
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    font: { size: getFontSize() }, // ⬆ Legend font size
+                  },
+                },
+                tooltip: {
+                  bodyFont: { size: getFontSize() }, // ⬆ Tooltip text size
+                  titleFont: { size: getFontSize() }, // ⬆ Tooltip title size
+                },
+              },
+            },
+          });
+
+          // Top Products Chart
+          const productsCtx = document
+            .getElementById("productsChart")
+            .getContext("2d");
+          new Chart(productsCtx, {
+            type: "bar",
+            data: {
+              labels: data.top_products.map((item) => item.product_name),
+              datasets: [
+                {
+                  label: "Total Sold",
+                  data: data.top_products.map((item) => item.total_sold),
+                  backgroundColor: "purple",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: "Product Ids",
+                    font: { size: getFontSize() }, // ⬆ X-axis title font size
+                  },
+                  ticks: { font: { size: getFontSize() } }, // ⬆ X-axis labels font size
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: "No of Orders",
+                    font: { size: getFontSize() }, // ⬆ Y-axis title font size
+                  },
+                  ticks: { font: { size: getFontSize() } }, // ⬆ Y-axis labels font size
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    font: { size: getFontSize() }, // ⬆ Legend font size
+                  },
+                },
+                tooltip: {
+                  bodyFont: { size: getFontSize() }, // ⬆ Tooltip text size
+                  titleFont: { size: getFontSize() }, // ⬆ Tooltip title size
+                },
+              },
+            },
+          });
+        });
+    </script>
+  </body>
+</html>

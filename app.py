@@ -377,6 +377,13 @@ def login():
             return 'user_not_found'
     return render_template('login.html', form=form)
 
+# logout route
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
 # Handle user registration:
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -1143,6 +1150,59 @@ def enquiry():
 @app.route('/privacy_policy')
 def privacy_policy():
     return render_template('privacy_policy.html')
+
+
+@app.route('/dashboard')
+@login_required
+@roles_required('admin')
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/dashboard-data')
+def dashboard_data():
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor(dictionary=True)
+    
+    # Orders per day
+    cursor.execute("SELECT DATE_FORMAT(created_at, '%d-%b') AS order_day, COUNT(*) AS total_orders FROM orders GROUP BY order_day ORDER BY STR_TO_DATE(order_day, '%d-%b') desc limit 10")
+    orders_per_day = cursor.fetchall()
+
+    # Orders per shipment status
+    cursor.execute("SELECT DATE_FORMAT(o.checkout,'%d-%b') AS order_day, s.status, COUNT(*) AS count FROM order_checkout o JOIN shipment s ON o.order_id = s.internal_order_id GROUP BY order_day, s.status ORDER BY order_day")
+    orders_by_status = cursor.fetchall()
+
+    # Top-selling products
+    cursor.execute("SELECT p.prod_id as product_name, SUM(o.qty) AS total_sold FROM orders o JOIN products p ON o.prod_id = p.prod_id GROUP BY product_name ORDER BY total_sold DESC LIMIT 10")
+    top_products = cursor.fetchall()
+
+    # Summary metrics
+    cursor.execute("SELECT COUNT(*) AS total_orders_today FROM order_checkout WHERE DATE(checkout) = CURDATE() and payment_status='success';")
+    total_orders_today = cursor.fetchone()['total_orders_today']
+
+    cursor.execute("SELECT COUNT(*) AS total_shipped FROM shipment WHERE status LIKE '%PICK%';")
+    total_shipped = cursor.fetchone()['total_shipped']
+
+    cursor.execute("SELECT COUNT(*) AS pending_shipments FROM shipment WHERE status = 'NEW';")
+    pending_shipments = cursor.fetchone()['pending_shipments']
+
+    cursor.execute("SELECT coalesce(SUM(subtotal),0) AS revenue FROM orders;")
+    revenue = cursor.fetchone()['revenue']
+
+    conn.close()
+    
+    return jsonify({
+        "orders_per_day": orders_per_day,
+        "orders_by_status": orders_by_status,
+        "top_products": top_products,
+        "summary": {
+            "total_orders_today": total_orders_today,
+            "total_shipped": total_shipped,
+            "pending_shipments": pending_shipments,
+            "revenue": revenue
+        }
+    })
+
+
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode

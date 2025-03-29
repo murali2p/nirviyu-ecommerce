@@ -23,9 +23,9 @@
       </logo>
       <nav class="nav">
         <ul class="nav-list">
-          <li>
+          <!--li>
             <a class="nav-el" href="{{ url_for('index_admin') }}">Home</a>
-          </li>
+          </li-->
           <li>
             <a class="nav-el" href="{{ url_for('view_product') }}"
               >View Product</a
@@ -56,7 +56,9 @@
           <li>
             <a class="nav-el" href="{{ url_for('order_history') }}">Orders</a>
           </li-->
-          <li><a class="nav-el login-bar" href="login"> Login </a></li>
+          <li>
+            <a class="nav-el" href="{{ url_for('dashboard') }}"> Dashboard </a>
+          </li>
         </ul>
       </nav>
       <svg
@@ -119,7 +121,7 @@
         <!--a href="{{ url_for('cart') }}">Cart</a>
         <a href="{{ url_for('order_history') }}">Orders</a>
         <a href="{{ url_for('index_admin') }}#know_more">Contact Us</a-->
-        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
       </div>
     </header>
     {% block content %}{% endblock %}
