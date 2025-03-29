@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from rapidfuzz import process,fuzz
 import requests,json
+from flask_apscheduler import APScheduler
 
 
 
@@ -47,9 +48,42 @@ RAZORPAY_WEBHOOK_SECRET = os.getenv('RAZORPAY_WEBHOOK_SECRET')
 
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
-data = { "amount": 500, "currency": "INR", "receipt": "order_rcptid_11" }
-payment = razorpay_client.order.create(data=data)
+# initialize the scheduler
+scheduler = APScheduler()
 
+# UPDATE SHIPPING STATUS IN MYSQL
+def update_shipping_status(order_id):
+    """Update shipping status in MySQL"""
+    if order_id:
+
+        new_status = get_shipping_status(order_id)
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        # Update MySQL with new status
+        update_query = "UPDATE shipment SET status = %s WHERE sr_order_id = %s"
+        cursor.execute(update_query, (new_status, order_id))
+        conn.commit()
+
+# Function to update shipping status in the database
+def auto_update_shipping_status():
+    """Check and update shipping status for all pending shipments"""
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+
+
+    cursor.execute("SELECT sr_order_id FROM shipment WHERE status != 'DELIVERED' or status != 'CANCELED' or staus is not null")
+    pending_orders = cursor.fetchall()
+
+    for order in pending_orders:
+        update_shipping_status(order[0])
+    
+    cursor.close()
+    conn.close()
+    print("Updated shipping status for all pending orders.")
+
+# Schedule the job every 10 minutes
+scheduler.add_job(id="auto_update_shipping", func=auto_update_shipping_status, trigger="interval", minutes=60)
+scheduler.start()
 
 
 # SQl Database Configuration #
@@ -86,6 +120,8 @@ SHIPROCKET_API_URL = os.getenv('SHIPROCKET_API_URL')
 SR_EMAIL = os.getenv('SR_EMAIL')
 SR_PASSWORD = os.getenv('SR_PASSWORD')
 
+
+# shiprocket  api token generation
 def get_shiprocket_token():
     url = f"{SHIPROCKET_API_URL}/auth/login"
     payload = {"email": SR_EMAIL, "password": SR_PASSWORD}
@@ -200,6 +236,25 @@ def create_shiprocket_order(order_details):
     
     return response.json()
 
+def get_shipping_status(shipment_id):
+    """Fetch current shipping status from Shiprocket"""
+    token= get_shiprocket_token()
+    #print(token)
+    #print(shipment_id)
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {token}"
+    }
+
+    response = requests.get(f"{SHIPROCKET_API_URL}/orders/show/{shipment_id}", headers=headers)
+    #print(response.json())
+    if response.status_code == 200:
+        tracking_data = response.json()
+        
+        status = tracking_data.get("data", {}).get("status", "Unknown")
+        return status
+    else:
+        return "Error"
 
 
 @app.template_filter('to_float')
@@ -806,7 +861,7 @@ def order_history():
     try:
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("select  og.order_id, og.updated_at as order_date, oc.payment_status,cast(avg(og.amount) as decimal(20,2)) as amount, group_concat(p.prod_name separator ', ') as product_details from order_generate as og inner join orders as o on o.order_id = og.order_id inner join products as p on p.prod_id = o.prod_id inner join order_checkout as oc on oc.order_id = og.order_id where o.cust_id = %s and oc.payment_status ='success' group by 1,2,3", (current_user.id,))
+        cursor.execute("select  og.order_id, og.updated_at as order_date, oc.payment_status,cast(avg(og.amount) as decimal(20,2)) as amount, group_concat(p.prod_name separator ', ') as product_details,s.status as shipment_status from order_generate as og inner join orders as o on o.order_id = og.order_id inner join products as p on p.prod_id = o.prod_id inner join order_checkout as oc on oc.order_id = og.order_id inner join shipment as s on s.internal_order_id=og.order_id where o.cust_id = %s and oc.payment_status ='success' group by 1,2,3,6", (current_user.id,))
         orders = cursor.fetchall()
         cursor.close()
         connection.close()

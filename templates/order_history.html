@@ -10,9 +10,10 @@
           <tr>
             <th>Order ID</th>
             <th>Order Date</th>
-            <th>Order Status</th>
+            <!--th>Order Status</th-->
             <th>Order Total</th>
             <th>Order Details</th>
+            <th>Shipment Status</th>
           </tr>
         </thead>
         <tbody>
@@ -20,9 +21,10 @@
           <tr>
             <td>{{ order.order_id }}</td>
             <td>{{ order.order_date }}</td>
-            <td>{{ order.payment_status }}</td>
+            <!--td>{{ order.payment_status }}</td-->
             <td>{{ order.amount }}</td>
             <td>{{ order.product_details }}</td>
+            <td>{{ order.shipment_status }}</td>
           </tr>
           {% endfor %}
         </tbody>
