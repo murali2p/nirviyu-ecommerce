@@ -71,7 +71,7 @@ def auto_update_shipping_status():
     cursor = conn.cursor()
 
 
-    cursor.execute("SELECT sr_order_id FROM shipment WHERE status != 'DELIVERED' or status != 'CANCELED' or staus is not null")
+    cursor.execute("SELECT sr_order_id FROM shipment WHERE status != 'DELIVERED' or status != 'CANCELED' or status is not null")
     pending_orders = cursor.fetchall()
 
     for order in pending_orders:
@@ -82,7 +82,7 @@ def auto_update_shipping_status():
     print("Updated shipping status for all pending orders.")
 
 # Schedule the job every 10 minutes
-scheduler.add_job(id="auto_update_shipping", func=auto_update_shipping_status, trigger="interval", minutes=60)
+scheduler.add_job(id="auto_update_shipping", func=auto_update_shipping_status, trigger="interval", minutes=50)
 scheduler.start()
 
 
