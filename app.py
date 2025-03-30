@@ -1176,16 +1176,16 @@ def dashboard_data():
     top_products = cursor.fetchall()
 
     # Summary metrics
-    cursor.execute("SELECT COUNT(*) AS total_orders_today FROM order_checkout WHERE DATE(checkout) = CURDATE() and payment_status='success';")
+    cursor.execute("SELECT COUNT(*) AS total_orders_today FROM order_checkout WHERE DATE(checkout) = CURDATE() and payment_status='success'")
     total_orders_today = cursor.fetchone()['total_orders_today']
 
-    cursor.execute("SELECT COUNT(*) AS total_shipped FROM shipment WHERE status LIKE '%PICK%';")
+    cursor.execute("SELECT COUNT(*) AS total_shipped FROM shipment WHERE status LIKE '%PICK%'")
     total_shipped = cursor.fetchone()['total_shipped']
 
-    cursor.execute("SELECT COUNT(*) AS pending_shipments FROM shipment WHERE status = 'NEW';")
+    cursor.execute("SELECT COUNT(*) AS pending_shipments FROM shipment WHERE status = 'NEW'")
     pending_shipments = cursor.fetchone()['pending_shipments']
 
-    cursor.execute("SELECT coalesce(SUM(subtotal),0) AS revenue FROM orders;")
+    cursor.execute("SELECT coalesce(SUM(subtotal),0) AS revenue FROM orders DATE(created_at) = CURDATE()")
     revenue = cursor.fetchone()['revenue']
 
     conn.close()

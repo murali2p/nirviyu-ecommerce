@@ -113,19 +113,19 @@ Header Settings
 hero Settings
 ***************************/
 .banner {
-  background: linear-gradient(to bottom, white, #a9e34b); /* Example gradient */
+  /*background: linear-gradient(to bottom, white, #a9e34b);*/ /* Example gradient */
   margin: 0 0 !important;
 }
 .hero {
   justify-content: center;
   align-items: center;
-  padding: 9.6rem 6.4rem 9.6rem 6.4rem !important;
+  padding: 2.4rem 6.4rem 2.4rem 6.4rem !important;
+  box-shadow: 0rem 0.5rem 1rem 0.1rem rgba(0, 0, 0, 0.137);
 }
 
 .hero-img {
   width: 100%;
   height: auto;
-  opacity: 0.7;
 }
 
 .primary-header {
@@ -333,7 +333,13 @@ index-products
   align-items: center;
   margin: auto;
   margin-bottom: 4rem;
-  box-shadow: 0 0 1.2rem 0.2rem rgba(0, 0, 0, 0.137);
+}
+
+.product-banner-img-container1 {
+  width: 80%;
+  align-items: center;
+  margin: auto;
+  margin-bottom: 4rem;
 }
 
 .carousel-inner {
