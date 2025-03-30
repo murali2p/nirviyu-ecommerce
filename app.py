@@ -1185,7 +1185,7 @@ def dashboard_data():
     cursor.execute("SELECT COUNT(*) AS pending_shipments FROM shipment WHERE status = 'NEW'")
     pending_shipments = cursor.fetchone()['pending_shipments']
 
-    cursor.execute("SELECT coalesce(SUM(subtotal),0) AS revenue FROM orders DATE(created_at) = CURDATE()")
+    cursor.execute("SELECT coalesce(SUM(subtotal),0) AS revenue FROM orders where DATE(created_at) = CURDATE()")
     revenue = cursor.fetchone()['revenue']
 
     conn.close()
