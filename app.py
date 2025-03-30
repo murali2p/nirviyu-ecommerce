@@ -1164,8 +1164,9 @@ def dashboard_data():
     cursor = conn.cursor(dictionary=True)
     
     # Orders per day
-    cursor.execute("SELECT DATE_FORMAT(created_at, '%d-%b') AS order_day, COUNT(*) AS total_orders FROM orders GROUP BY order_day ORDER BY STR_TO_DATE(order_day, '%d-%b') desc limit 10")
+    cursor.execute("SELECT DATE_FORMAT(created_at, '%d-%b') AS order_day, COUNT(*) AS total_orders FROM orders GROUP BY order_day ORDER BY order_day desc limit 10")
     orders_per_day = cursor.fetchall()
+    #print(orders_per_day)
 
     # Orders per shipment status
     cursor.execute("SELECT DATE_FORMAT(o.checkout,'%d-%b') AS order_day, s.status, COUNT(*) AS count FROM order_checkout o JOIN shipment s ON o.order_id = s.internal_order_id GROUP BY order_day, s.status ORDER BY order_day")
