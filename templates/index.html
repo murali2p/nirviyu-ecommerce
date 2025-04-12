@@ -107,10 +107,10 @@
         <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="{{ url_for('static', filename='uploads/calcium_brand_1500.webp') }}" class="d-block w-100" alt="Banner 1">
+                    <img src="{{ url_for('static', filename='uploads/calcium_brand_5.png') }}" class="d-block w-100" alt="Banner 1">
                 </div>
                 <div class="carousel-item">
-                    <img src="{{ url_for('static', filename='uploads/men_1500.webp') }}" class="d-block w-100" alt="Banner 2">
+                    <img src="{{ url_for('static', filename='uploads/calcium_brand_6.png') }}" class="d-block w-100" alt="Banner 2">
                 </div>
                 <div class="carousel-item">
                     <img src="{{ url_for('static', filename='uploads/women_1500.webp') }}" class="d-block w-100" alt="Banner 3">
@@ -152,11 +152,11 @@
 
     </div-->
 
-    <!--section class="services-list" id="services">
+    <section class="services-list" id="services">
       <h2 class="service-header">Our Services</h2>
       <ul class="services">
         <li class="service-item">
-          <svg
+          <a href ="{{ url_for('products') }}" ><svg
             class = "service-icon xmlns="http://www.w3.org/2000/svg"
             width="32"
             height="32"
@@ -166,15 +166,19 @@
             <path
               d="M72,144H32a8,8,0,0,1,0-16H67.72l13.62-20.44a8,8,0,0,1,13.32,0l25.34,38,9.34-14A8,8,0,0,1,136,128h24a8,8,0,0,1,0,16H140.28l-13.62,20.44a8,8,0,0,1-13.32,0L88,126.42l-9.34,14A8,8,0,0,1,72,144ZM178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,.75,0,1.5,0,2.25a8,8,0,1,0,16-.5c0-.58,0-1.17,0-1.75A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46c0,53.61-77.76,102.15-96,112.8-10.83-6.31-42.63-26-66.68-52.21a8,8,0,1,0-11.8,10.82c31.17,34,72.93,56.68,74.69,57.63a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40Z"
             ></path>
-          </svg>
-          <span class="service-primary-heading">Health check-up</span
-          ><span class="service-description"
+          </svg></a>
+          <a href ="{{ url_for('products') }}" class = "service-product-link">
+          <span class="service-primary-heading">Health Products</span
+          ></a>
+          
+          <!--span class="service-description"
             >Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime,
             sunt tempore nobis facere necessitatibus pariatur sequi totam
             quis. </span
-          >
+          -->
         </li>
         <li class="service-item">
+        <a href ="{{ url_for('lab_tests') }}" >
           <svg
             class = "service-icon xmlns="http://www.w3.org/2000/svg"
             width="32"
@@ -185,14 +189,19 @@
             <path
               d="M237.66,66.34l-48-48a8,8,0,0,0-11.32,11.32L196.69,48,168,76.69,133.66,42.34a8,8,0,0,0-11.32,11.32L128.69,60l-84,84A15.86,15.86,0,0,0,40,155.31v49.38L18.34,226.34a8,8,0,0,0,11.32,11.32L51.31,216h49.38A15.86,15.86,0,0,0,112,211.31l84-84,6.34,6.35a8,8,0,0,0,11.32-11.32L179.31,88,208,59.31l18.34,18.35a8,8,0,0,0,11.32-11.32ZM100.69,200H56V155.31l18-18,20.34,20.35a8,8,0,0,0,11.32-11.32L85.31,126,98,113.31l20.34,20.35a8,8,0,0,0,11.32-11.32L109.31,102,140,71.31,184.69,116Z"
             ></path></svg
-          ><span class="service-primary-heading">Lab tests </span
-          ><span class="service-description"
+          >
+          </a>  
+          <a href ="{{ url_for('lab_tests') }}" class = "service-product-link">
+          <span class="service-primary-heading">Lab tests </span
+          >
+          </a>
+          <!--span class="service-description"
             >Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime,
             sunt tempore nobis facere necessitatibus pariatur sequi totam
             quis. </span
-          >
+          -->
         </li>
-        <li class="service-item">
+        <!--li class="service-item">
           <svg
             class = "service-icon xmlns="http://www.w3.org/2000/svg"
             width="32"
@@ -227,10 +236,10 @@
             sunt tempore nobis facere necessitatibus pariatur sequi totam
             quis.</span
           >
-        </li>
+        </li-->
       </ul>
     </section>
-    <section class="popular-health-plans">
+    <!--section class="popular-health-plans">
       <h2 class="popular-plan-header service-header">Our popular Health-Check plans</h2>
       <button class="slider-btn slider-btn--prev">&lt;</button>
       <div class="health-plan-items container">

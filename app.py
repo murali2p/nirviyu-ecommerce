@@ -16,6 +16,7 @@ from werkzeug.utils import secure_filename
 from rapidfuzz import process,fuzz
 import requests,json
 from flask_apscheduler import APScheduler
+from thyrocare import get_thyrocare_products,get_thyrocare_test_detail,check_pincode_availability_thyrocare
 
 
 
@@ -1204,6 +1205,89 @@ def dashboard_data():
     })
 
 
+@app.route('/lab_tests')
+def lab_tests():
+    return render_template('lab_tests.html')
+
+@app.route('/get_lab_products', methods=['GET'])
+def get_products():
+    provider = request.args.get('provider', '')
+    query = request.args.get('query', '').lower()
+    connection=mysql.connector.connect(**db_config)
+    cursor = connection.cursor(dictionary=True)
+
+    if not provider or not query:
+        return jsonify([])
+
+    sql = """
+        SELECT tc_prod_name FROM thyrocare_tests
+        WHERE LOWER(tc_prod_name) LIKE %s
+        LIMIT 10
+    """
+    cursor.execute(sql, (f"%{query}%",))
+    result = cursor.fetchall()
+    
+    connection.close()
+    cursor.close()
+
+    # Extract product names only
+    suggestions = [row['tc_prod_name'] for row in result]
+    return jsonify(suggestions)
+
+@app.route('/search_lab_details', methods=['POST'])
+def search_details():
+    provider = request.form.get('provider')
+    product = request.form.get('product')
+    
+    connection=mysql.connector.connect(**db_config)
+    cursor = connection.cursor(dictionary=True)
+
+    if not provider or not product:
+        return jsonify({'error': 'Provider and Product are required'}), 400
+
+    sql = """
+        SELECT * FROM thyrocare_tests
+        WHERE tc_prod_name = %s
+        LIMIT 1
+    """
+    cursor.execute(sql, (product,))
+    result = cursor.fetchone()
+
+    if not result:
+        return jsonify({'error': 'No product found'}), 404
+
+    return jsonify(result)
+
+@app.route('/book_lab_test', methods=['POST'])
+def book_now():
+    provider = request.form.get('provider')
+    product = request.form.get('product')
+
+    # Optional: Validate and check if already booked
+    # sql = "INSERT INTO bookings (provider_name, product_name) VALUES (%s, %s)"
+    # cursor.execute(sql, (provider, product))
+    # db.commit()
+
+    return jsonify({'message': 'Booking successful!'})
+
+
+@app.route('/pincode_check_thyrocare', methods=['POST'])
+def pincode_check():
+    pincode = request.form.get('pincode')
+    
+    response = check_pincode_availability_thyrocare(pincode)
+    print(response)
+    if response['response'] == 'Success':
+        result = {
+            'serviceable': True,
+            'message': f'Pincode {pincode} is serviceable',
+        }
+    else:
+        result = {
+            'serviceable': False,
+            'message': 'pincode is not serviceable'
+        }
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode
