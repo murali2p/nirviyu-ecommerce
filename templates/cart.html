@@ -1,52 +1,424 @@
 {% extends 'base.html'%} {% block title %}Shopping Cart{% endblock %} {% block
 content %}
+
 <div class="cart-container container">
-  <h2 class="cart-header">Shopping Cart</h2>
-  {% if cart %} {% for item in cart %}
-  <div class="cart-item">
-    <form action="/products/{{item.prod_id}}" method="post">
-      <button type="submit" class="cart-button-image">
-        <img class="cart-img" src="{{ item.image_url}}" alt="{{ item.name }}" />
-      </button>
-    </form>
-    <div class="cart-item-details">
-      <p class="cart-item-name">{{ item.prod_name }}</p>
-      <p class="cart-item-desc">{{ item.description }}</p>
+  {% if cart %}
+  <div id="productCart">
+    <h2 class="cart-header">Product Cart</h2>
+    {% for item in cart %}
+
+    <div class="cart-item">
+      <form action="/products/{{item.prod_id}}" method="post">
+        <button type="submit" class="cart-button-image">
+          <img
+            class="cart-img"
+            src="{{ item.image_url}}"
+            alt="{{ item.name }}"
+          />
+        </button>
+      </form>
+      <div class="cart-item-details">
+        <p class="cart-item-name">{{ item.prod_name }}</p>
+        <p class="cart-item-desc">{{ item.description }}</p>
+      </div>
+      <p class="cart-item-price">₹ {{ item.price }}</p>
+      <p class="cart-item-quantity">Qty: {{ item.qty }}</p>
+      <form action="/remove_from_cart/{{ item.prod_id }}" method="post">
+        <button class="cart-remove-button">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+      </form>
     </div>
-    <p class="cart-item-price">₹ {{ item.price }}</p>
-    <p class="cart-item-quantity">Qty: {{ item.qty }}</p>
-    <form action="/remove_from_cart/{{ item.prod_id }}" method="post">
-      <button class="cart-remove-button">
-        <ion-icon name="trash-outline"></ion-icon>
-      </button>
-    </form>
-  </div>
-  {% endfor %}
-  <p class="cart-mrp">Total Price: ₹ {{mrp}}</p>
-  <p class="cart-discount">Discount: ₹ {{discount}}</p>
-  <p class="cart-total">Price After Discount: ₹ {{total_amt}}</p>
-  <div class="cart-buttons">
-    <button class="btn btn--primary">
-      <a href="/products" class="cont-shopping"> Continue Shopping</a>
-    </button>
-    <form action="/address" method="post">
+    {% endfor %}
+    <p class="cart-mrp">Total Price: ₹ {{mrp}}</p>
+    <p class="cart-discount">Discount: ₹ {{discount}}</p>
+    <p class="cart-total">Price After Discount: ₹ {{total_amt}}</p>
+    <div class="cart-buttons">
       <button class="btn btn--primary">
-        Confirm Shipping Address to place order
+        <a href="/products" class="cont-shopping"> Continue Shopping</a>
       </button>
-    </form>
+      <form action="/address" method="post">
+        <button class="btn btn--primary">
+          Confirm Shipping Address to place order
+        </button>
+      </form>
+    </div>
+    <hr />
+    {% endif %}
   </div>
-  {% else %}
-  <p>Your cart is empty.</p>
-  {% endif %}
+  <!-- === LAB TEST SECTION === -->
+
+  {% if lab_cart %}
+  <div id="labCart" class="container cart-container">
+    <h2 class="cart-header" style="margin-top: 50px">Lab Test Cart</h2>
+    <h3>🧪 Lab tests/profiles</h3>
+    {% for test in lab_cart %}
+    <div class="cart-item">
+      <form action="/labtests/{{ test.test_id }}" method="post">
+        <button type="submit" class="cart-button-image">
+          <img
+            class="cart-img"
+            src="{{ test.image_url }}"
+            alt="{{ test.test_name }}"
+          />
+        </button>
+      </form>
+      <div class="cart-item-details">
+        <p class="cart-item-name">{{ test.tc_prod_name }}</p>
+        <p class="cart-item-desc">Total tests: {{ test.tc_test_Count}}</p>
+      </div>
+      <p class="cart-item-price">₹ {{ test.price }}</p>
+      <form
+        action="/remove_from_cart_thyrocare/{{ test.tc_prod_id }}"
+        method="post"
+      >
+        <button class="cart-remove-button">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+      </form>
+    </div>
+    {% endfor %}
+    <p class="cart-total">Total: ₹ {{ lab_total_amt }}</p>
+    <div class="cart-buttons">
+      <button class="btn btn--primary" id="open-lab-form">
+        Book Lab Tests
+      </button>
+    </div>
+
+    <p style="margin-top: 20px; font-size: 0.8rem; color: #888">
+      ** Prices are subject to change based on the options selected during
+      booking.
+    </p>
+    {% endif %} {% if not cart and not lab_cart %}
+    <p class="container" style="font-size: 20px; text-align: center">
+      Your cart is empty.
+    </p>
+
+    {% endif %}
+    <!-- Slide-in Lab Test Booking Form -->
+    <form id="lab-order-form" class="lab-form-container">
+      <!-- Date, Pincode, Slot stuff -->
+      <label for="pincode">Pincode <span style="color: red">*</span></label>
+      <input
+        type="text"
+        id="pincode"
+        name="pincode"
+        required
+        maxlength="6"
+        pattern="\d{6}"
+        class="form-control"
+      />
+
+      <!-- Appointment Date -->
+      <label for="appointment_date">Appointment Date:</label>
+      <input
+        type="date"
+        name="appointment_date"
+        id="appointment_date"
+        required
+      />
+      <!-- Slot selection -->
+      <div
+        id="slot-selection"
+        class="slot-options"
+        style="margin: 1rem 0"
+      ></div>
+      <input type="hidden" name="selected_slot" id="selected_slot" />
+
+      <div id="hardcopy-option" style="display: none; margin-top: 15px">
+        <p>Do you want a hardcopy of the report?</p>
+        <div class="btn-group" id="hardcopy-choice">
+          <button type="button" class="btn btn--secondary" data-value="1">
+            Yes
+          </button>
+          <button type="button" class="btn btn--secondary" data-value="0">
+            No
+          </button>
+        </div>
+        <input type="hidden" name="hardcopy" id="hardcopy" />
+      </div>
+
+      <div
+        id="pre-invoice-section"
+        style="display: none; margin-top: 10px"
+      ></div>
+
+      <div id="patient-details" style="display: none; margin-top: 10px">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="age">Age:</label>
+        <input type="Number" id="age" name="age" required />
+
+        <label for="gender">Gender:</label>
+        <select name="gender" required>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+
+        <label for="report">Report Required:</label>
+        <select name="report" required>
+          <option value="Y">Yes</option>
+          <option value="N">No</option>
+        </select>
+
+        <label for="phone">Phone Number:</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          required
+          maxlength="10"
+          pattern="[1-9][0-9]{9}"
+        />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" />
+
+        <label for="address">Address:</label>
+        <textarea name="address" id="address" rows="3" required></textarea>
+      </div>
+
+      <button type="button" id="place-order-btn" style="display: none">
+        Place Order
+      </button>
+
+      <!-- Close icon (top right corner of the sliding form) -->
+      <span
+        id="close-lab-form-icon"
+        style="
+          position: absolute;
+          top: 10px;
+          right: 15px;
+          font-size: 24px;
+          cursor: pointer;
+        "
+        >&times;</span
+      >
+    </form>
+
+    <p id="productCartData" style="display: none">{{ cart }}</p>
+    <p id="labCartData" style="display: none">{{ lab_cart }}</p>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const productCartSection = document.getElementById("productCart");
+        const labCartSection = document.getElementById("labCart");
+
+        const hasProductCart =
+          document.getElementById("productCartData").innerText.trim().length >
+          0;
+        const hasLabCart =
+          document.getElementById("labCartData").innerText.trim().length > 0;
+
+        productCartSection.style.display = hasProductCart ? "block" : "none";
+        labCartSection.style.display = hasLabCart ? "block" : "none";
+      });
+    </script>
+
+    <script>
+      const openFormBtn = document.getElementById("open-lab-form");
+      const closeFormBtn = document.getElementById("close-lab-form");
+      const closeFormIcon = document.getElementById("close-lab-form-icon");
+      const labForm = document.getElementById("lab-order-form");
+      const dateInput = document.getElementById("appointment_date");
+      const pincodeInput = document.getElementById("pincode");
+      const slotSection = document.getElementById("slot-selection");
+      const selectedSlotInput = document.getElementById("selected_slot");
+      const hardcopyButtons = document.querySelectorAll(
+        "#hardcopy-choice button"
+      );
+      const preInvoiceSection = document.getElementById("pre-invoice-section");
+      const patientDetails = document.getElementById("patient-details");
+      const placeOrderBtn = document.getElementById("place-order-btn");
+
+      // Open/close form
+      openFormBtn?.addEventListener("click", () =>
+        labForm.classList.add("active")
+      );
+      closeFormBtn?.addEventListener("click", () =>
+        labForm.classList.remove("active")
+      );
+      closeFormIcon?.addEventListener("click", () =>
+        labForm.classList.remove("active")
+      );
+
+      // Set min & max date
+      const today = new Date();
+      const maxDate = new Date();
+      maxDate.setDate(today.getDate() + 7);
+      const formatDate = (d) => d.toISOString().split("T")[0];
+      dateInput.min = formatDate(today);
+      dateInput.max = formatDate(maxDate);
+
+      // Slot fetching
+      dateInput.addEventListener("change", async () => {
+        const selectedDate = dateInput.value;
+        if (!selectedDate) return;
+
+        const response = await fetch(
+          `/get_slots?date=${selectedDate}&pincode=${pincodeInput.value}`
+        );
+        const data = await response.json();
+
+        if (data && data.slots && data.slots.length > 0) {
+          slotSection.innerHTML = "<p>Select a time slot:</p>";
+          data.slots.forEach((slot) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.textContent = slot;
+            btn.className = "btn btn--secondary";
+            btn.style.margin = "5px";
+            btn.onclick = () => {
+              document
+                .querySelectorAll("#slot-selection button")
+                .forEach((b) => b.classList.remove("selected"));
+              btn.classList.add("selected");
+              selectedSlotInput.value = slot;
+
+              // Reset everything below
+              document.getElementById("hardcopy-option").style.display =
+                "block";
+              preInvoiceSection.style.display = "none";
+              patientDetails.style.display = "none";
+              placeOrderBtn.style.display = "none";
+
+              // Reset button states
+              hardcopyButtons.forEach((btn) =>
+                btn.classList.remove("selected")
+              );
+            };
+
+            slotSection.appendChild(btn);
+          });
+        } else {
+          slotSection.innerHTML =
+            "<p>No slots available for selected date.</p>";
+          selectedSlotInput.value = "";
+        }
+      });
+
+      // Handle hardcopy option
+      hardcopyButtons.forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const choice = btn.dataset.value;
+
+          // Visual state
+          hardcopyButtons.forEach((b) => b.classList.remove("selected"));
+          btn.classList.add("selected");
+
+          try {
+            const response = await fetch(
+              `/get_pre_invoice_thyrocare?hardcopy=${choice}`
+            );
+            const data = await response.json();
+
+            // Display pre-invoice details
+            preInvoiceSection.innerHTML = `
+                <div style="border: 1px solid #ccc; padding: 10px;">
+                  <h4>Pre-Invoice</h4>
+                  <p>Total Amount: ₹${
+                    choice === "1"
+                      ? Number(data.payable) + Number(data.hcrAmount)
+                      : Number(data.payable)
+                  }</p>
+                  <p>Testing Charges: ₹${data.testingCharges}</p>
+                  <p> Additional charge for HardCopy : ₹${
+                    choice === "1" ? data.hcrAmount : "0"
+                  }</p>
+
+                  <p style="font-size: 1.2rem; color: #000">${
+                    data.chcNote === null ? "" : data.chcNote
+                  }</p>
+                  <!--p>Hardcopy Required: ${
+                    choice === "1" ? "Yes" : "No"
+                  }</p-->
+
+                  <button id="confirm-preinvoice" class="btn btn--primary" style=" margin-top: 10px ; margin-right: 10px;">Confirm</button>
+                  <button id="cancel-preinvoice" class="btn btn--secondary">Cancel</button>
+                </div>
+              `;
+            preInvoiceSection.style.display = "block";
+
+            // Confirm / Cancel handlers
+            document.getElementById("confirm-preinvoice").onclick = () => {
+              patientDetails.style.display = "block";
+              placeOrderBtn.style.display = "block";
+              preInvoiceSection.style.display = "block";
+            };
+
+            document.getElementById("cancel-preinvoice").onclick = () => {
+              preInvoiceSection.style.display = "none";
+              patientDetails.style.display = "none";
+              placeOrderBtn.style.display = "none";
+              hardcopyButtons.forEach((b) => b.classList.remove("selected"));
+            };
+          } catch (err) {
+            console.error("Error fetching pre-invoice:", err);
+            alert("Something went wrong. Please try again.");
+          }
+        });
+      });
+    </script>
+    <script>
+      document.querySelectorAll("#hardcopy-choice button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.getElementById("hardcopy").value = btn.dataset.value;
+        });
+      });
+
+      placeOrderBtn?.addEventListener("click", async () => {
+        // Gather all required values from the form
+        const formData = {
+          name: document.getElementById("name")?.value,
+          email: document.getElementById("email")?.value,
+          phone: document.getElementById("phone")?.value,
+          age: document.getElementById("age")?.value,
+          gender: document.querySelector('select[name="gender"]')?.value,
+          address: document.getElementById("address")?.value,
+          date: document.getElementById("appointment_date")?.value,
+          pincode: document.getElementById("pincode")?.value,
+          selected_slot: document.getElementById("selected_slot").value,
+          hardcopy: document.getElementById("hardcopy")?.value,
+        };
+        console.log("Slot value before sending:", formData); // 👈 This logs the slot value
+        try {
+          const response = await fetch("/book_lab_test", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const result = await response.json();
+
+          if (result.response_status == 1) {
+            alert("Order placed successfully!");
+            // Optionally reset the form or close the slide-in
+            document.getElementById("lab-order-form").reset();
+            document
+              .getElementById("lab-order-form")
+              .classList.remove("active");
+            window.location.href = "/lab_tests";
+          } else {
+            alert("Order placement failed.");
+          }
+        } catch (error) {
+          console.error("Error placing order:", error);
+          alert("Something went wrong. Please try again later.");
+        }
+      });
+    </script>
+
+    {% endblock %}
+  </div>
 </div>
-
-<script
-  type="module"
-  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-></script>
-<script
-  nomodule
-  src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-></script>
-
-{% endblock %}

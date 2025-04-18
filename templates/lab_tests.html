@@ -368,14 +368,26 @@
     formData1.append("provider", provider);
     formData1.append("product", product);
 
-    const res = await fetch("/book_lab_test", {
+    const res1 = await fetch("/search_lab_details", {
       method: "POST",
       body: formData1,
     });
 
-    const data = await res.json();
-    document.getElementById("bookingStatus").innerText =
-      data.message || "Booking failed.";
+    const data1 = await res1.json();
+
+    const productId = data1.tc_prod_id; // Assuming this is the ID you need
+    const productName = data1.tc_prod_name; // Assuming this is the name you need
+    const productPrice = data1.tc_rate_b2c; // Assuming this is the price you need
+
+    fetch(`/add_to_cart_thyrocare/${productId}`, {
+      method: "POST",
+    })
+      .then((response) => {
+        if (response.redirected) {
+          window.location.href = response.url; // Redirect manually
+        }
+      })
+      .catch((error) => console.error("Redirect error:", error));
   });
 </script>
 {% endblock %}

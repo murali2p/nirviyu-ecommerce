@@ -29,6 +29,7 @@ def get_thyrocare_token():
   
   response=requests.post(url=url,json=data, headers=headers)
   api_token_key=response.json()['apiKey']
+  #print(api_token_key)
   return api_token_key
 
 def get_thyrocare_products():
@@ -116,7 +117,7 @@ def check_pincode_availability_thyrocare(pincode):
   }
   
   response = requests.post(url='https://velso.thyrocare.cloud/api/TechsoApi/PincodeAvailability',json=data, headers=headers)
-  print(response.json())
+  #print(response.json())
   try:
     if response.json()['status'] == 'Y':
       return response.json()
@@ -132,6 +133,15 @@ def check_slots_availability_thyrocare(pincode,booking_dt,test_id):
       'Content-Type': 'application/json',
       'Cookie': 'ARRAffinity=d45f3e41a57738967561c580e540208a1117a87753342792901a;ARRAffinity=3666eec51755029e95841e4cad76b639868f03fb2c9e42e8d4970cd42b2a34ea;ARRAffinitySameSite=3666eec51755029e95841e4cad76b639868f03fb2c9e42e8d4970cd42b2a34ea; ApplicationGatewayAffinity=6fed3da3fc0148fcd8fbf1a27ec431a5;ApplicationGatewayAffinityCORS=6fed3da3fc0148fcd8fbf1a27ec431a5'
   }
+  
+      # Generate Items dynamically from test_ids list
+  items = []
+  for tid in test_id:
+      items.append({
+          "Id": tid,
+          "PatientQuantity": 1,
+          "PatientIds": [1]
+      })
   data = {
       "Apikey": get_thyrocare_token(),
       "Pincode": f"{pincode}",
@@ -146,26 +156,16 @@ def check_slots_availability_thyrocare(pincode,booking_dt,test_id):
           }
           ],
       
-      "Items": [
-          {
-            "Id":f"{test_id}",
-            "PatientQuantity":1,
-            "PatientIds": [
-                            1
-                          ],          
-          }
-      
-              ]
-      
+      "Items": items
       
       }
   
   response = requests.post(url='https://velso.thyrocare.cloud/api/TechsoApi/GetAppointmentSlots',json=data, headers=headers)
-  print(response.json())
+  #print(response.json())
   return response.json()
 
 
-def view_cart_details_thyrocare(products,rates,report_required,ben_count):
+def view_cart_details_thyrocare(products,rates,report_required):
   headers = {
       'Content-Type': 'application/json',
       'Cookie': ''
@@ -178,7 +178,7 @@ def view_cart_details_thyrocare(products,rates,report_required,ben_count):
 
       "ClientType":"PUBLIC",
       "Mobile":"7869734430",
-      "BenCount":f"{ben_count}",
+      "BenCount":"1",
       "Report":f"{report_required}",
       "Discount":""
   }
@@ -188,7 +188,7 @@ def view_cart_details_thyrocare(products,rates,report_required,ben_count):
   return response.json()
 
 
-def create_order_thyrocare(products,pincode,report_required):
+def create_order_thyrocare(products,pincode,report_required,name, age, gender,phone, email,address,date, time,order_id):
   headers = {
       'Content-Type': 'application/json',
       'Cookie': ''
@@ -196,11 +196,11 @@ def create_order_thyrocare(products,pincode,report_required):
   data = {
       "api_key": get_thyrocare_token(),
 
-      "ref_order_id":"NIRVIYU29",
-      "email":"mohanmurali.behera@gmail.com",
-      "mobile":"7381062885",
-      "address":"h-304,jains carlton creek, khajaguda, hyderabad, 500089",
-      "appt_date":"2025-04-14 12:00",
+      "ref_order_id":f"{order_id}",
+      "email":f"{email}",
+      "mobile":f"{phone}",
+      "address":f"{address}",
+      "appt_date":f"{date} {time}",
       "order_by":"Test",
       "passon":0,
       "pay_type":"POSTPAID",
@@ -212,9 +212,9 @@ def create_order_thyrocare(products,pincode,report_required):
       "service_type":"HOME",
       "ben_data": [
       {
-      "name":"SagarTest",
-      "age":30,
-      "gender":"Female"
+      "name":f"{name}",
+      "age":f"{age}",
+      "gender":f"{gender}"
       }
       ],
       "coupon":"",
@@ -225,7 +225,7 @@ def create_order_thyrocare(products,pincode,report_required):
   
   
   response = requests.post(url='https://dx-dsa-service.thyrocare.com//api/booking-master/v2/create-order',json=data, headers=headers)
-  print(response.json())
+  #print(response.json())
   return response.json()
 
 
@@ -279,20 +279,29 @@ def report_download_thyrocare(lead_id,mobile):
   headers = {
       'Content-Type': 'application/json'
   }
-  B2CAPIKEY = get_b2capi_access_token()
-  print(B2CAPIKEY)
+  B2CAPIKEY = '2oVtJaTDWS3VBOhzQcdZ9v1OCgEdhAtNf0unh8fpQNYcKLWvXyFzEw=='
+  #print(B2CAPIKEY)
   LEADID=lead_id
   MOBILE=mobile
   ReportFormat='PDF'
-  response = requests.get(url=f'https://b2capi.thyrocare.com/APIS/order.svc/{B2CAPIKEY}/GETREPORTS/{LEADID}/{ReportFormat}/{MOBILE}/Myreport', headers=headers)
+  response = requests.get(url=f'https://b2capi.thyrocare.com/APIS/order.svc/{B2CAPIKEY}/GETREPORTS/{LEADID}/{ReportFormat}/{MOBILE}/Myreport')
   print(response.json())
   return response.json()
      
+#get_thyrocare_token()
 
-#report_download_thyrocare("SP80969646","7381062885")
+#{'response_status': 1, 'response': {'message': 'Order Placed Successfully', 'duplicate_skus': None}, 'ben_data': [{'name': 'None', 'age': 23, 'gender': 'Male', 'lead_id': 'SP80994962'}], 'order_no': 'VLA0BE52', 'products': 'HBST', 'product_names': 'HBST', 'service_type': 'HOME COLLECTION', 'mode': 'PAY WHILE SAMPLE COLLECTION', 'report_hard_copy': 'YES', 'customer_rate': 1032, 'booked_by': 'Test', 'status': 'YET TO CONFIRM', 'pay_type': 'POSTPAID', 'mobile': '7381062885', 'address': 'Flat 304, Block H, JAINS CARLTON CREEK, Lanco Hills Road Flat 304, Block H, JAINS CARLTON CREEK, Lanco Hills Road', 'email': 'mohanmurali.behera@gmail.com', 'ref_order_id': 'NIRVIYU30', 'fasting': 'NON FASTING', 'collection_centers': None, 'qr': None}
 
+#report_download_thyrocare("SP81032410","7381062885")
 
-#cancel_order_thyrocare('VLDEE802','TEST')
+# data = {
+#       "username": "7869734430",
+#       "password": "Baby@2023",
+#       "portalType": "",
+#       "userType": "DSA"
+#   }
+
+#cancel_order_thyrocare('VL1377AC','TEST')
 
 #{'respId': 'SUCCESS', 'response': 'Order cancelled successfully'}
 
@@ -461,7 +470,7 @@ def report_download_thyrocare(lead_id,mobile):
 #   ''collection_centers'': None,
 #   ''qr'': None
 # }
-#check_slots_availability_thyrocare("500089",'2025-04-12','UPTR')
+#check_slots_availability_thyrocare("500089",'2025-04-14',['AFP-C','UPTR'])
 
 
 # # Storing the tests list as a JSON string

@@ -16,8 +16,8 @@ from werkzeug.utils import secure_filename
 from rapidfuzz import process,fuzz
 import requests,json
 from flask_apscheduler import APScheduler
-from thyrocare import get_thyrocare_products,get_thyrocare_test_detail,check_pincode_availability_thyrocare
-
+from thyrocare import get_thyrocare_products,get_thyrocare_test_detail,check_pincode_availability_thyrocare,check_slots_availability_thyrocare,create_order_thyrocare
+from thyrocare import view_cart_details_thyrocare,cancel_order_thyrocare
 
 
 # Determine the environment (default: development)
@@ -525,6 +525,73 @@ def add_to_cart(id):
         return jsonify({'error': str(e)})
 
 
+@app.route('/add_to_cart_thyrocare/<string:id>', methods=['POST'])
+@login_required
+def add_to_cart_thyrocare(id):
+    try:
+        print("adding to cart")
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        
+        print("getting the product details")
+        # Fetch the product
+        cursor.execute('SELECT * FROM thyrocare_tests WHERE tc_prod_id = %s', (id,))
+        product = cursor.fetchone()
+        print(product)
+        if not product:
+            
+            print("product not found")
+            cursor.close()
+            connection.close()
+            return jsonify({'error': 'Product not found'})
+        
+        # Check if the product is already in the cart
+        cursor.execute('SELECT * FROM thyrocare_cart WHERE cust_id = %s AND tc_prod_id = %s', (current_user.id, product['tc_prod_id']))
+        cart_item = cursor.fetchone()
+        current_time = datetime.datetime.now()
+        print(cart_item)
+        if cart_item:
+            # Update the quantity if the product is already in the cart
+            print("product already in cart")
+            #cursor.execute(f'UPDATE cart SET qty = qty + 1, updated_at = %s WHERE cust_id = %s AND prod_id = %s', (current_time,current_user.id, product['id']))
+        else:
+            # Insert the product into the cart if it is not already there
+            print("product not in cart")
+            if (product['tc_prod_type']=='OFFER'):
+                cursor.execute('INSERT INTO thyrocare_cart (cust_id, tc_prod_id, qty, price, updated_at) VALUES (%s, %s, 1, %s,%s)', (current_user.id, product['tc_prod_id'], product['tc_rate_offer'],current_time))
+            else:
+                print('product not in offer')
+                cursor.execute('INSERT INTO thyrocare_cart (cust_id, tc_prod_id, qty, price, updated_at) VALUES (%s, %s, 1, %s,%s)', (current_user.id, product['tc_prod_id'], product['tc_rate_b2c'],current_time))
+        connection.commit()
+        
+
+        
+        cursor.close()
+        connection.close()
+        print("redirecting to cart")
+        
+        return redirect(url_for('cart'))
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+# route to remove the test lab from cart
+@app.route('/remove_from_cart_thyrocare/<string:id>', methods=['POST']) 
+@login_required
+def remove_from_cart_thyrocare(id):
+    try:
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute('DELETE FROM thyrocare_cart WHERE cust_id = %s AND tc_prod_id = %s', (current_user.id, id))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return redirect(url_for('cart'))
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)})
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 @app.route('/cart')
 @login_required
@@ -536,8 +603,7 @@ def cart():
     cursor.execute('SELECT * FROM cart inner join products on cart.prod_id =products.prod_id inner join (select * from (select *, rank() over(partition by product_id order by id asc) as Rank_  from product_images) as a where a.Rank_=1) as c on c.product_id=products.prod_id WHERE cart.cust_id = %s', (current_user.id,))
     cart = cursor.fetchall()
     #print(cart)
-    cursor.close()
-    connection.close()
+
     total_amt = 0
     mrp=0
    
@@ -546,8 +612,53 @@ def cart():
         total_amt+=item['subtotal']
 
     discount=mrp-total_amt
-    return render_template('cart.html', cart=cart, total_amt=total_amt, mrp=mrp, discount=discount)
+    
+    # create section for lab tests to be passed to the cart
+    cursor.execute('SELECT * FROM thyrocare_cart inner join thyrocare_tests on thyrocare_cart.tc_prod_id =thyrocare_tests.tc_prod_id WHERE thyrocare_cart.cust_id = %s', (current_user.id,))
+    lab_cart = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    
+    lab_total_amt = 0
+    for item in lab_cart:
+        lab_total_amt+=item['price']
+    
+    return render_template('cart.html', cart=cart, total_amt=total_amt, mrp=mrp, discount=discount, lab_cart=lab_cart, lab_total_amt=lab_total_amt)
  
+@app.route('/get_slots')
+@login_required
+def get_slots():
+    date = request.args.get('date')
+    #print(date)
+    pincode= request.args.get('pincode')
+    #print(pincode)
+    #get the list of tc_prod_id in the cart
+    connection = mysql.connector.connect(**db_config)
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute('SELECT * FROM thyrocare_cart inner join thyrocare_tests on thyrocare_cart.tc_prod_id =thyrocare_tests.tc_prod_id WHERE thyrocare_cart.cust_id = %s', (current_user.id,))    
+    lab_cart = cursor.fetchall()
+    #print(lab_cart)
+    cursor.close()
+    connection.close()
+    
+    # get the list of tc_prod_id in the cart
+    tc_prod_id_list = [item['tc_prod_id'] for item in lab_cart]
+    #print(tc_prod_id_list)
+    
+    # gettin the response from the thyrocare api for slots
+    response = check_slots_availability_thyrocare(pincode,date, tc_prod_id_list)
+    #print(response)
+    slots =[]
+    if response['response'] == 'Success':
+        
+        
+        for item in response['lSlotDataRes']:
+            slots.append(item['slot'])
+    else:
+        slots = []
+        # Handle the case when no slots are available or an error occurs
+    return jsonify({"slots": slots})
+
 
 @app.route('/add_to_order', methods=['POST'])
 @login_required
@@ -871,9 +982,13 @@ def order_history():
         cursor = connection.cursor(dictionary=True)
         cursor.execute("select  og.order_id, og.updated_at as order_date, oc.payment_status,cast(avg(og.amount) as decimal(20,2)) as amount, group_concat(p.prod_name separator ', ') as product_details,s.status as shipment_status from order_generate as og inner join orders as o on o.order_id = og.order_id inner join products as p on p.prod_id = o.prod_id inner join order_checkout as oc on oc.order_id = og.order_id inner join shipment as s on s.internal_order_id=og.order_id where o.cust_id = %s and oc.payment_status ='success' group by 1,2,3,6", (current_user.id,))
         orders = cursor.fetchall()
+        
+    # Fetch lab test orders
+        cursor.execute("SELECT * FROM thyrocare_test_bookings WHERE cust_id = %s and tc_order_no is not null", (current_user.id,))
+        lab_orders = cursor.fetchall()
         cursor.close()
         connection.close()
-        return render_template('order_history.html', orders=orders)
+        return render_template('order_history.html', orders=orders, lab_orders=lab_orders)
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -1258,10 +1373,109 @@ def search_details():
 
     return jsonify(result)
 
+@app.route('/get_pre_invoice_thyrocare',methods=['POST','GET'])
+@login_required
+def get_pre_invoice_thyrocare():
+    report= request.args.get('hardcopy')
+    #print(report)
+    
+    
+    connection=mysql.connector.connect(**db_config)
+    cursor=connection.cursor(dictionary=True)
+    #fetch list of products and rates from db
+    
+    cursor.execute("select tc_prod_id,price from thyrocare_cart where cust_id= %s",(current_user.id,))
+    data= cursor.fetchall()
+    
+    product = ",".join([item['tc_prod_id'] for item in data])
+    
+    
+    #print(product)
+
+    rate = ",".join([str(int(item['price'])) for item in data])
+    #print(rate)
+    
+    
+    response=view_cart_details_thyrocare(product,rate,report)
+    #print (response)
+    return response
+
 @app.route('/book_lab_test', methods=['POST'])
 def book_now():
-    provider = request.form.get('provider')
-    product = request.form.get('product')
+    data= request.get_json()
+    date = data.get('date')
+    time = data.get('selected_slot')[:5] 
+    pincode = data.get('pincode')
+    name = data.get('name')
+    phone = data.get('phone')
+    email = data.get('email')
+    address = data.get('address')
+    age= data.get('age')
+    gender=data.get('gender')
+    report=data.get('hardcopy')
+    
+    if report=="1":
+        report='Y'
+    else:
+        report='N'
+    
+    products=""
+    connection=mysql.connector.connect(**db_config)
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute( "select tc_prod_id from thyrocare_cart where cust_id = %s",(current_user.id,))
+    cart= cursor.fetchall()
+    
+    for item in cart:
+        products+=item['tc_prod_id']+','
+    
+    #print("inserting records to thyrocare_test_bookings")
+    # insert record into thyrocare_test_bookings
+    query = "insert into thyrocare_test_bookings(pincode,booking_date,booking_time,patient_name,age,gender, email, mobile, report,products,cust_id) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    cursor.execute(query,(pincode,date,time,name,age,gender,email, phone,report,products,current_user.id))
+    connection.commit()
+    
+    #print("records inserted into thyrocare_test_bookings")
+    row_id = cursor.lastrowid  # Get the ID of the newly inserted address
+    
+    #print("updating the test_id")
+    cursor.execute("update thyrocare_test_bookings set test_id=concat('nirviyu_order',%s)  where tc_book_id = %s",(row_id,row_id))
+    
+    connection.commit()
+    
+    #print("test_id updated")
+    
+    order_id="nirviyu_order"+str(row_id)
+    #print(order_id)
+    #pass the details to thyrocare api for booking
+    response = create_order_thyrocare(products,pincode,report,name,age, gender,phone, email,address,date, time,order_id)
+    
+    if response['response_status'] == 1:
+        #print("order created successfully")
+        #print(response)
+        
+        #print("updating the order details")
+        cursor.execute("update thyrocare_test_bookings set tc_lead_no=%s,tc_order_no=%s where tc_book_id = %s",(response['ben_data'][0]['lead_id'],response['order_no'],row_id))
+        connection.commit()
+        
+        #print("order details updated")
+        
+        #print("deleting the cart items")
+        cursor.execute("delete from thyrocare_cart  where cust_id = %s",(current_user.id,))
+
+        connection.commit()
+        #print("cart items deleted")
+        
+        # insert records into orders table
+        
+        cursor.close()
+        connection.close()
+        return response
+    else:
+        print("order creation failed")
+        cursor.close()
+        connection.close()
+        return jsonify({'error': 'Failed to create order'}), 500
+    
 
     # Optional: Validate and check if already booked
     # sql = "INSERT INTO bookings (provider_name, product_name) VALUES (%s, %s)"
@@ -1288,6 +1502,49 @@ def pincode_check():
             'message': 'pincode is not serviceable'
         }
     return jsonify(result)
+
+
+
+
+
+@app.route('/cancel-lab-booking/<int:booking_id>')
+@login_required
+def cancel_lab_booking(booking_id):
+    try:
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor()
+        
+
+        # Optional: Check status before updating
+        cursor.execute("SELECT status FROM thyrocare_test_bookings WHERE tc_book_id = %s", (booking_id,))
+        result = cursor.fetchone()
+        
+        #fetch the thyrocare order no
+        cursor.execute("SELECT tc_order_no FROM thyrocare_test_bookings WHERE tc_book_id = %s", (booking_id,))
+        order_no = cursor.fetchone()
+        thyrocare_order_no = order_no[0]
+        
+        if result and result[0] not in ['Cancelled', 'Completed']:
+            # call the function to cancel the booking in thyrocare api
+            response = cancel_order_thyrocare(thyrocare_order_no,"Change in schedule")
+            if response['respId'] == "SUCCESS":
+                # Update the status in the database
+                cursor.execute("UPDATE thyrocare_test_bookings SET status = 'Cancelled' WHERE tc_book_id = %s", (booking_id,))
+                connection.commit()
+                flash("Lab booking has been cancelled.", "success")
+            else:
+                flash("Failed to cancel the booking with Thyrocare.", "danger")
+            
+
+
+        cursor.close()
+        connection.close()
+
+    except Exception as e:
+        print("Error:", e)
+        flash("An error occurred while cancelling the booking.", "danger")
+
+    return redirect(url_for('order_history'))
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode

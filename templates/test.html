@@ -1,51 +1,37 @@
-{% extends "base.html" %} {% block title %}Nirviyu: Products{% endblock %} {%
-block content %}
+{% extends 'base.html'%} {% block title %}Nirviyu : Stay Healthy{% endblock %}
+{% block content %}
 
-<div class="container product-details">
-  <h1 class="product-details-header">{{ product['prod_name'] }}</h1>
-  <div class="product-details-info">
-    <p class="product-details-description">{{ product['description'] }}</p>
-    <ul>
-      <li class="product_details_el">{{ product['highlight1'] }}</li>
-      <li class="product_details_el">{{ product['highlight2'] }}</li>
-      <li class="product_details_el">{{ product['highlight3'] }}</li>
-      <li class="product_details_el">{{ product['highlight4'] }}</li>
-      <li class="product_details_el">{{ product['highlight5'] }}</li>
-    </ul>
+<div class="container tbl-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Order History</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Order Date</th>
+            <!--th>Order Status</th-->
+            <th>Order Total</th>
+            <th>Order Details</th>
+            <th>Shipment Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.order_date }}</td>
+            <!--td>{{ order.payment_status }}</td-->
+            <td>{{ order.amount }}</td>
+            <td>{{ order.product_details }}</td>
+            <td>{{ order.shipment_status }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
-  {% if images %}
-  <img
-    id="mainImage"
-    src="{{ images[0]['image_url'] }}"
-    class="main-image"
-    alt="Product Image"
-  />
-  <div class="thumbnail-container">
-    {% for img in images %}
-    <img
-      src="{{ img['image_url'] }}"
-      class="thumbnail"
-      onclick="changeMainImage(this)"
-    />
-    {% endfor %}
-  </div>
-  {% else %}
-  <p>No images available for this product.</p>
-  {% endif %}
-  <form action="/add_to_cart/{{product['prod_id']}}" method="post">
-    <button
-      class="product-image-button btn btn--primary product-details-button"
-    >
-      Add to Cart
-    </button>
-  </form>
 </div>
-
-<script>
-  function changeMainImage(thumbnail) {
-    document.getElementById("mainImage").src = thumbnail.src;
-  }
-</script>
 <script
   type="module"
   src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -54,4 +40,5 @@ block content %}
   nomodule
   src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
 ></script>
+
 {% endblock %}
