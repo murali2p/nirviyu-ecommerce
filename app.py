@@ -17,7 +17,7 @@ from rapidfuzz import process,fuzz
 import requests,json
 from flask_apscheduler import APScheduler
 from thyrocare import get_thyrocare_products,get_thyrocare_test_detail,check_pincode_availability_thyrocare,check_slots_availability_thyrocare,create_order_thyrocare
-from thyrocare import view_cart_details_thyrocare,cancel_order_thyrocare
+from thyrocare import view_cart_details_thyrocare,cancel_order_thyrocare,update_db_thyrocare_products,report_download_thyrocare,get_order_summary_thyrocare
 
 
 # Determine the environment (default: development)
@@ -81,9 +81,58 @@ def auto_update_shipping_status():
     cursor.close()
     conn.close()
     print("Updated shipping status for all pending orders.")
+    
+# function to auto update status in lab tests
+def auto_update_lab_status():
+    """Check and update lab test status for all pending shipments"""
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    
+    # Fetch all pending orders from the database
+    cursor.execute("SELECT tc_order_no FROM thyrocare_test_bookings WHERE status != 'Done' and status != 'Serviced' and status != 'PartialServiced' and status != 'CANCELLED' and tc_order_no is not null")
+    pending_orders = cursor.fetchall()
+    #print(pending_orders)
+    #print(type(pending_orders))
+    for order in pending_orders:
+        response = get_order_summary_thyrocare(order[0])
+        #print(type(response))
+        if response['respId'] == 'RES00001': #''respId'': ''RES00001'',
+            if response['orderMaster']:
+                cursor.execute("update thyrocare_test_bookings set status = %s where tc_order_no = %s", (response['orderMaster'][0]['status'],order[0]))
+                conn.commit()
+            
+    cursor.close()
+    conn.close()
+    print("Updated lab test status for all pending orders.")
+
+
+# function to auto update the download url in the database
+def auto_update_download_url():
+    """Check and update download URL for all pending shipments"""
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    
+    # Fetch all pending orders from the database whose download url is null
+    cursor.execute("SELECT tc_lead_no,mobile FROM thyrocare_test_bookings WHERE report_url is null and (status = 'Done' or status = 'Serviced' or status = 'PartialServiced') and tc_order_no is not null")
+    pending_url = cursor.fetchall()
+    
+    #print(pending_orders)
+    # iterate through the pending orders and update the download url
+    for url in pending_url:
+        response = report_download_thyrocare(url[0],url[1])
+        #print(type(response))
+        if response['RES_ID'] == 'RES0000':
+            cursor.execute("update thyrocare_test_bookings set report_url = %s where tc_lead_no = %s", (response['URL'],url[0]))
+            
+    print("Updated download URL for all pending orders.")
+    
+
 
 # Schedule the job every 10 minutes
-scheduler.add_job(id="auto_update_shipping", func=auto_update_shipping_status, trigger="interval", minutes=50)
+scheduler.add_job(id="auto_update_shipping", func=auto_update_shipping_status, trigger="interval",  minutes=50)
+scheduler.add_job(id="thyrocare_update", func=update_db_thyrocare_products, trigger="cron", hour=10, minute=5)
+scheduler.add_job(id="auto_update_lab_Status", func=auto_update_lab_status, trigger="interval",  minutes=55)
+scheduler.add_job(id="auto_update_download_url", func=auto_update_download_url, trigger="interval",  minutes=60)
 scheduler.start()
 
 

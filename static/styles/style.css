@@ -1030,6 +1030,11 @@ CART Settings
   transition: background 0.2s;
 }
 
+.slot-options {
+  overflow-y: auto;
+  max-height: 15rem;
+}
+
 .slot-options .btn:hover {
   background-color: #eee;
 }

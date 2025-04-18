@@ -87,7 +87,7 @@ def update_db_thyrocare_products():
     
   connection.close()
   cursor.close()
-  print("thyrocare offer products inserted successfully")
+  print("thyrocare products inserted successfully")
   
 
 def get_thyrocare_test_detail(productcode):
@@ -201,7 +201,7 @@ def create_order_thyrocare(products,pincode,report_required,name, age, gender,ph
       "mobile":f"{phone}",
       "address":f"{address}",
       "appt_date":f"{date} {time}",
-      "order_by":"Test",
+      "order_by":"Customer",
       "passon":0,
       "pay_type":"POSTPAID",
       "pincode":f"{pincode}",
@@ -241,7 +241,11 @@ def get_order_summary_thyrocare(order_no):
   }
   
   response = requests.post(url='https://velso.thyrocare.cloud/api/OrderSummary/OrderSummary',json=data, headers=headers)
-  print(response.json())
+  print('api accessed successfully')
+  #print(response.json())
+  # print(response.json()['orderMaster'][0])
+  # print(response.json()['orderMaster'][0]['status'])
+  
   return response.json()
 
 def cancel_order_thyrocare(order_no,reason):

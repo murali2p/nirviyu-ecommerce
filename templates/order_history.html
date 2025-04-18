@@ -104,12 +104,23 @@
             <td>{{ lab.booking_date }} {{lab.booking_time}}</td>
             <td>{{ lab.status }}</td>
             <td>
-              {% if lab.status not in ['Cancelled', 'Completed'] %}
+              {% if lab.status not in ['Done', 'Serviced',
+              'PartialServiced','CANCELLED'] %}
               <a
                 href="{{ url_for('cancel_lab_booking', booking_id=lab.tc_book_id) }}"
                 class="btn btn-sm btn-danger"
                 >Cancel</a
               >
+              {% elif lab.status in ['Done','Serviced','PartialServiced'] and
+              lab.report_url %}
+              <a
+                href="{{ lab.report_url }}"
+                download
+                target="_blank"
+                class="btn btn-sm btn-primary"
+              >
+                Download Report
+              </a>
               {% endif %}
             </td>
           </tr>
