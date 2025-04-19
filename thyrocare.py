@@ -2,6 +2,17 @@ import requests
 import json
 import mysql.connector
 from mysql.connector import Error
+import os
+from dotenv import load_dotenv
+
+# Determine the environment (default: development)
+env = os.getenv('FLASK_ENV', 'prod')
+
+# Load the corresponding .env file
+dotenv_file = f".env.{env}"
+
+load_dotenv(dotenv_file)
+
 
 #api_key=get_thyrocare_token()
 url_products='https://velso.thyrocare.cloud/api/productsmaster/Products'
@@ -9,11 +20,11 @@ url = 'https://velso.thyrocare.cloud/api/Login/Login'
 
 
 #db configuration
-host='localhost'
-user='root'
-password='murali123'
-database='nirviyu'
-auth_plugin='mysql_native_password'
+host = os.getenv('hostname')
+user = os.getenv('user')
+password = os.getenv('password')
+database = os.getenv('database')
+auth_plugin = os.getenv('auth_plugin')
 
 def get_thyrocare_token():
   headers = {

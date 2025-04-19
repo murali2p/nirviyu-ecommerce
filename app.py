@@ -138,7 +138,7 @@ scheduler.start()
 
 # SQl Database Configuration #
 db_config = {
-    'host': os.getenv('host'),
+    'host': os.getenv('hostname'),
     'user': os.getenv('user'),
     'password': os.getenv('password'),
     'database': os.getenv('database'),
@@ -1497,7 +1497,7 @@ def book_now():
     row_id = cursor.lastrowid  # Get the ID of the newly inserted address
     
     #print("updating the test_id")
-    cursor.execute("update thyrocare_test_bookings set test_id=concat('nirviyu_order',%s)  where tc_book_id = %s",(row_id,row_id))
+    cursor.execute("update thyrocare_test_bookings set test_id=concat('nirviyu_order_no',%s)  where tc_book_id = %s",(row_id,row_id))
     
     connection.commit()
     
