@@ -762,10 +762,10 @@ lab test settings
 }
 
 #productDetails {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 2fr;
   column-gap: 1rem;
   row-gap: 1rem;
-  padding: 3rem 2rem;
+  padding: 1rem 1rem;
   margin: 0 auto;
   width: 50rem;
   border-radius: 1rem;
@@ -775,7 +775,7 @@ lab test settings
 
 .lab-details-content {
   grid-column: 1 /2 !important;
-  grid-row: 1/10 !important;
+  grid-row: 1/7 !important;
   justify-content: center;
   justify-items: center;
   align-items: center;
@@ -1036,7 +1036,7 @@ CART Settings
 }
 
 .slot-options .btn:hover {
-  background-color: #eee;
+  background-color: var(--tertiary-color);
 }
 
 /* Hardcopy Buttons */
@@ -1052,7 +1052,7 @@ CART Settings
 }
 
 .btn-group .btn--secondary:hover {
-  background-color: #eaeaea;
+  background-color: var(--tertiary-color);
 }
 
 .btn-group .btn--secondary.active {

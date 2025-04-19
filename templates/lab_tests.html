@@ -183,9 +183,12 @@
 
   <p><strong>Name:</strong> <span id="pName"></span></p>
   <p><strong>Total Tests:</strong> <span id="pProvider"></span></p>
+  <p style="overflow-y: auto; max-height: 100px">
+    <strong>Test Details:</strong> <span id="pTests"></span>
+  </p>
   <p><strong>Fasting:</strong> <span id="pDesc"></span></p>
   <p><strong>Price:</strong> ₹<span id="pPrice"></span></p>
-  <p><strong>Type:</strong> <span id="pStock"></span></p>
+  <!--p><strong>Type:</strong> <span id="pStock"></span></p-->
 </div>
 <!--div class="booknowbtnclass">
   <button
@@ -221,6 +224,12 @@
 </button>
 
 <script>
+  function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function (word) {
+      return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
+    });
+  }
+
   const productInput = document.getElementById("productInput");
   const suggestionsDiv = document.getElementById("suggestions");
   const providerSelect = document.getElementById("provider");
@@ -304,10 +313,14 @@
         data.tc_prod_name
       );
       document.getElementById("pProvider").innerText = data.tc_test_Count;
-      document.getElementById("pDesc").innerText = data.tc_fasting || "N/A";
+      document.getElementById("pTests").innerText = data.tc_prod_childs
+        ? toTitleCase(data.tc_prod_childs)
+        : "Not available";
+      document.getElementById("pDesc").innerText =
+        data.tc_fasting === "CF" ? "Compulsary Fasting" : "No Fasting";
       document.getElementById("pPrice").innerText = data.tc_rate_b2c || "N/A";
-      document.getElementById("pStock").innerText =
-        toCamelCase(data.tc_prod_type) || "N/A";
+      //document.getElementById("pStock").innerText =
+      //toCamelCase(data.tc_prod_type) || "N/A";
     } else {
       alert(data.error || "Something went wrong");
       document.getElementById("productDetails").style.display = "none";

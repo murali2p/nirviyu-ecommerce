@@ -1419,6 +1419,16 @@ def search_details():
 
     if not result:
         return jsonify({'error': 'No product found'}), 404
+    prod_list= json.loads(result['tc_prod_childs'])
+    # products=''
+    # for res in prod_list:
+    #     if res == None:
+    #         products+=''
+    #     else:
+    #         products+=res['name']+','
+    products = ', '.join(res['name'] for res in prod_list if res is not None)
+    #print(products)
+    result['tc_prod_childs'] = products     
 
     return jsonify(result)
 
