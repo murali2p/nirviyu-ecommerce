@@ -373,6 +373,13 @@ class LoginForm(FlaskForm):
     password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=20)])
     submit = SubmitField('Login') 
 
+# create a form for password reset:
+class ResetPasswordForm(FlaskForm):
+    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=20)])
+    old_password = PasswordField('Old Password', validators=[InputRequired(), Length(min=4, max=20)])
+    new_password = PasswordField('New Password', validators=[InputRequired(), Length(min=4, max=20)])
+    submit = SubmitField('Reset Password')
+
 # create decorator to restrict access
 def roles_required(*roles):
     def decorator(f):
@@ -456,6 +463,38 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
+ 
+@app.route('/reset_password', methods=["GET", "POST"])
+def reset_password():
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        connection = mysql.connector.connect(**db_config)
+        cur = connection.cursor()
+        cur.execute("SELECT * FROM users WHERE username = %s", (form.username.data,))
+        user = cur.fetchone()
+        cur.close()
+        connection.close()
+
+        if user:
+            if check_password_hash(user[2], form.old_password.data):  # user[2] is the hashed password
+                hashed_password = generate_password_hash(form.new_password.data, method='pbkdf2:sha256')
+                connection = mysql.connector.connect(**db_config)
+                cur = connection.cursor()
+                cur.execute("UPDATE users SET password = %s WHERE username = %s", (hashed_password, form.username.data))
+                connection.commit()
+                cur.close()
+                connection.close()
+                flash("Password updated successfully!", "success")
+                return redirect(url_for('login'))
+            else:
+                flash("Incorrect old password.", "danger")
+        else:
+            flash("User not found!", "danger")
+
+    return render_template('reset_password.html', form=form)
+
+            
+ 
  
 #routes for the website    
 

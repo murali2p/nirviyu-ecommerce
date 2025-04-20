@@ -32,10 +32,10 @@ def get_thyrocare_token():
       'Cookie': ''
   }
   data = {
-      "username": "7869734430",
-      "password": "Baby@2023",
+      "username": os.getenv('tc_username'),
+      "password": os.getenv('tc_password'),
       "portalType": "",
-      "userType": "DSA"
+      "userType": os.getenv('tc_userType')
   }
   
   response=requests.post(url=url,json=data, headers=headers)
