@@ -250,7 +250,7 @@
                       {% endif %}
                   </div>
                   <form action="/add_to_cart/{{ product.prod_id }}" method="post">
-                      <button class="product-image-button btn btn--primary">Add to Cart</button>
+                      <button class="product-image-button  btn--primary">Add to Cart</button>
                   </form>
               </div>
               {% endfor %}
@@ -303,7 +303,7 @@
 
 
           <!--button type="submit" class="btn btn--cta">Contact Us</button-->
-          <button type="submit"  class="g-recaptcha btn btn--cta" 
+          <button type="submit"  class="g-recaptcha btn--primary btn--cta" 
               data-sitekey="{{ recaptcha_key }}" 
                       data-callback="onSubmit" data-expired-callback="onRecaptchaError"
                       data-action="submit">

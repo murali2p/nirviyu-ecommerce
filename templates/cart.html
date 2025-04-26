@@ -48,13 +48,13 @@ content %}
   </div>
   <!-- === LAB TEST SECTION === -->
 
-  {% if lab_cart %}
+  {% if tc_lab_cart %}
   <div id="labCart" class="container cart-container">
-    <h2 class="cart-header" style="margin-top: 50px">Lab Test Cart</h2>
+    <h2 class="cart-header" style="margin-top: 50px">Thyrocare Lab Cart</h2>
     <h3>🧪 Lab tests/profiles</h3>
-    {% for test in lab_cart %}
+    {% for test in tc_lab_cart %}
     <div class="cart-item">
-      <form action="/labtests/{{ test.test_id }}" method="post">
+      <!--form action="/labtests/{{ test.test_id }}" method="post">
         <button type="submit" class="cart-button-image">
           <img
             class="cart-img"
@@ -62,7 +62,7 @@ content %}
             alt="{{ test.test_name }}"
           />
         </button>
-      </form>
+      </form-->
       <div class="cart-item-details">
         <p class="cart-item-name">{{ test.tc_prod_name }}</p>
         <p class="cart-item-desc">Total tests: {{ test.tc_test_Count}}</p>
@@ -78,9 +78,9 @@ content %}
       </form>
     </div>
     {% endfor %}
-    <p class="cart-total">Total: ₹ {{ lab_total_amt }}</p>
+    <p class="cart-total">Total: ₹ {{ tc_lab_total_amt }}</p>
     <div class="cart-buttons">
-      <button class="btn btn--primary" id="open-lab-form">
+      <button class="btn btn--primary open-lab-form" lab-id="thyrocare" id="open-lab-form">
         Book Lab Tests
       </button>
     </div>
@@ -89,12 +89,61 @@ content %}
       ** Prices are subject to change based on the options selected during
       booking.
     </p>
-    {% endif %} {% if not cart and not lab_cart %}
+  </div>
+  {% endif %}
+  
+  <!-- === HEALTHIANS LAB TEST SECTION === -->
+  {% if healthians_cart %}
+  <div id="healthlabCart" class="container cart-container">
+    <h2 class="cart-header" style="margin-top: 50px">Healthians Lab Cart</h2>
+    <h3>🧪 Lab tests/profiles</h3>
+    {% for test in healthians_cart %}
+    <div class="cart-item">
+      <!--form action="/labtests/{{ test.test_id }}" method="post">
+        <button type="submit" class="cart-button-image">
+          <img
+            class="cart-img"
+            src="{{ test.image_url }}"
+            alt="{{ test.test_name }}"
+          />
+        </button>
+      </form-->
+      <div class="cart-item-details">
+        <p class="cart-item-name">{{ test.test_name }}</p>
+        <!--p class="cart-item-desc">Total tests: {{ test.tc_test_Count}}</p-->
+      </div>
+      <p class="cart-item-price">₹ {{ test.price }}</p>
+      <form
+        action="/remove_from_cart_healthians/{{test.deal_id}}"
+        method="post"
+      >
+        <button class="cart-remove-button">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+      </form>
+    </div>
+    {% endfor %}
+    <p class="cart-total">Total: ₹ {{ healthians_total_amt }}</p>
+    <div class="cart-buttons">
+      <button class="btn btn--primary open-lab-form" lab-id="healthians" id="open-lab-form">
+        Book Lab Tests
+      </button>
+    </div>
+    <p style="margin-top: 20px; font-size: 0.8rem; color: #888">
+      ** Prices are subject to change based on the options selected during
+      booking.
+    </p>
+    
+  </div>
+
+  {% endif %} 
+    
+  {% if not cart and not tc_lab_cart and not healthians_cart %}
     <p class="container" style="font-size: 20px; text-align: center">
-      Your cart is empty.
+      Your cart is empty. Please add products or lab tests to your cart.
     </p>
 
-    {% endif %}
+  {% endif %}
     <!-- Slide-in Lab Test Booking Form -->
     <form id="lab-order-form" class="lab-form-container">
       <!-- Date, Pincode, Slot stuff -->
@@ -111,6 +160,7 @@ content %}
 
       <!-- Appointment Date -->
       <label for="appointment_date">Appointment Date:</label>
+      <input type="hidden" id="selected_slot_code" name="selected_slot_code" />
       <input
         type="date"
         name="appointment_date"
@@ -198,7 +248,10 @@ content %}
     </form>
 
     <p id="productCartData" style="display: none">{{ cart }}</p>
-    <p id="labCartData" style="display: none">{{ lab_cart }}</p>
+    <p id="labCartData" style="display: none">{{ tc_lab_cart }}</p>
+    <p id="healthianCartData" style="display: none">{{ healthians_cart }}</p>
+    
+
 
     <script
       type="module"
@@ -212,20 +265,26 @@ content %}
       document.addEventListener("DOMContentLoaded", () => {
         const productCartSection = document.getElementById("productCart");
         const labCartSection = document.getElementById("labCart");
+        const healthlabCartSection = document.getElementById("healthlabCart");
 
         const hasProductCart =
           document.getElementById("productCartData").innerText.trim().length >
           0;
         const hasLabCart =
           document.getElementById("labCartData").innerText.trim().length > 0;
+        
+        const hasHealthlabCart =
+          document.getElementById("healthianCartData").innerText.trim().length > 0;
 
         productCartSection.style.display = hasProductCart ? "block" : "none";
         labCartSection.style.display = hasLabCart ? "block" : "none";
+        healthlabCartSection.style.display = hasHealthlabCart ? "block" : "none";
+
       });
     </script>
 
     <script>
-      const openFormBtn = document.getElementById("open-lab-form");
+      //const openFormBtn = document.getElementById("open-lab-form");
       const closeFormBtn = document.getElementById("close-lab-form");
       const closeFormIcon = document.getElementById("close-lab-form-icon");
       const labForm = document.getElementById("lab-order-form");
@@ -239,11 +298,17 @@ content %}
       const preInvoiceSection = document.getElementById("pre-invoice-section");
       const patientDetails = document.getElementById("patient-details");
       const placeOrderBtn = document.getElementById("place-order-btn");
+      
+      let labidentifier = null; // Define globally
 
-      // Open/close form
-      openFormBtn?.addEventListener("click", () =>
-        labForm.classList.add("active")
-      );
+      // 🔥 Handle multiple "Book Lab Tests" buttons
+      document.querySelectorAll(".open-lab-form").forEach(openFormBtn => {
+        openFormBtn.addEventListener("click", () => {
+          labForm.classList.add("active");
+          labidentifier = openFormBtn.getAttribute("lab-id");
+          console.log("Lab identifier:", labidentifier); 
+        });
+      });
       closeFormBtn?.addEventListener("click", () =>
         labForm.classList.remove("active")
       );
@@ -264,47 +329,66 @@ content %}
         const selectedDate = dateInput.value;
         if (!selectedDate) return;
 
-        const response = await fetch(
-          `/get_slots?date=${selectedDate}&pincode=${pincodeInput.value}`
-        );
-        const data = await response.json();
+        
+       
+          const response = await fetch(
+            `/get_slots?date=${selectedDate}&pincode=${pincodeInput.value}&provider=${labidentifier}`
+          );
+          const data = await response.json();
 
-        if (data && data.slots && data.slots.length > 0) {
-          slotSection.innerHTML = "<p>Select a time slot:</p>";
-          data.slots.forEach((slot) => {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.textContent = slot;
-            btn.className = "btn btn--secondary";
-            btn.style.margin = "5px";
-            btn.onclick = () => {
-              document
-                .querySelectorAll("#slot-selection button")
-                .forEach((b) => b.classList.remove("selected"));
-              btn.classList.add("selected");
-              selectedSlotInput.value = slot;
+          if (data && data.slots && data.slots.length > 0) {
+            slotSection.innerHTML = "<p>Select a time slot:</p>";
+            data.slots.forEach((slot) => {
+              const btn = document.createElement("button");
+              btn.type = "button";
+              if (labidentifier == "thyrocare"){
+               
+              btn.textContent = slot;
+              }else if(labidentifier == "healthians"){
+                btn.textContent = slot.time;
+                // Store slot_code in a data attribute!
+                btn.dataset.slotCode = slot.slot_id
+              }
+              btn.className = "btn btn--secondary";
+              btn.style.margin = "5px";
 
-              // Reset everything below
-              document.getElementById("hardcopy-option").style.display =
-                "block";
-              preInvoiceSection.style.display = "none";
-              patientDetails.style.display = "none";
-              placeOrderBtn.style.display = "none";
-
-              // Reset button states
-              hardcopyButtons.forEach((btn) =>
-                btn.classList.remove("selected")
-              );
-            };
-
+             
+              btn.onclick = () => {
+                document
+                  .querySelectorAll("#slot-selection button")
+                  .forEach((b) => b.classList.remove("selected"));
+                btn.classList.add("selected");
+                if (labidentifier == "thyrocare") {
+                  selectedSlotInput.value = slot; // Save the string directly
+                  document.getElementById("selected_slot_code").value = ""; // No slot code
+                  document.getElementById("hardcopy-option").style.display ="block";
+                  preInvoiceSection.style.display = "none";
+                  patientDetails.style.display = "none";
+                  placeOrderBtn.style.display = "none";
+                // Reset button states
+                  hardcopyButtons.forEach((btn) =>
+                  btn.classList.remove("selected")
+                    );
+                  }
+                else if (labidentifier == "healthians") {
+                  selectedSlotInput.value = slot.time;
+                  document.getElementById("selected_slot_code").value = slot.slot_id;
+                  document.getElementById("hardcopy-option").style.display =
+                  "none";
+                preInvoiceSection.style.display = "none";
+                patientDetails.style.display = "block";
+                placeOrderBtn.style.display = "block";
+                }
+              };
             slotSection.appendChild(btn);
-          });
-        } else {
-          slotSection.innerHTML =
-            "<p>No slots available for selected date.</p>";
-          selectedSlotInput.value = "";
-        }
-      });
+          }); 
+        }else {
+            slotSection.innerHTML =
+              "<p>No slots available for selected date.</p>";
+            selectedSlotInput.value = "";
+          }
+        });
+        
 
       // Handle hardcopy option
       hardcopyButtons.forEach((btn) => {
@@ -387,7 +471,9 @@ content %}
           date: document.getElementById("appointment_date")?.value,
           pincode: document.getElementById("pincode")?.value,
           selected_slot: document.getElementById("selected_slot").value,
+          selected_slot_code: document.getElementById("selected_slot_code").value,
           hardcopy: document.getElementById("hardcopy")?.value,
+          provider: labidentifier
         };
         console.log("Slot value before sending:", formData); // 👈 This logs the slot value
         try {
@@ -400,7 +486,9 @@ content %}
           });
 
           const result = await response.json();
-
+          if(labidentifier == "thyrocare"){
+            console.log("Thyrocare response:", result);
+          
           if (result.response_status == 1) {
             alert("Order placed successfully!");
             // Optionally reset the form or close the slide-in
@@ -412,7 +500,21 @@ content %}
           } else {
             alert("Order placement failed.");
           }
-        } catch (error) {
+        } else if(labidentifier == "healthians"){
+          console.log("Healthians response:", result);
+          if (result.status == true) {
+            alert("Order placed successfully!");
+            // Optionally reset the form or close the slide-in
+            document.getElementById("lab-order-form").reset();
+            document
+              .getElementById("lab-order-form")
+              .classList.remove("active");
+            window.location.href = "/lab_tests";
+          } else {
+            alert("Order placement failed.");
+          }
+        }
+       } catch (error) {
           console.error("Error placing order:", error);
           alert("Something went wrong. Please try again later.");
         }

@@ -4,6 +4,9 @@ import mysql.connector
 from mysql.connector import Error
 import os
 from dotenv import load_dotenv
+from requests.auth import HTTPBasicAuth
+import hashlib
+import hmac
 
 # Determine the environment (default: development)
 env = os.getenv('FLASK_ENV', 'prod')
@@ -12,13 +15,6 @@ env = os.getenv('FLASK_ENV', 'prod')
 dotenv_file = f".env.{env}"
 
 load_dotenv(dotenv_file)
-
-
-# call api to get the token from healthians api
-import os
-import json
-import requests
-from requests.auth import HTTPBasicAuth
 
 # This function retrieves an access token from the Healthians API using basic authentication.
 def healthians_get_access_token():
@@ -70,11 +66,32 @@ def save_zipcodes_to_db():
 
         if connection.is_connected():
             cursor = connection.cursor()
+            cursor.execute("delete from healthians_zipcodes")
+            print("Deleted existing records from healthians_zipcodes table.")
+            connection.commit()
+            
             for zipcode in zipcodes:
                 if isinstance(zipcode, dict) and 'zipcode' in zipcode:  # Ensure zipcode is a dictionary
-                    cursor.execute("INSERT INTO healthians_zipcodes (zipcode) VALUES (%s)", (zipcode['zipcode'],))
+                    cursor.execute("INSERT IGNORE INTO healthians_zipcodes (zipcode,city_id,state_id) VALUES (%s,%s,%s)", (zipcode['zipcode'],zipcode['city_id'],zipcode['state_id']))
             connection.commit()
             print("Zipcodes saved to database successfully.")
+            
+            cursor.execute("SELECT * FROM healthians_zipcodes")
+            records = cursor.fetchall()
+            
+            for record in records:
+                response = get_products_by_zipcode(record[0])
+                if response['status']:
+                    # Assuming response['data'] is a list of products
+                    for product in response['data']:
+                        # Extracting necessary fields from the product
+                         cursor.execute("INSERT IGNORE INTO healthians_products (zipcode,test_name,city_name,city_id, price, mrp,product_type,product_type_id,deal_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", (record[0],product['test_name'],product['city_name'],product['city_id'], product['price'], product['mrp'], product['product_type'], product['product_type_id'], product['deal_id']))
+                    connection.commit()
+            
+                else:
+                    print(f"Failed to get products for zipcode {record[0]}: {response['message']}")
+            print("Products saved to database successfully.")
+                
 
     except Error as e:
         print(f"Error while connecting to MySQL: {e}")
@@ -87,25 +104,30 @@ def save_zipcodes_to_db():
 
 # check serviability by lat long coordinates
 def check_serviability_by_lat_long(lat, long):
-    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/checkServiceabilityByLocation_v2"
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f"Bearer {healthians_get_access_token()}"
-    }
-    data = {
-        "lat": lat,
-        "long": long
-    }
-    response = requests.post(url, headers=headers, json=data)
-    print(f"Response from Healthians API: {response.json()} ")
-    if response.status_code == 200:
-        return response.json()
-    else:
-        raise Exception(f"Failed to check servicability: {response.status_code} - {response.text}")
+    try:
+        url = f"{os.getenv('healthians_base_url')}/goelhealthcare/checkServiceabilityByLocation_v2"
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f"Bearer {healthians_get_access_token()}"
+        }
+        data = {
+            "lat": lat,
+            "long": long
+        }
+        response = requests.post(url, headers=headers, json=data)
+        print(f"Response from Healthians API: {response.content} ")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception(f"Failed to check servicability: {response.status_code} - {response.text}")
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return None
 
 
 # this funtions gives the coordinates of the address using google api
 def get_lat_long(address):
+    address=f"Pincode {address}, India"
     api_key = os.getenv('GOOGLE_API_KEY')
     url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={api_key}"
     response = requests.get(url)
@@ -133,7 +155,7 @@ def get_slots_by_lat_long(lat, long, date, zone_id):
         "slot_date": date,
         "zone_id": zone_id
     }
-    print(f"Request data: {data} ")  # Debugging output
+    #print(f"Request data: {data} ")  # Debugging output
     response = requests.post(url, headers=headers, json=data)
     print(f"Response from Healthians API: {response.json()} ")
     if response.status_code == 200:
@@ -141,21 +163,221 @@ def get_slots_by_lat_long(lat, long, date, zone_id):
     else:
         raise Exception(f"Failed to get slots: {response.status_code} - {response.text}")
     
+
+# this function freezes the slot for next 15 mins
+def  freeze_slot_by_slot_id(slot_id):
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/freezeSlot_v1"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {healthians_get_access_token()}"
+    }
+    data = {
+        "slot_id": slot_id,
+        "vendor_billing_user_id": "goelhealthcare"
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    
+    if response.status_code == 200:
+        print(f"Response from Healthians API: {response.json()} ")
+        return response.json()
+    else:
+        raise Exception(f"Failed to freeze slot: {response.status_code} - {response.text}")
     
 
+# this function gets the products for a given zip code
+def get_products_by_zipcode(zipcode):
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/getPartnerProducts"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {healthians_get_access_token()}"
+    }
+    data = {    
+        "zipcode": zipcode
+    }
+    response = requests.post(url, headers=headers, json=data)
+    #print(f"Response from Healthians API: {response.json()} ")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to get products: {response.status_code} - {response.text}")
+    
+
+#this function gets the vendor details
+def get_vendor_details():
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/getVendorIdDetails"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {healthians_get_access_token()}"
+    }
+    data = {   
+            "mobile_number": 7381062885
+                #7869734430  #9993694449
+    }
+    response = requests.post(url, headers=headers, json=data)
+    print(f"Response from Healthians API: {response.json()} ")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to get vendor details: {response.status_code} - {response.text}")
 
 
+# this function generates the checksum for the given data and key
+def generate_checksum(data, key):
+    """
+    Generate a checksum using HMAC-SHA256 algorithm.
+    :param data: The data for which the checksum is to be generated.
+    :param key: The secret key used for generating the checksum.
+    :return: The generated checksum.
+    """
+    hmac_obj = hmac.new(key.encode(), data.encode(), hashlib.sha256)
+    return hmac_obj.hexdigest()
 
-# l1,l2=get_lat_long("banjara hills,hyderabad")
+# this function places order for a given slot id and product id
+def place_order_healthians(patient_id,name,age ,gender,slot_id, product,mobile,billing_name, email, address,lat, long, zipcode,booking_id, vendor_billing_user_id, zone_id):
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/createBooking_v3"
+    data = {
+    "customer": [
+        {
+            "customer_id": f"{patient_id}",
+            "customer_name": f"{name}",
+            "relation": "self",
+            "age": age,
+            "gender": f"{gender}",
+        }
+    ],
+    "slot": {
+        "slot_id": f"{slot_id}"
+    },
+    "package": [
+        {
+            "deal_id": product,
+        }
+    ],
+    "customer_calling_number": mobile,
+    "billing_cust_name": f"{billing_name}",
+    "gender": f"{gender}",
+    "mobile": mobile,
+    "email": f"{email}",
+    "sub_locality": f"{address}",
+    "latitude": f"{lat}",
+    "longitude": f"{long}",
+    "address": f"{address}",
+    "zipcode": zipcode,
+    "hard_copy": 0,
+    "vendor_booking_id": f"{booking_id}",
+    "vendor_billing_user_id": f"{vendor_billing_user_id}",
+    "payment_option": "cod",
+    "zone_id": zone_id
+    }
+    checksum=generate_checksum(json.dumps(data), os.getenv('X-Checksum'))
+    #print(f"Checksum: {checksum}")  # Debugging output
+    # data['checksum'] = checksum
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization  ': f"Bearer {healthians_get_access_token()}",
+        'X-Checksum': checksum
+        
+    }   
+    
+    
+    response = requests.post(url, headers=headers, json=data)
+
+    print(f"Response from Healthians API: {response.json()} ")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to place order: {response.status_code} - {response.text}")
+
+def cancel_order(booking_id):
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/cancelBooking"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {healthians_get_access_token()}"
+    }
+    data = {    
+        "booking_id": booking_id,
+        "vendor_billing_user_id": "mohan123",
+        "vendor_customer_id": "123",
+        "remarks": "Customer not available"
+    }
+    response = requests.post(url, headers=headers, json=data)
+    print(f"Response from Healthians API: {response.json()} ")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to cancel order: {response.status_code} - {response.text}")
+
+def get_reports(booking_id):
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/getCustomerReport_v2"
+    headers = {
+       'Content-Type': 'application/json',
+        'Authorization': f"Bearer {healthians_get_access_token()}"
+    }
+    
+    data ={
+        'booking_id':booking_id,
+        'vendor_billing_user_id': 'mohan123',
+        'vendor_customer_id': '123',
+        'allow_partial_report': 1
+        
+    }
+    
+    response = requests.post(url, headers=headers, json=data)
+    print(f"Response from Healthians API: {response.json()} ")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to cancel order: {response.status_code} - {response.text}")
+
+def get_product_details(product_id):
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/getProductDetails"
+    
+    deal_type, deal_id = product_id.split("_")
+    headers = {         
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {healthians_get_access_token()}"
+    }
+    data = {
+        "deal_type": deal_type,  
+        "deal_type_id": deal_id
+    }
+    response = requests.post(url, headers=headers, json=data)
+    #print(f"Response from Healthians API: {response.json()} ")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to get product details: {response.status_code} - {response.text}")
+        
+
+#get_product_details("parameter_34")        
+        
+#get_reports("1387705970615")        
+    
+#cancel_order("1387705970615")
+#place_order()
+#Response from Healthians API: {'status': True, 'message': 'Booking (1387705970615) placed successfully.', 'lead_id': 0, 'booking_id': '1387705970615', 'resCode': 'RES0001'}
+#healthians_get_access_token()
+#Response from Healthians API: {'status': True, 'message': 'Booking (1387705994324) placed successfully.', 'lead_id': 0, 'booking_id': '1387705994324', 'resCode': 'RES0001'}
+#get_vendor_details()
+#Response from Healthians API: {'status': True, 'message': 'Data available!', 'data': {'customer_name': 'Mohan', 'age': '0', 'gender': 'M', 'vendor_user_id': 'mohan123', 'family_members_data': [{'vendor_user_id': '123', 'name': 'RAHUL SHARMA', 'gender': 'M', 'age': '31'}]}, 'code': 200}
+
+#get_products_by_zipcode("500002")
+
+# l1,l2=get_lat_long("122001")
 # res=check_serviability_by_lat_long(l1,l2)
-# get_slots_by_lat_long(l1,l2,"2025-05-21",res['data']['zone_id'])
+# get_slots_by_lat_long(l1,l2,"2025-04-27",res['data']['zone_id'])
+
+#freeze_slot_by_slot_id("34704496")
 
 
-#check_serviability_by_lat_long("17.415156403394082", "78.37116994338342")
+#check_serviability_by_lat_long("1", "8")
 
 # # Example
 # address = "Bhawanipatna, odisha"
 # api_key = "YOUR_API_KEY"
 # lat, lng = get_lat_long(address, os.getenv('GOOGLE_API_KEY'))
 # print(lat, lng)
+
+# save_zipcodes_to_db()
 

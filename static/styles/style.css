@@ -47,6 +47,7 @@ html {
 .grid--4-cols {
   grid-template-columns: repeat(4, 1fr);
 }
+
 /***************************
 colors
 ***************************/
@@ -185,7 +186,7 @@ Services Settings
 .services {
   background-color: #fff;
   display: flex;
-  padding: 0rem 3.2rem 3.2rem 3.2rem;
+  padding: 0rem 3.2rem 0rem 3.2rem;
   list-style-type: none;
   align-items: center;
   justify-items: center;
@@ -219,7 +220,7 @@ Services Settings
 }
 
 .services-list {
-  padding: 6.4rem 3.2rem 3.2rem 3.2rem;
+  padding: 3.2rem 3.2rem 0rem 3.2rem;
 }
 
 .service-product-link {
@@ -561,7 +562,7 @@ Product Settings
   font-weight: 600;
   color: #1a1a1a;
   text-align: center;
-  padding: 3.2rem 3.2rem !important;
+  padding: 0rem 3.2rem 6.4rem 3.2rem !important;
 }
 
 .product-name {
@@ -601,6 +602,12 @@ Product Settings
   background: none;
   padding: 0;
   cursor: pointer;
+}
+
+.product-image-button :hover {
+  transform: scale(1.05);
+  /* transition: transform 0.2s ease-in-out;
+  background-color: var(--secondary-color) !important; */
 }
 
 .product-search {
@@ -998,6 +1005,21 @@ CART Settings
   font-size: 13.5px;
 }
 
+#lab-order-form {
+  position: fixed;
+  right: -100%; /* Initially hidden off-screen */
+  top: 0;
+  width: 400px;
+  height: 100%;
+  background: white;
+  transition: right 0.3s ease; /* Animate the slide */
+  z-index: 1000;
+}
+
+#lab-order-form.active {
+  right: 0; /* Slide into view */
+}
+
 .lab-form-container input,
 .lab-form-container select,
 .lab-form-container textarea {
@@ -1331,11 +1353,15 @@ signup settings
   font-size: 1.6rem;
   font-weight: 600;
   color: #fff;
-  background-color: #0c4322;
+  background-color: var(--primary-color);
   border: none;
-  border-radius: 0.4rem;
+  border-radius: 2rem;
   cursor: pointer;
   text-align: center;
+}
+
+.btn--primary:hover {
+  background-color: var(--tertiary-color);
 }
 
 /***************************
@@ -1448,6 +1474,11 @@ hero-section
     cursor: pointer;
     text-decoration: none;
     margin: 0 0.2rem;
+  }
+
+  .btn:hover {
+    background-color: var(--tertiary-color) !important;
+    color: #fff;
   }
   /***************************
   services settings
@@ -2236,7 +2267,7 @@ lab test settings
   }
 
   .service-header {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
   /***************************
   popular-health-plans settings
@@ -2417,7 +2448,7 @@ lab test settings
     font-size: 1.2rem;
     font-weight: 500;
     color: #02040f;
-    text-align: center;
+
     padding-bottom: 0.4rem;
   }
 
@@ -2432,14 +2463,14 @@ lab test settings
   services settings 
 ***************************/
   .service-header {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 600;
     padding: 4.8rem 3.2rem 3.2rem 3.2rem;
     margin-bottom: 0rem;
   }
 
   .service-primary-heading {
-    font-size: 1rem;
+    font-size: 1.4rem;
   }
 
   .service-description {
@@ -2599,7 +2630,8 @@ hero-section
   **********************/
 
   .product-search {
-    width: 50%;
+    width: 60% !important;
+    font-size: 1.2rem !important;
     display: flex;
     justify-content: center;
     margin-top: 0rem;
@@ -2610,6 +2642,10 @@ hero-section
   .product_details_el {
     font-size: 1rem;
   }
+  .btn--primary {
+    font-size: 1.2rem !important;
+    padding: 1rem 1.5rem !important;
+  }
 
   .product-details-description {
     font-size: 1rem;
@@ -2619,15 +2655,19 @@ hero-section
   }
   .product-details {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr;
     gap: 1rem;
     row-gap: 1rem;
   }
   .product-details-header {
-    margin-bottom: 1.8rem !important;
+    margin-bottom: 1rem !important;
     font-size: 1.4rem;
-    grid-column: 1 / -1;
-    text-align: center;
+    grid-row: 3/4;
+    text-align: left;
+  }
+
+  .product-details-info {
+    grid-row: 5/6;
   }
 
   .product-details__image {
@@ -2649,13 +2689,13 @@ hero-section
 
   .main-image-container {
     position: relative;
-    width: 15rem;
+    width: 20rem;
     grid-column: 1 / 2;
-    grid-row: 2 / 3;
+    grid-row: 1 / 2;
     margin: 0 auto;
   }
   .main-image {
-    width: 75%;
+    width: 20rem;
     height: auto;
     border-radius: 10px;
     margin-left: 0rem;
@@ -2667,13 +2707,16 @@ hero-section
   }
   .thumbnail-container {
     display: flex;
-    gap: 10px;
+    gap: 1rem;
     margin-top: 10px;
     overflow-x: auto;
-    margin-left: 0rem;
+    margin-left: auto;
+    margin-right: auto;
+
+    /* justify-content: space-between; */
   }
   .thumbnail {
-    width: 2rem;
+    width: 4rem;
     height: auto;
     object-fit: cover;
     cursor: pointer;
@@ -2682,7 +2725,7 @@ hero-section
     margin: 1rem;
   }
   .thumbnail:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
   /* Zoom effect styles */
   .zoom-lens {

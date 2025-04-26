@@ -22,7 +22,9 @@
       <label for="password">Password</label>
       {{ form.password(class="form-control") }}
     </div>
-    <button class="btn btn--primary">{{ form.submit() }}</button>
+    <button class="btn btn--primary">
+      {{ form.submit(class="btn--primary") }}
+    </button>
   </form>
 
   <p

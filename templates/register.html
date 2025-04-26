@@ -1,6 +1,15 @@
 {% extends 'base.html' %} {% block title %}Sign Up{% endblock %} {% block
 content %}
 <div class="signup-container">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %}
+  <div
+    class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show "
+    role="alert"
+  >
+    {{ message }}
+  </div>
+  {% endfor %} {% endif %} {% endwith %}
   <h2 class="signup-header">Sign Up</h2>
   <form action="{{ url_for('register') }}" method="post" class="signup-form">
     {{ form.hidden_tag() }}
@@ -13,7 +22,9 @@ content %}
       {{ form.password(class="form-control") }}
     </div>
 
-    <button class="btn btn--primary"">{{ form.submit() }}</button>
+    <button class="btn btn--primary">
+      {{ form.submit(class="btn--primary") }}
+    </button>
   </form>
 </div>
 {% endblock %}
