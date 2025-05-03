@@ -19,7 +19,7 @@ from flask_apscheduler import APScheduler
 from thyrocare import get_thyrocare_products,get_thyrocare_test_detail,check_pincode_availability_thyrocare,check_slots_availability_thyrocare,create_order_thyrocare
 from thyrocare import view_cart_details_thyrocare,cancel_order_thyrocare,update_db_thyrocare_products,report_download_thyrocare,get_order_summary_thyrocare
 from healthians import get_product_details,get_lat_long,get_slots_by_lat_long,check_serviability_by_lat_long
-from healthians import place_order_healthians
+from healthians import place_order_healthians,cancel_order,save_zipcodes_to_db,get_order_status_healthians,get_reports
 
 # Determine the environment (default: development)
 env = os.getenv('FLASK_ENV', 'prod')
@@ -52,6 +52,7 @@ razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
 # initialize the scheduler
 scheduler = APScheduler()
+scheduler.init_app(app)
 
 # UPDATE SHIPPING STATUS IN MYSQL
 def update_shipping_status(order_id):
@@ -126,14 +127,72 @@ def auto_update_download_url():
             cursor.execute("update thyrocare_test_bookings set report_url = %s where tc_lead_no = %s", (response['URL'],url[0]))
             
     print("Updated download URL for all pending orders.")
+
+
+# function to auto updated the orders status for healthians
+def auto_update_healthians_status():
+    """Check and update healthians order status for all pending shipments"""
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
     
+    # Fetch all pending orders from the database
+    cursor.execute("SELECT healthians_order_no FROM healthians_test_bookings WHERE status != 'Order Cancelled' and status != 'Report Available' and healthians_order_no is not null")
+    pending_orders = cursor.fetchall()
+    #print(pending_orders)
+    #print(type(pending_orders))
+    for order in pending_orders:
+        response = get_order_status_healthians(order[0])
+        #print(type(response))
+        if response['resCode'] == 'RES0001': #''respId'': ''RES00001'',
+            cursor.execute("select status_desc from healthians_reference_status_tbl where status_code = %s", (response['data']['booking_status'],)) 
+            status_desc = cursor.fetchone()
+            #print(type(response))
+            #print(status_desc[0])
+            
+            if response['data']:
+                cursor.execute("update healthians_test_bookings set status = %s where healthians_order_no = %s", (status_desc,response['data']['booking_id']))
+                conn.commit()
+            
+    cursor.close()
+    conn.close()
+    print("Updated healthians order status for all pending orders.")
+    
+
+# function to auto updated the download url of orders for healthians 
+def auto_update_healthians_download_url():
+    """Check and update download URL for all pending shipments"""
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    
+    # Fetch all pending orders from the database whose download url is null
+    cursor.execute("SELECT healthians_order_no,vendor_id,patient_id FROM healthians_test_bookings WHERE report_url is null and status = 'Report Available' and healthians_order_no is not null")
+    pending_url = cursor.fetchall()
+    
+    
+    
+    #print(pending_orders)
+    # iterate through the pending orders and update the download url
+    for url in pending_url:
+        order_=url[0]
+        vendor_id=url[1]
+        patient_id=url[2]
+        response = get_reports(order_,vendor_id,patient_id)
+        #print(type(response))
+        if response['status']:
+            cursor.execute("update healthians_test_bookings set report_url = %s where healthians_order_no = %s", (response['report_url'],order_))
+            
+    print("Updated download URL for all pending orders.")
+           
 
 
 # Schedule the job every 10 minutes
-scheduler.add_job(id="auto_update_shipping", func=auto_update_shipping_status, trigger="interval",  minutes=50)
-scheduler.add_job(id="thyrocare_update", func=update_db_thyrocare_products, trigger="cron", hour=10, minute=5)
-scheduler.add_job(id="auto_update_lab_Status", func=auto_update_lab_status, trigger="interval",  minutes=55)
-scheduler.add_job(id="auto_update_download_url", func=auto_update_download_url, trigger="interval",  minutes=60)
+#scheduler.add_job(id="auto_update_shipping", func=auto_update_shipping_status, trigger="interval",  minutes=50)
+#scheduler.add_job(id="thyrocare_update", func=update_db_thyrocare_products, trigger="cron", hour=5, minute=30, max_instances=1, misfire_grace_time=3600)
+#scheduler.add_job(id="healthians_update", func=save_zipcodes_to_db, trigger="cron", hour=0, minute=25, max_instances=1, misfire_grace_time=3600)
+#scheduler.add_job(id="auto_update_lab_Status", func=auto_update_lab_status, trigger="interval",  minutes=55)
+#scheduler.add_job(id="auto_update_healthians_status", func=auto_update_healthians_status, trigger="interval",  minutes=55)
+#scheduler.add_job(id="auto_update_download_url", func=auto_update_download_url, trigger="interval",  minutes=60)
+#scheduler.add_job(id="auto_update_healthians_download_url", func=auto_update_healthians_download_url, trigger="interval",  minutes=60)  
 scheduler.start()
 
 
@@ -683,9 +742,12 @@ def add_to_cart_healthians(id):
         # Fetch the product
         cursor.execute('SELECT * FROM healthians_products WHERE deal_id = %s and zipcode=%s', (id,pincode))
         product = cursor.fetchone()
+        # cursor.fetchall()
+        print("product: ", product)
         if not product:
             cursor.close()
             connection.close()
+            print("product not found")
             flash('Product not available in your area', 'danger')
             return jsonify({'error': 'Product not found'})
         
@@ -715,8 +777,10 @@ def add_to_cart_healthians(id):
         
         return redirect(url_for('cart'))
     except mysql.connector.Error as err:
+        print("sql error: ", err)
         return jsonify({'error': str(err)})
     except Exception as e:
+        print("exception error: ", e)
         return jsonify({'error': str(e)})
     
     
@@ -1184,7 +1248,7 @@ def order_history():
         orders = cursor.fetchall()
         
     # Fetch lab test orders
-        cursor.execute("SELECT * FROM thyrocare_test_bookings WHERE cust_id = %s and tc_order_no is not null", (current_user.id,))
+        cursor.execute('''select tc_book_id, concat(booking_date," ",booking_time) as booking_date, patient_name,tc_order_no,products,status,report_url,lab from thyrocare_test_bookings where cust_id=%s and tc_order_no is not null union all select healthians_book_id,concat(booking_date," ",booking_time),patient_name,healthians_order_no,products,status,report_url,lab from healthians_test_bookings where cust_id=%s and healthians_order_no is not null''', (current_user.id,current_user.id))
         lab_orders = cursor.fetchall()
         cursor.close()
         connection.close()
@@ -1900,6 +1964,49 @@ def cancel_lab_booking(booking_id):
         flash("An error occurred while cancelling the booking.", "danger")
 
     return redirect(url_for('order_history'))
+
+
+@app.route('/cancel-healthians-booking/<int:booking_id>')
+@login_required
+def cancel_healthians_booking(booking_id):
+    try:
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor()
+        
+        # Optional: Check status before updating
+        cursor.execute("SELECT status FROM healthians_test_bookings WHERE healthians_book_id = %s", (booking_id,))
+        result = cursor.fetchone()
+        
+        #fetch
+        cursor.execute("SELECT healthians_order_no,vendor_id,patient_id FROM healthians_test_bookings WHERE healthians_book_id = %s", (booking_id,))
+        order_no = cursor.fetchone()
+        healthians_order_no = order_no[0]
+        vendor_id= order_no[1]
+        patient_id= order_no[2]
+
+        if result and result[0] in ['Order Placed', 'Pickup Scheduled']:
+            # call the function to cancel the booking in healthians api
+            response = cancel_order(healthians_order_no,vendor_id,patient_id)
+            if response['status'] == True:
+                # Update the status in the database
+                cursor.execute("UPDATE healthians_test_bookings SET status = 'Order Cancelled' WHERE healthians_book_id = %s", (booking_id,))
+                connection.commit()
+                flash("Lab booking has been cancelled.", "success")
+            else:
+                flash("Failed to cancel the booking with Healthians.", "danger")
+        
+        cursor.close()
+        connection.close()
+        
+    except Exception as e:
+        print("Error:", e)
+        flash("An error occurred while cancelling the booking.", "danger")
+    
+    return redirect(url_for('order_history'))
+                
+        
+        
+
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode

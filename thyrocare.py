@@ -4,6 +4,7 @@ import mysql.connector
 from mysql.connector import Error
 import os
 from dotenv import load_dotenv
+import datetime
 
 # Determine the environment (default: development)
 env = os.getenv('FLASK_ENV', 'prod')
@@ -70,6 +71,8 @@ def update_db_thyrocare_products():
   connection = mysql.connector.connect(host=host, user=user, password=password, database=database, auth_plugin=auth_plugin)
   cursor = connection.cursor()
   
+  current_time = datetime.datetime.now()
+  
   print("connection made with database successfully")
   
   #deleting records from the table before inserting new records
@@ -80,20 +83,20 @@ def update_db_thyrocare_products():
   
   for item in offer_products.get('master').get('offer',[]):
     #print(item['code']+item['name']+item['type']+item['rate']['b2C']+item['rate']['offerRate']+item['margin']+item['fasting'])
-    query = "INSERT IGNORE INTO thyrocare_tests (tc_prod_id, tc_prod_name,tc_prod_type,tc_prod_childs,tc_test_Count,tc_rate_b2c,tc_rate_offer,tc_margin,tc_fasting) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (item['code'], item['name'], item['type'], json.dumps(item['childs']), item['testCount'], item['rate']['b2C'], item['rate']['offerRate'], item['margin'], item['fasting']))
+    query = "INSERT IGNORE INTO thyrocare_tests (tc_prod_id, tc_prod_name,tc_prod_type,tc_prod_childs,tc_test_Count,tc_rate_b2c,tc_rate_offer,tc_margin,tc_fasting,updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)"
+    cursor.execute(query, (item['code'], item['name'], item['type'], json.dumps(item['childs']), item['testCount'], item['rate']['b2C'], item['rate']['offerRate'], item['margin'], item['fasting'], current_time))
     connection.commit()
     
   for item in offer_products.get('master').get('tests',[]):
     #print(item['code']+item['name']+item['type']+item['rate']['b2C']+item['rate']['offerRate']+item['margin']+item['fasting'])
-    query = "INSERT IGNORE INTO thyrocare_tests (tc_prod_id, tc_prod_name,tc_prod_type,tc_prod_childs,tc_test_Count,tc_rate_b2c,tc_rate_offer,tc_margin,tc_fasting) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (item['code'], item['name'], item['type'], json.dumps(item['childs']), item['testCount'], item['rate']['b2C'], item['rate']['offerRate'], item['margin'], item['fasting']))
+    query = "INSERT IGNORE INTO thyrocare_tests (tc_prod_id, tc_prod_name,tc_prod_type,tc_prod_childs,tc_test_Count,tc_rate_b2c,tc_rate_offer,tc_margin,tc_fasting,updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)"
+    cursor.execute(query, (item['code'], item['name'], item['type'], json.dumps(item['childs']), item['testCount'], item['rate']['b2C'], item['rate']['offerRate'], item['margin'], item['fasting'],current_time))
     connection.commit()
   
   for item in offer_products.get('master').get('profile',[]):
     #print(item['code']+item['name']+item['type']+item['rate']['b2C']+item['rate']['offerRate']+item['margin']+item['fasting'])
-    query = "INSERT IGNORE INTO thyrocare_tests (tc_prod_id, tc_prod_name,tc_prod_type,tc_prod_childs,tc_test_Count,tc_rate_b2c,tc_rate_offer,tc_margin,tc_fasting) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (item['code'], item['name'], item['type'], json.dumps(item['childs']), item['testCount'], item['rate']['b2C'], item['rate']['offerRate'], item['margin'], item['fasting']))
+    query = "INSERT IGNORE INTO thyrocare_tests (tc_prod_id, tc_prod_name,tc_prod_type,tc_prod_childs,tc_test_Count,tc_rate_b2c,tc_rate_offer,tc_margin,tc_fasting,updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)"
+    cursor.execute(query, (item['code'], item['name'], item['type'], json.dumps(item['childs']), item['testCount'], item['rate']['b2C'], item['rate']['offerRate'], item['margin'], item['fasting'],current_time))
     connection.commit()
     
   connection.close()
@@ -252,7 +255,7 @@ def get_order_summary_thyrocare(order_no):
   }
   
   response = requests.post(url='https://velso.thyrocare.cloud/api/OrderSummary/OrderSummary',json=data, headers=headers)
-  print('api accessed successfully')
+  #print('api accessed successfully')
   #print(response.json())
   # print(response.json()['orderMaster'][0])
   # print(response.json()['orderMaster'][0]['status'])
@@ -302,7 +305,9 @@ def report_download_thyrocare(lead_id,mobile):
   response = requests.get(url=f'https://b2capi.thyrocare.com/APIS/order.svc/{B2CAPIKEY}/GETREPORTS/{LEADID}/{ReportFormat}/{MOBILE}/Myreport')
   print(response.json())
   return response.json()
-     
+
+
+#update_db_thyrocare_products()     
 #get_thyrocare_token()
 
 #{'response_status': 1, 'response': {'message': 'Order Placed Successfully', 'duplicate_skus': None}, 'ben_data': [{'name': 'None', 'age': 23, 'gender': 'Male', 'lead_id': 'SP80994962'}], 'order_no': 'VLA0BE52', 'products': 'HBST', 'product_names': 'HBST', 'service_type': 'HOME COLLECTION', 'mode': 'PAY WHILE SAMPLE COLLECTION', 'report_hard_copy': 'YES', 'customer_rate': 1032, 'booked_by': 'Test', 'status': 'YET TO CONFIRM', 'pay_type': 'POSTPAID', 'mobile': '7381062885', 'address': 'Flat 304, Block H, JAINS CARLTON CREEK, Lanco Hills Road Flat 304, Block H, JAINS CARLTON CREEK, Lanco Hills Road', 'email': 'mohanmurali.behera@gmail.com', 'ref_order_id': 'NIRVIYU30', 'fasting': 'NON FASTING', 'collection_centers': None, 'qr': None}

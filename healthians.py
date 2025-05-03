@@ -7,6 +7,12 @@ from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 import hashlib
 import hmac
+import datetime
+import time
+import logging
+
+# Set up logging configuration
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Determine the environment (default: development)
 env = os.getenv('FLASK_ENV', 'prod')
@@ -41,7 +47,7 @@ def healthians_get_servicable_zipcodes():
         'Authorization': f"Bearer {healthians_get_access_token()}"
     }
     response = requests.get(url, headers=headers)
-    print(f"Response from Healthians API: {response.status_code} ")
+    #print(f"Response from Healthians API: {response.status_code} ")
     if response.status_code == 200:
         return response.json()
     else:
@@ -50,7 +56,9 @@ def healthians_get_servicable_zipcodes():
 # this function saves the zip codes to the database
 def save_zipcodes_to_db():
     zipcodes = healthians_get_servicable_zipcodes()
-    print(type(zipcodes))  # Debugging output
+    #print(type(zipcodes))  # Debugging output
+    
+    current_time= datetime.datetime.now()
 
     if isinstance(zipcodes, dict):  
         zipcodes = list(zipcodes.values())  # Convert dict values to a proper list
@@ -65,27 +73,39 @@ def save_zipcodes_to_db():
         )
 
         if connection.is_connected():
+            logging.info("Connected to MySQL database")
             cursor = connection.cursor()
             cursor.execute("delete from healthians_zipcodes")
-            print("Deleted existing records from healthians_zipcodes table.")
+            #print("Deleted existing records from healthians_zipcodes table.")
             connection.commit()
+            
+
             
             for zipcode in zipcodes:
                 if isinstance(zipcode, dict) and 'zipcode' in zipcode:  # Ensure zipcode is a dictionary
                     cursor.execute("INSERT IGNORE INTO healthians_zipcodes (zipcode,city_id,state_id) VALUES (%s,%s,%s)", (zipcode['zipcode'],zipcode['city_id'],zipcode['state_id']))
             connection.commit()
-            print("Zipcodes saved to database successfully.")
+            #print("Zipcodes saved to database successfully.")
             
             cursor.execute("SELECT * FROM healthians_zipcodes")
             records = cursor.fetchall()
             
+            #deleting records from healthians_products table
+            cursor.execute("delete from healthians_products")
+            #print("Deleted existing records from healthians_products table.")
+            
             for record in records:
+                time.sleep(0.25)  # Adding a delay of 0.25 seconds between requests
                 response = get_products_by_zipcode(record[0])
-                if response['status']:
+                if response['status'] and response['data']:
                     # Assuming response['data'] is a list of products
                     for product in response['data']:
+                        #logging.info(f"start entering products {product['deal_id']}")  # Debugging output
+                        #print(product)  # Debugging output
+                        #print(f"Product ID: {product['deal_id']}")
                         # Extracting necessary fields from the product
-                         cursor.execute("INSERT IGNORE INTO healthians_products (zipcode,test_name,city_name,city_id, price, mrp,product_type,product_type_id,deal_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", (record[0],product['test_name'],product['city_name'],product['city_id'], product['price'], product['mrp'], product['product_type'], product['product_type_id'], product['deal_id']))
+                        cursor.execute("INSERT IGNORE INTO healthians_products (zipcode,test_name,city_name,city_id, price, mrp,product_type,product_type_id,deal_id,updated_at) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (record[0],product['test_name'],product['city_name'],product['city_id'], product['price'], product['mrp'], product['product_type'], product['product_type_id'], product['deal_id'], current_time))
+                        #logging.info(f"End of entering products {product['deal_id']}")
                     connection.commit()
             
                 else:
@@ -115,7 +135,7 @@ def check_serviability_by_lat_long(lat, long):
             "long": long
         }
         response = requests.post(url, headers=headers, json=data)
-        print(f"Response from Healthians API: {response.content} ")
+        #print(f"Response from Healthians API: {response.content} ")
         if response.status_code == 200:
             return response.json()
         else:
@@ -135,7 +155,7 @@ def get_lat_long(address):
     #print(f"Response from Google API: {data} ")
     if data['status'] == 'OK':
         location = data['results'][0]['geometry']['location']
-        print(f"Coordinates for {address}: {location['lat']}, {location['lng']}")  # Debugging output
+        #print(f"Coordinates for {address}: {location['lat']}, {location['lng']}")  # Debugging output
         return location['lat'], location['lng']
     return None, None
 
@@ -157,7 +177,7 @@ def get_slots_by_lat_long(lat, long, date, zone_id):
     }
     #print(f"Request data: {data} ")  # Debugging output
     response = requests.post(url, headers=headers, json=data)
-    print(f"Response from Healthians API: {response.json()} ")
+    #print(f"Response from Healthians API: {response.json()} ")
     if response.status_code == 200:
         return response.json()
     else:
@@ -215,7 +235,7 @@ def get_vendor_details():
                 #7869734430  #9993694449
     }
     response = requests.post(url, headers=headers, json=data)
-    print(f"Response from Healthians API: {response.json()} ")
+    #print(f"Response from Healthians API: {response.json()} ")
     if response.status_code == 200:
         return response.json()
     else:
@@ -289,7 +309,7 @@ def place_order_healthians(patient_id,name,age ,gender,slot_id, product,mobile,b
     else:
         raise Exception(f"Failed to place order: {response.status_code} - {response.text}")
 
-def cancel_order(booking_id):
+def cancel_order(booking_id, vendor_user_id, customer_id):
     url = f"{os.getenv('healthians_base_url')}/goelhealthcare/cancelBooking"
     headers = {
         'Content-Type': 'application/json',
@@ -297,18 +317,18 @@ def cancel_order(booking_id):
     }
     data = {    
         "booking_id": booking_id,
-        "vendor_billing_user_id": "mohan123",
-        "vendor_customer_id": "123",
+        "vendor_billing_user_id": vendor_user_id,
+        "vendor_customer_id": customer_id,
         "remarks": "Customer not available"
     }
     response = requests.post(url, headers=headers, json=data)
-    print(f"Response from Healthians API: {response.json()} ")
+    #print(f"Response from Healthians API: {response.json()} ")
     if response.status_code == 200:
         return response.json()
     else:
         raise Exception(f"Failed to cancel order: {response.status_code} - {response.text}")
 
-def get_reports(booking_id):
+def get_reports(booking_id, vendor_id, customer_id):
     url = f"{os.getenv('healthians_base_url')}/goelhealthcare/getCustomerReport_v2"
     headers = {
        'Content-Type': 'application/json',
@@ -317,14 +337,14 @@ def get_reports(booking_id):
     
     data ={
         'booking_id':booking_id,
-        'vendor_billing_user_id': 'mohan123',
-        'vendor_customer_id': '123',
+        'vendor_billing_user_id': vendor_id,
+        'vendor_customer_id': customer_id,
         'allow_partial_report': 1
         
     }
     
     response = requests.post(url, headers=headers, json=data)
-    print(f"Response from Healthians API: {response.json()} ")
+    #print(f"Response from Healthians API: {response.json()} ")
     if response.status_code == 200:
         return response.json()
     else:
@@ -350,11 +370,31 @@ def get_product_details(product_id):
         raise Exception(f"Failed to get product details: {response.status_code} - {response.text}")
         
 
+def get_order_status_healthians(booking_id):
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/getBookingStatus"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {healthians_get_access_token()}"
+    }
+    data = {
+        "booking_id": booking_id
+    }
+    response = requests.post(url, headers=headers, json=data)
+    #print(f"Response from Healthians API: {response.json()} ")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to get order status: {response.status_code} - {response.text}")
+
+
+#get_order_status_healthians("1387705994324")
+
 #get_product_details("parameter_34")        
         
 #get_reports("1387705970615")        
     
-#cancel_order("1387705970615")
+
+
 #place_order()
 #Response from Healthians API: {'status': True, 'message': 'Booking (1387705970615) placed successfully.', 'lead_id': 0, 'booking_id': '1387705970615', 'resCode': 'RES0001'}
 #healthians_get_access_token()
@@ -379,5 +419,6 @@ def get_product_details(product_id):
 # lat, lng = get_lat_long(address, os.getenv('GOOGLE_API_KEY'))
 # print(lat, lng)
 
-# save_zipcodes_to_db()
+#save_zipcodes_to_db()
+#get_products_by_zipcode(908765)
 
