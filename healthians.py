@@ -213,7 +213,11 @@ def get_products_by_zipcode(zipcode):
         'Authorization': f"Bearer {healthians_get_access_token()}"
     }
     data = {    
-        "zipcode": zipcode
+        "zipcode": zipcode,
+        "product_type": "",
+        "product_type_id": "",
+        "limit": "100000"
+        
     }
     response = requests.post(url, headers=headers, json=data)
     #print(f"Response from Healthians API: {response.json()} ")
@@ -421,5 +425,5 @@ def get_order_status_healthians(booking_id):
 # print(lat, lng)
 
 #save_zipcodes_to_db()
-#get_products_by_zipcode(908765)
+get_products_by_zipcode(495001)
 

@@ -206,8 +206,8 @@ content %}
           <option value="Female">Female</option>
         </select>
 
-        <label for="report">Report Required:</label>
-        <select name="report" required>
+        <label id='health_na' for="report">Report Required:</label>
+        <select id='health_na_2' name="report" required>
           <option value="Y">Yes</option>
           <option value="N">No</option>
         </select>
@@ -298,6 +298,8 @@ content %}
       const preInvoiceSection = document.getElementById("pre-invoice-section");
       const patientDetails = document.getElementById("patient-details");
       const placeOrderBtn = document.getElementById("place-order-btn");
+      const hadcopy_option_na= document.getElementById("health_na");
+      const hadcopy_option_na_2= document.getElementById("health_na_2");
       
       let labidentifier = null; // Define globally
 
@@ -375,6 +377,8 @@ content %}
                   document.getElementById("selected_slot_code").value = slot.slot_id;
                   document.getElementById("hardcopy-option").style.display =
                   "none";
+                  hadcopy_option_na.style.display = "none";
+                  hadcopy_option_na_2.style.display = "none";
                 preInvoiceSection.style.display = "none";
                 patientDetails.style.display = "block";
                 placeOrderBtn.style.display = "block";
