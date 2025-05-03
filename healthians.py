@@ -302,9 +302,10 @@ def place_order_healthians(patient_id,name,age ,gender,slot_id, product,mobile,b
     
     
     response = requests.post(url, headers=headers, json=data)
-
-    print(f"Response from Healthians API: {response.json()} ")
-    if response.status_code == 200:
+    resp_data = response.json()
+    #print(f"Response from Healthians API: {response.json()} ")
+    if resp_data:
+        #print(f"Response from Healthians API: {resp_data} ")  # Debugging output
         return response.json()
     else:
         raise Exception(f"Failed to place order: {response.status_code} - {response.text}")

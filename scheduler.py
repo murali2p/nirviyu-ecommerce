@@ -203,8 +203,8 @@ scheduler.add_job(
     id='save_zipcodes_job',
     func=save_zipcodes_to_db,
     trigger='cron',
-    hour=11,
-    minute=37,
+    hour=1,
+    minute=30,
     replace_existing=True,
     max_instances=1
 )
@@ -213,7 +213,7 @@ scheduler.add_job(
     id='auto_update_healthians_status_job',
     func=auto_update_healthians_status,
     trigger='interval',
-    minutes=5,
+    minutes=55,
     replace_existing=True,
     max_instances=1
 )
@@ -222,19 +222,19 @@ scheduler.add_job(
     id='auto_update_healthians_download_url_job',
     func=auto_update_healthians_download_url,
     trigger='interval',
-    minutes=13,
+    minutes=53,
     replace_existing=True,
     max_instances=1
 )
 
-scheduler.add_job(id="auto_update_shipping", func=auto_update_shipping_status, trigger="interval",  minutes=5,   replace_existing=True,
+scheduler.add_job(id="auto_update_shipping", func=auto_update_shipping_status, trigger="interval",  minutes=55,   replace_existing=True,
     max_instances=1)
 
 scheduler.add_job(id="thyrocare_update", func=update_db_thyrocare_products, trigger="cron", hour=5, minute=30, max_instances=1, replace_existing=True)
 
-scheduler.add_job(id="auto_update_lab_Status", func=auto_update_lab_status, trigger="interval",  minutes=5,   replace_existing=True,max_instances=1)
+scheduler.add_job(id="auto_update_lab_Status", func=auto_update_lab_status, trigger="interval",  minutes=55,   replace_existing=True,max_instances=1)
 
-scheduler.add_job(id="auto_update_download_url", func=auto_update_download_url, trigger="interval",  minutes=5,   replace_existing=True,max_instances=1)
+scheduler.add_job(id="auto_update_download_url", func=auto_update_download_url, trigger="interval",  minutes=55,   replace_existing=True,max_instances=1)
 
 if __name__ == "__main__":
     logging.info("Starting scheduler...")

@@ -486,6 +486,8 @@ content %}
           });
 
           const result = await response.json();
+          console.log("Response from server:", result); // Log the response
+
           if(labidentifier == "thyrocare"){
             console.log("Thyrocare response:", result);
           
@@ -511,7 +513,7 @@ content %}
               .classList.remove("active");
             window.location.href = "/lab_tests";
           } else {
-            alert("Order placement failed.");
+            alert(result.message);
           }
         }
        } catch (error) {

@@ -1847,8 +1847,8 @@ def book_now():
         #pass the details to healthians api for booking
         
         response=place_order_healthians(patient_id,name,age ,gender,slot_id, products,phone,current_user.username, email, address,lat, long, pincode,row_id, "goelhealthcare", zone_id)
-        
-        if response['status'] == True:
+        #print("response from healthians in route",response)
+        if response['status']:
             print("order created successfully")
             print(response)
             
@@ -1872,11 +1872,11 @@ def book_now():
         
         
     
-    else:
-            print("order creation failed")
-            cursor.close()
-            connection.close()
-            return jsonify({'error': 'Failed to create order'}), 500
+        else:
+                print("order creation failed")
+                cursor.close()
+                connection.close()
+                return response
     
 
     # Optional: Validate and check if already booked
