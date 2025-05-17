@@ -96,20 +96,22 @@ def save_zipcodes_to_db():
             
             for record in records:
                 time.sleep(0.25)  # Adding a delay of 0.25 seconds between requests
-                response = get_products_by_zipcode(record[0])
-                if response['status'] and response['data']:
-                    # Assuming response['data'] is a list of products
-                    for product in response['data']:
-                        #logging.info(f"start entering products {product['deal_id']}")  # Debugging output
-                        #print(product)  # Debugging output
-                        #print(f"Product ID: {product['deal_id']}")
-                        # Extracting necessary fields from the product
-                        cursor.execute("INSERT IGNORE INTO healthians_products (zipcode,test_name,city_name,city_id, price, mrp,product_type,product_type_id,deal_id,updated_at) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (record[0],product['test_name'],product['city_name'],product['city_id'], product['price'], product['mrp'], product['product_type'], product['product_type_id'], product['deal_id'], current_time))
-                        #logging.info(f"End of entering products {product['deal_id']}")
-                    connection.commit()
-            
-                else:
-                    print(f"Failed to get products for zipcode {record[0]}: {response['message']}")
+                types=['','package','profile']
+                for type in types:
+                    response = get_products_by_zipcode(record[0],type)
+                    if response['status'] and response['data']:
+                        # Assuming response['data'] is a list of products
+                        for product in response['data']:
+                            #logging.info(f"start entering products {product['deal_id']}")  # Debugging output
+                            #print(product)  # Debugging output
+                            #print(f"Product ID: {product['deal_id']}")
+                            # Extracting necessary fields from the product
+                            cursor.execute("INSERT IGNORE INTO healthians_products (zipcode,test_name,city_name,city_id, price, mrp,product_type,product_type_id,deal_id,updated_at) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (record[0],product['test_name'],product['city_name'],product['city_id'], product['price'], product['mrp'], product['product_type'], product['product_type_id'], product['deal_id'], current_time))
+                            #logging.info(f"End of entering products {product['deal_id']}")
+                        connection.commit()
+                
+                    else:
+                        print(f"Failed to get products for zipcode {record[0]}: {response['message']}")
             print("Products saved to database successfully.")
                 
 
@@ -206,7 +208,7 @@ def  freeze_slot_by_slot_id(slot_id):
     
 
 # this function gets the products for a given zip code
-def get_products_by_zipcode(zipcode):
+def get_products_by_zipcode(zipcode,param):
     url = f"{os.getenv('healthians_base_url')}/goelhealthcare/getPartnerProducts"
     headers = {
         'Content-Type': 'application/json',
@@ -214,7 +216,7 @@ def get_products_by_zipcode(zipcode):
     }
     data = {    
         "zipcode": zipcode,
-        "product_type": "",
+        "product_type": f"{param}",
         "product_type_id": "",
         "limit": "100000"
         
@@ -425,5 +427,6 @@ def get_order_status_healthians(booking_id):
 # print(lat, lng)
 
 #save_zipcodes_to_db()
-get_products_by_zipcode(495001)
+#get_products_by_zipcode(403601)
+#healthians_get_access_token()
 

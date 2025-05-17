@@ -1,37 +1,49 @@
-{
-    "customer": [
-        {
-            "customer_id": "CUYEFNRUQB343B",
-            "customer_name": "RAHUL SHARMA",
-            "relation": "self",
-            "age": 31,
-            "gender": "M",
-        }
-    ],
-    "slot": {
-        "slot_id": "11432603"
-    },
-    "package": [
-        {
-            "deal_id": [
-                "profile_1","parameter_625","package_119"
-            ]
-        }
-    ],
-    "customer_calling_number": "8377736411",
-    "billing_cust_name": "RAHUL SHARMA",
-    "gender": "M",
-    "mobile": "8377736411",
-    "email": "rahulsharma@gmail.com",
-    "sub_locality": "Plot No-518, Phase III, Udyog Vihar III, Sector 19, Gurugram, Haryana 122016, India",
-    "latitude": "28.512195944534703",
-    "longitude": "77.08483249142313",
-    "address": "Sector 19",
-    "zipcode": "122016",
-    "hard_copy": 0,
-    "vendor_booking_id": "897234897232333",
-    "vendor_billing_user_id": "CUYEFNRUQB343B",
-    "payment_option": "cod",
-    "discounted_price": 400,
-    "zone_id": 53
-}
+import requests
+import json
+import mysql.connector
+from mysql.connector import Error
+import os
+from dotenv import load_dotenv
+from requests.auth import HTTPBasicAuth
+import hashlib
+import hmac
+import datetime
+import time
+import logging
+from healthians import get_products_by_zipcode
+
+# Set up logging configuration
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Determine the environment (default: development)
+env = os.getenv('FLASK_ENV', 'prod')
+
+# Load the corresponding .env file
+dotenv_file = f".env.{env}"
+
+load_dotenv(dotenv_file)
+
+# This function retrieves an access token from the Healthians API using basic authentication.
+def healthians_get_access_token():
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/getAccessToken"
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    auth = HTTPBasicAuth(os.getenv('healthians_username'), os.getenv('healthians_password'))
+
+    response = requests.get(url, headers=headers, auth=auth)
+    
+    print(response.json()['access_token'])
+    
+    if response.status_code == 200 :
+        return response.json().get('access_token')
+    else:
+        raise Exception(f"Failed to get token: {response.status_code} - {response.text}")
+    
+def save_zipcodes_to_db():
+    types=['','package','profile']
+    for type in types:
+        response = get_products_by_zipcode(495001,type)
+        print(response['data_count'])
+    
+#save_zipcodes_to_db()
