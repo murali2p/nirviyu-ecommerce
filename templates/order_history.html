@@ -72,7 +72,7 @@
             <td>{{ order.product_details }}</td>
             <td>{{ order.shipment_status}}</td>
             <td>
-              {% if (order.shipment_status in
+              {% if order.shipment_status in
               ['New','Invoiced','NEW','INVOICED','OUT FOR PICKUP','Out For
               Pickup','Ready to Ship','READY TO SHIP'] %}
               <a
