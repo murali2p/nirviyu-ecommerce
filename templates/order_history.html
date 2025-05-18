@@ -60,6 +60,7 @@
             <th>Price</th>
             <th>Order Details</th>
             <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -70,7 +71,19 @@
             <td>{{ order.amount }}</td>
             <td>{{ order.product_details }}</td>
             <td>{{ order.shipment_status}}</td>
+            <td>
+              {% if (order.shipment_status in
+              ['New','Invoiced','NEW','INVOICED','OUT FOR PICKUP','Out For
+              Pickup','Ready to Ship','READY TO SHIP'] %}
+              <a
+                href="{{ url_for('cancel_order_nirviyu', order_id=order.order_id) }}"
+                class="btn btn-sm btn-danger"
+                >Cancel</a
+              >
+              {% endif %}
+            </td>
           </tr>
+
           {% else %}
           <tr>
             <td colspan="5" class="text-center">No product orders found.</td>

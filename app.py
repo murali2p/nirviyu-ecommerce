@@ -1237,6 +1237,77 @@ def webhook_nirviyu():
     except Exception as e:
         return jsonify({'error': str(e)})
 
+def cancel_shiprocket_order(order_id):
+    token = get_shiprocket_token()
+    if not token:
+        return {"error": "Token error"}
+
+    url = "https://apiv2.shiprocket.in/v1/external/orders/cancel"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "ids": [order_id]
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    return response.json()
+
+@app.route('/cancel_order_nirviyu', methods=['GET'])
+@login_required
+def cancel_order_nirviyu(order_id):
+    try:
+        #get the src_id from the order id
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM shipment WHERE internal_order_id = %s', (order_id,))
+        sr_order_id = cursor.fetchone()
+        #cursor.fetchall()
+
+        sr_order_id_=sr_order_id['sr_order_id']
+        
+        result = cancel_shiprocket_order(sr_order_id_)
+        flash(result.get('message', 'Unknown error'))
+        
+        update_shipping_status(sr_order_id_)
+        
+        #initiate refund in razorpay find the payid for the order id
+        
+        cursor.execute('SELECT * FROM order_generate WHERE order_id = %s', (order_id,))
+        row_ = cursor.fetchone()
+        payment_id = row_['razorpay_payment_id']
+        #print(payment_id)
+        
+        response = razorpay_client.payment.refund(payment_id)
+        print(response)
+        #cursor.fetchall()
+        
+        
+        # send email to customer
+        
+        cursor.execute("SELECT email FROM addresses WHERE user_id = %s", (current_user.id,))
+        email = cursor.fetchone()
+        msg = Message(f'Nirviyu: Order Cancelled - {order_id}',sender='info@nirviyu.com',recipients=[email['email']])
+        msg.body = (f'Hi {current_user.username}, \n\nYour order has been cancelled. \n\nregards \nTeam Nirivyu \nThis is an auto generated email.Do not Reply.')
+        mail.send(msg)
+        
+        # send email to admin
+        msg = Message(f'Nirviyu: Order Cancelled - {order_id}',sender='info@nirviyu.com',recipients=['mohanmurali.behera@gmail.com','tusharbpt@yahoo.in'])
+        msg.body = (f'Hi Admin, \n\nOrder has been cancelled. \n\nOrder ID: {order_id} \nReview Shiprocket and Razorpay console to confirm the order has been cancelled and payment refunds is initiated.\n\nregards \nTeam Nirivyu \nThis is an auto generated email.Do not Reply.')
+        mail.send(msg)
+        cursor.close()
+        connection.close()
+        
+        return redirect(url_for('order_history'))
+    except mysql.connector.Error as err:
+        flash("Database error: " + str(err), "danger")
+        return redirect(url_for('order_history'))
+    except Exception as e:
+        flash("An error occurred: " + str(e), "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for('order_history'))
+
 
 @app.route('/order_history', methods=['GET','POST'])
 @login_required
