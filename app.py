@@ -1253,7 +1253,7 @@ def cancel_shiprocket_order(order_id):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
-@app.route('/cancel_order_nirviyu', methods=['GET'])
+@app.route('/cancel_order_nirviyu/<int:order_id>', methods=['GET','POST'])
 @login_required
 def cancel_order_nirviyu(order_id):
     try:
