@@ -453,6 +453,115 @@ def roles_required(*roles):
 
     return decorator
 
+# define function to add to cart
+def add_product_to_cart(brand,pincode,product_id):
+    # Insert logic to add item to user's cart in your DB
+    id = product_id
+    pincode = pincode
+    brand= brand
+    if brand=='nirviyu':
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        
+        # Fetch the product
+        cursor.execute('SELECT * FROM products WHERE prod_id = %s', (id,))
+        product = cursor.fetchone()
+        if not product:
+            cursor.close()
+            connection.close()
+            return jsonify({'error': 'Product not found'})
+        
+        # Check if the product is already in the cart
+        cursor.execute('SELECT * FROM cart WHERE cust_id = %s AND prod_id = %s', (current_user.id, product['prod_id']))
+        cart_item = cursor.fetchone()
+        current_time = datetime.datetime.now()
+        
+        if cart_item:
+            # Update the quantity if the product is already in the cart
+            cursor.execute(f'UPDATE cart SET qty = qty + 1, updated_at = %s WHERE cust_id = %s AND prod_id = %s', (current_time,current_user.id, product['prod_id']))
+        else:
+            # Insert the product into the cart if it is not already there
+            cursor.execute('INSERT INTO cart (cust_id, prod_id, qty, price, updated_at) VALUES (%s, %s, 1, %s,%s)', (current_user.id, product['prod_id'], product['price'],current_time))
+        
+        connection.commit()
+        
+        #update the sub total fiedl in the cart table
+        cursor.execute('UPDATE cart SET subtotal = qty * price *(1-(%s/100))  WHERE cust_id = %s and prod_id =%s', (product['discount'],current_user.id,product['prod_id']))
+        connection.commit()
+        
+        cursor.close()
+        connection.close()
+# thyrocare add to cart
+    elif brand=='thyrocare':
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        
+        #print("getting the product details")
+        # Fetch the product
+        cursor.execute('SELECT * FROM thyrocare_tests WHERE tc_prod_id = %s', (id,))
+        product = cursor.fetchone()
+        #print(product)
+        if not product:
+            
+            #print("product not found")
+            cursor.close()
+            connection.close()
+            return jsonify({'error': 'Product not found'})
+        
+        # Check if the product is already in the cart
+        cursor.execute('SELECT * FROM thyrocare_cart WHERE cust_id = %s AND tc_prod_id = %s', (current_user.id, product['tc_prod_id']))
+        cart_item = cursor.fetchone()
+        current_time = datetime.datetime.now()
+        #print(cart_item)
+        if cart_item:
+            # Update the quantity if the product is already in the cart
+            print("product already in cart")
+            #cursor.execute(f'UPDATE cart SET qty = qty + 1, updated_at = %s WHERE cust_id = %s AND prod_id = %s', (current_time,current_user.id, product['id']))
+        else:
+            # Insert the product into the cart if it is not already there
+            #print("product not in cart")
+            if (product['tc_prod_type']=='OFFER'):
+                cursor.execute('INSERT INTO thyrocare_cart (cust_id, tc_prod_id, qty, price, updated_at) VALUES (%s, %s, 1, %s,%s)', (current_user.id, product['tc_prod_id'], product['tc_rate_offer'],current_time))
+            else:
+                #print('product not in offer')
+                cursor.execute('INSERT INTO thyrocare_cart (cust_id, tc_prod_id, qty, price, updated_at) VALUES (%s, %s, 1, %s,%s)', (current_user.id, product['tc_prod_id'], product['tc_rate_b2c'],current_time))
+        connection.commit()
+        cursor.close()
+        connection.close()
+    else:
+        #healthians add to cart
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        
+        # Fetch the product
+        cursor.execute('SELECT * FROM healthians_products WHERE deal_id = %s and zipcode=%s', (id,pincode))
+        product = cursor.fetchone()
+        # cursor.fetchall()
+        #print("product: ", product)
+        if not product:
+            cursor.close()
+            connection.close()
+            #print("product not found")
+            #flash('Product not available in your area', 'danger')
+            return jsonify({'error': 'Product not found'})
+        
+        # Check if the product is already in the cart
+        cursor.execute('SELECT * FROM healthians_cart WHERE cust_id = %s AND deal_id = %s', (current_user.id, product['deal_id']))
+        cart_item = cursor.fetchone()
+        current_time = datetime.datetime.now()
+        #print("cart: " , cart_item)
+        if cart_item:
+            # Update the quantity if the product is already in the cart
+            #cursor.execute(f'UPDATE healthians_cart SET qty = qty + 1, updated_at = %s WHERE cust_id = %s AND prod_id = %s', (current_time,current_user.id, product['prod_id']))
+            print("product already in cart")
+        else:
+            # Insert the product into the cart if it is not already there
+            #print("product not in cart")
+            cursor.execute('INSERT INTO healthians_cart (cust_id, test_name, deal_id, price, updated_at) VALUES (%s, %s, %s, %s,%s)', (current_user.id, product['test_name'],product['deal_id'] ,product['price'],current_time))
+            connection.commit()
+            #print("product inserted into cart")
+        connection.close()
+        cursor.close()
 # To load a user from the database by ID, implement this function required by Flask-Login:
 
 @login_manager.user_loader
@@ -486,6 +595,17 @@ def login():
             # msg = Message('User Logged in', sender='info@nirviyu.com', recipients=recipients)
             # msg.body = (f'Hi, \n\n User  {current_user.username} has logged. \n This is an auto generated email.Do not Reply.****')
             # mail.send(msg)
+            # After login, check for post-login actions
+            post_action = session.pop('post_login_action', None)
+            if post_action and post_action.get('action') == 'add_to_cart':
+                product_id = post_action.get('product_id')
+                brand= post_action.get('brand')
+                pincode= post_action.get('pincode')
+                add_product_to_cart(brand, pincode, product_id)
+                flash('Product added to cart after login.')
+                return redirect(url_for('cart'))
+            
+            
             if current_user.role == 'admin':
                 return redirect(url_for('index_admin'))
             else:
@@ -637,8 +757,18 @@ def product_detail(id):
 
 
 @app.route('/add_to_cart/<int:id>', methods=['POST'])
-@login_required
+#@login_required
 def add_to_cart(id):
+    if not current_user.is_authenticated:
+    # Save the product ID and the fact that it needs to be added after login
+        session['post_login_action'] = {
+            'action': 'add_to_cart',
+            'product_id': id,
+            'brand':'nirviyu',
+            'pincode':'NA'
+        }
+        flash('Please log in to add items to your cart.')
+        return redirect(url_for('login', next=request.url))
     try:
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
@@ -680,8 +810,19 @@ def add_to_cart(id):
 
 
 @app.route('/add_to_cart_thyrocare/<string:id>', methods=['POST'])
-@login_required
+#@login_required
 def add_to_cart_thyrocare(id):
+    if not current_user.is_authenticated:
+# Save the product ID and the fact that it needs to be added after login
+        session['post_login_action'] = {
+            'action': 'add_to_cart',
+            'product_id': id,
+            'brand':'thyrocare',
+            'pincode':'NA'
+        }
+        flash('Please log in to add items to your cart.')
+        return redirect(url_for('login', next=request.url))
+    
     try:
         print("adding to cart")
         connection = mysql.connector.connect(**db_config)
@@ -731,10 +872,20 @@ def add_to_cart_thyrocare(id):
         return jsonify({'error': str(e)})
 
 @app.route('/add_to_cart_healthians/<string:id>', methods=['POST'])
-@login_required
+#@login_required
 def add_to_cart_healthians(id):
     pincode=request.form.get('pincode')
     print(pincode,id)
+    if not current_user.is_authenticated:
+    # Save the product ID and the fact that it needs to be added after login
+        session['post_login_action'] = {
+            'action': 'add_to_cart',
+            'product_id': id,
+            'brand':'healthians',
+            'pincode':pincode
+        }
+        flash('Please log in to add items to your cart.')
+        return redirect(url_for('login', next=request.url))
     try:
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
