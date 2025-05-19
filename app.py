@@ -1306,6 +1306,14 @@ def cancel_order_nirviyu(order_id):
         flash("An error occurred: " + str(e), "danger")
         cursor.close()
         connection.close()
+        
+        # send email to admin
+        msg = Message(f'Nirviyu: Order Cancellation issue - {order_id}',sender='info@nirviyu.com',recipients=['mohanmurali.behera@gmail.com','tusharbpt@yahoo.in'])
+        msg.body = (f'Hi Admin, \n\nThere is a issue with Order ID: {order_id} \n{str(e)}\nReview Shiprocket and Razorpay console to confirm the order has been cancelled and payment refunds is initiated.\n\nregards \nTeam Nirivyu \nThis is an auto generated email.Do not Reply.')
+        mail.send(msg)
+        cursor.close()
+        connection.close()
+        
         return redirect(url_for('order_history'))
 
 
