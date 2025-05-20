@@ -2237,6 +2237,21 @@ def cancel_healthians_booking(booking_id):
         
         
 
+#landing page thyrocare
+@app.route('/thyrocare_lp',methods=['GET','POST'])
+def thyrocare_lp():
+    if request.method == 'POST':
+        #print(request.form)
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        age = request.form.get('age')
+    
+    connection=mysql.connector.connect(**db_config)
+    cursor = connection.cursor()
+    cursor.execute("SELECT tc_prod_id, tc_prod_name, tc_test_Count, tc_rate_b2c, tc_fasting FROM thyrocare_tests LIMIT 10")
+    products = cursor.fetchall()   
+    return render_template('thyrocare_lp.html',products=products)
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode
