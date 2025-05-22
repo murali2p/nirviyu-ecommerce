@@ -1017,9 +1017,9 @@ def cart():
 def get_slots():
     date = request.args.get('date')
     provider = request.args.get('provider')
-    #print(date)
+    print(date,"-",provider)
     pincode= request.args.get('pincode')
-    #print(pincode)
+    print(pincode)
     #get the list of tc_prod_id in the cart
     
     connection = mysql.connector.connect(**db_config)
@@ -1070,7 +1070,57 @@ def get_slots():
         return jsonify({"slots": slots})
     
                     
+@app.route('/get_slots_lp',methods=['GET','POST'])
+
+def get_slots_lp():
+    date = request.args.get('date')
+    provider = request.args.get('provider')
+    print(date,"-",provider)
+    pincode= request.args.get('pincode')
+    print(pincode)
     
+    #get the list of tc_prod_id in the cart
+    product= request.args.get('product_id')
+
+    if provider == 'thyrocare':
+        
+        
+        # get the list of tc_prod_id in the cart
+        tc_prod_id_list = [product]
+        #print(tc_prod_id_list)
+        
+        # gettin the response from the thyrocare api for slots
+        response = check_slots_availability_thyrocare(pincode,date, tc_prod_id_list)
+        #print(response)
+        slots =[]
+        if response['response'] == 'Success':
+            
+            
+            for item in response['lSlotDataRes']:
+                slots.append(item['slot'])
+        else:
+            slots = []
+            # Handle the case when no slots are available or an error occurs
+        return jsonify({"slots": slots})
+    elif provider == 'healthians':
+        lat, long = get_lat_long(pincode)
+        response = check_serviability_by_lat_long(lat, long)
+        if response['status'] == True:
+            print("service available")
+            zone_id = response['data']['zone_id']
+            slots_response=get_slots_by_lat_long(lat,long,date,zone_id)
+            slots = []
+            if slots_response['status'] == True:
+                for item in slots_response['data']:
+                    slots.append({'time':item['slot_time'],'slot_id':item['stm_id']})
+            else:
+                slots = []
+                # Handle the case when no slots are available or an error occurs
+        else:
+            print("service not available")
+            slots = []
+            # Handle the case when no slots are available or an error occurs
+        return jsonify({"slots": slots})    
         
         
 
@@ -2127,11 +2177,18 @@ def pincode_check():
     elif provider == 'thyrocare':
         response = check_pincode_availability_thyrocare(pincode)
         print(response)
-        if response['response'] == 'Success':
-            result = {
-                'serviceable': True,
-                'message': f'Pincode {pincode} is serviceable',
-            }
+        
+        if response['status']=='Y':
+            if response['respId'] == 'RES00001':
+                result = {
+                    'serviceable': True,
+                    'message': f'Pincode {pincode} is serviceable',
+                }
+            else:
+                result = {
+                    'serviceable': False,
+                    'message': 'pincode is not serviceable'
+                }
         else:
             result = {
                 'serviceable': False,
@@ -2249,9 +2306,181 @@ def thyrocare_lp():
     
     connection=mysql.connector.connect(**db_config)
     cursor = connection.cursor()
-    cursor.execute("SELECT tc_prod_id, tc_prod_name, tc_test_Count, tc_rate_b2c, tc_fasting FROM thyrocare_tests LIMIT 10")
+    cursor.execute("SELECT tc_prod_id, tc_prod_name, tc_test_Count, tc_rate_b2c, tc_fasting FROM thyrocare_tests where tc_prod_id in ('PROJ1048412','PROJ1048414','PROJ1035580','PROJ1045784','PROJ1048416','PROJ1048417','PROJ1048420','PROJ1048421','PROJ1049391','PROJ1049392')  LIMIT 10")
     products = cursor.fetchall()   
     return render_template('thyrocare_lp.html',products=products)
+
+@app.route('/order_lp',methods=['GET','POST'])
+def order_lp():
+    data= request.get_json()
+    date = data.get('date')
+    time = data.get('selected_slot')[:5]
+    slot_id = data.get('selected_slot_code', '') 
+    pincode = data.get('pincode')
+    name = data.get('name')
+    phone = data.get('phone')
+    email = data.get('email')
+    address = data.get('address')
+    age= data.get('age')
+    gender=data.get('gender')
+    report=data.get('hardcopy')
+    provider=data.get('provider')
+    product_id=data.get('product_id','')
+    print("you are inside the order_lp route")
+    print(data)
+ 
+    #connect to the database
+    connection=mysql.connector.connect(**db_config)
+    cursor = connection.cursor(dictionary=True)
+    
+    if provider == 'thyrocare':
+        
+        if report=="1":
+            report='Y'
+        else:
+            report='N'
+        
+        products=product_id
+
+        # cursor.execute( "select tc_prod_id from thyrocare_cart where cust_id = %s",(current_user.id,))
+        # cart= cursor.fetchall()
+        
+        # for item in cart:
+        #     products+=item['tc_prod_id']+','
+        
+        #print("inserting records to thyrocare_test_bookings")
+        # insert record into thyrocare_test_bookings
+        query = "insert into thyrocare_lp_test_bookings(pincode,booking_date,booking_time,patient_name,age,gender, email, mobile, report,products) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        cursor.execute(query,(pincode,date,time,name,age,gender,email, phone,report,products))
+        connection.commit()
+        
+        #print("records inserted into thyrocare_test_bookings")
+        row_id = cursor.lastrowid  # Get the ID of the newly inserted address
+        
+        #print("updating the test_id")
+        cursor.execute("update thyrocare_lp_test_bookings set test_id=concat('nirviyu_lp_order_no',%s)  where tc_book_id = %s",(row_id,row_id))
+        
+        connection.commit()
+        
+        #print("test_id updated")
+        
+        order_id="nirviyu_lp_order_no"+str(row_id)
+        #print(order_id)
+        #pass the details to thyrocare api for booking
+        response = create_order_thyrocare(products,pincode,report,name,age, gender,phone, email,address,date, time,order_id)
+        
+        if response['response_status'] == 1:
+            #print("order created successfully")
+            #print(response)
+            
+            #print("updating the order details")
+            cursor.execute("update thyrocare_lp_test_bookings set tc_lead_no=%s,tc_order_no=%s where tc_book_id = %s",(response['ben_data'][0]['lead_id'],response['order_no'],row_id))
+            connection.commit()
+            
+            #print("order details updated")
+            
+            #print("deleting the cart items")
+            #cursor.execute("delete from thyrocare_cart  where cust_id = %s",(current_user.id,))
+
+            #connection.commit()
+            #print("cart items deleted")
+            
+            # insert records into orders table
+            
+            cursor.close()
+            connection.close()
+            
+            # send email to admin
+            msg = Message(f'Nirviyu: New Order Placed -External Landing Page - {order_id}', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com','tusharbpt@yahoo.in'])
+            msg.body = (f'Hi Admin, \n\nNew order has been placed through Thyrocare Landing page. \nReview the Order: {order_id} for fulfillment. \n\n regards \n Team Nirivyu \n ***This is an auto generated email.Do not Reply.***')
+            mail.send(msg)
+            return response
+        else:
+            print("order creation failed")
+            cursor.close()
+            connection.close()
+            return jsonify({'error': 'Failed to create order'}), 500
+    elif provider == 'healthians':
+        lat, long = get_lat_long(pincode)
+        response = check_serviability_by_lat_long(lat, long)
+        if response['status'] == True:
+            #print("service available")
+            zone_id = response['data']['zone_id']
+        products=[]
+        cursor.execute( "select deal_id from healthians_cart where cust_id = %s",(current_user.id,))
+        cart= cursor.fetchall()
+        
+        if gender=='Male':
+            gender='M'
+        else:
+            gender='F'
+        
+        for item in cart:
+            products.append(item['deal_id'])
+        print("products in cart",products)
+        #print("inserting records to healthians_test_bookings")
+        # insert record into healthians_test_bookings
+        query = "insert into healthians_test_bookings(pincode,booking_date,booking_time,booking_slotid,patient_name,age,gender,vendor_id, mobile, email,products,cust_id) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        product_string=','.join(products)
+        print("product_string",product_string)
+        cursor.execute(query,(pincode,date,time,slot_id,name,age,gender,'goelhealthcare',phone,email,product_string,current_user.id))
+        
+        connection.commit()
+        
+        print("records inserted into healthians_test_bookings")
+        row_id = cursor.lastrowid
+        # Get the ID of the newly inserted address
+        
+        patient_id = "goelhealthcare"+str(row_id)
+        #print("updating the test_id")
+        cursor.execute("update healthians_test_bookings set patient_id=%s  where healthians_book_id = %s",(patient_id,row_id)) 
+        
+        connection.commit()
+        
+        print("patient_id updated")
+        
+        #pass the details to healthians api for booking
+        
+        response=place_order_healthians(patient_id,name,age ,gender,slot_id, products,phone,current_user.username, email, address,lat, long, pincode,row_id, "goelhealthcare", zone_id)
+        #print("response from healthians in route",response)
+        if response['status']:
+            print("order created successfully")
+            print(response)
+            
+            #print("updating the order details")
+            cursor.execute("update healthians_test_bookings set healthians_order_no=%s where healthians_book_id = %s",(response['booking_id'],row_id))
+            connection.commit()
+            
+            print("order details updated")
+            
+            #print("deleting the cart items")
+            cursor.execute("delete from healthians_cart  where cust_id = %s",(current_user.id,))
+
+            connection.commit()
+            #print("cart items deleted")
+            
+            # insert records into orders table
+            
+            cursor.close()
+            connection.close()
+            return response
+        
+        
+    
+        else:
+                print("order creation failed")
+                cursor.close()
+                connection.close()
+                return response
+    
+
+    # Optional: Validate and check if already booked
+    # sql = "INSERT INTO bookings (provider_name, product_name) VALUES (%s, %s)"
+    # cursor.execute(sql, (provider, product))
+    # db.commit()
+
+    return jsonify({'message': 'Booking successful!'})
+
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode

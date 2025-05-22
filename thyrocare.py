@@ -321,7 +321,7 @@ def report_download_thyrocare(lead_id,mobile):
 #       "userType": "DSA"
 #   }
 
-#cancel_order_thyrocare('VL1377AC','TEST')
+#cancel_order_thyrocare('VLD53360','TEST')
 
 #{'respId': 'SUCCESS', 'response': 'Order cancelled successfully'}
 

@@ -106,6 +106,49 @@
     font-size: 20px;
     cursor: pointer;
   }
+  .two-col-display {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    float: left;
+  }
+
+  .form-el-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .add {
+    grid-column: span 2;
+    width: 100%;
+  }
+
+  #pin_check_status {
+    grid-column: span 2;
+    font-size: 10px;
+  }
+  .courier {
+    grid-column: span 2;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .courier_charge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Adds spacing between the checkbox and text */
+    width: 100%; /* Ensures it utilizes the full span */
+  }
+
+  input[type="checkbox"] {
+    width: 16px; /* Standard checkbox size */
+    height: 16px; /* Ensure it’s not oversized */
+    margin: 0; /* Remove extra space */
+    vertical-align: middle; /* Align with text */
+  }
 </style>
 <div class="hero-land" style="text-align: center; margin-top: 20px">
   <img
@@ -125,9 +168,11 @@
     <button
       class="btn-book"
       onclick="openForm_('{{ product[0] }}', '{{ product[1] }}')"
+      product_id="{{ product[0] }}"
     >
       Book Now
     </button>
+    +
   </div>
   {% endfor %}
 </div>
@@ -137,21 +182,102 @@
   <div class="modal-content_">
     <span class="close" onclick="closeForm()">&times;</span>
     <h2>Book: <span id="productName"></span></h2>
-    <form method="POST" action="/book-now">
+    <form method="POST">
       <input type="hidden" name="product_id" id="productId" />
-      <input
-        type="text"
-        name="customer_name"
-        placeholder="Your Name"
-        required
-      />
-      <input type="email" name="customer_email" placeholder="Email" required />
-      <input type="tel" name="customer_phone" placeholder="Phone" required />
-      <textarea name="notes" placeholder="Additional Notes"></textarea>
-      <button type="submit" class="submit-btn">Submit</button>
+      <div class="two-col-display">
+        <span id="pin_check_status" type="hidden"></span>
+        <input
+          type="text"
+          name="pincode"
+          id="pincode"
+          maxlength="6"
+          placeholder="Pincode"
+          onblur="valid_pin(this); Pinavalability(this);"
+          required
+        />
+        <input
+          type="text"
+          name="customer_name"
+          id="customer_name"
+          placeholder="Your Name"
+          required
+        />
+        <input
+          type="email"
+          name="customer_email"
+          id="customer_email"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="text"
+          name="customer_phone"
+          id="customer_phone"
+          pattern="[0-9]{10}"
+          maxlength="10"
+          placeholder="Phone"
+          required
+        />
+        <input
+          class="form-el-input"
+          type="number"
+          name="age"
+          id="age"
+          placeholder="Enter Age"
+          required
+        />
+
+        <select
+          class="form-el-input"
+          name="gender"
+          id="gender"
+          onchange="return GenderValidation();"
+          required
+        >
+          <option value="">Gender*</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+
+        <textarea
+          class="add"
+          name="notes"
+          id="address"
+          rows="4"
+          required
+          placeholder="Enter complete address (min 25 characters)"
+          minlength="25"
+        ></textarea>
+        <input
+          class="form-el-input"
+          type="date"
+          name="appointment_date"
+          id="appointment_date"
+          placeholder="Appointment Date"
+          onchange="getAvailableSlots(this);"
+          required
+        />
+
+        <select name="ddl_avlSlots" id="ddl_avlSlots" class="form-el-input">
+          <option value="">Select Slot</option>
+        </select>
+        <div class="courier">
+          <span class="courier_charge">
+            <input
+              id="courier_charge"
+              type="checkbox"
+              name="courier_charge"
+            />Additional Rs. 75 for Printed Reports</span
+          >
+        </div>
+      </div>
+      <button type="button" class="submit-btn" onclick="place_order();">
+        Submit
+      </button>
     </form>
   </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
   function openForm_(id, name) {
@@ -171,5 +297,160 @@
       modal.style.display = "none";
     }
   };
+
+  function GenderValidation() {
+    gender_value = document.getElementById("gender").value;
+    if (gender_value == "") {
+      alert("Please enter correct gender");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function valid_pin(pin) {
+    let pin_value = pin.value;
+    if (pin_value.length != 6) {
+      alert("Please enter a valid pincode");
+      return false;
+    } else if (isNaN(pin_value)) {
+      alert("Please enter a valid pincode");
+      return false;
+    } else if (pin_value < 100000 || pin_value > 999999) {
+      alert("Please enter a valid pincode");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function Pinavalability(pin) {
+    let pin_value = pin.value;
+    if (valid_pin(pin)) {
+      $.ajax({
+        type: "POST",
+        url: "/pincode_check",
+        data: { pincode: pin_value, provider: "thyrocare" },
+        success: function (response) {
+          if (response.serviceable) {
+            console.log("Pincode is available");
+            document.getElementById("pin_check_status").innerText =
+              "Pincode is servicable";
+            document.getElementById("pin_check_status").style.display = "block";
+            document.getElementById("pin_check_status").style.color = "green";
+          } else {
+            alert("Pincode is not available");
+            document.getElementById("pin_check_status").innerText =
+              "Pincode is not servicable";
+            document.getElementById("pin_check_status").style.display = "block";
+            document.getElementById("pin_check_status").style.color = "red";
+            //console.log(response);
+          }
+        },
+        error: function (error) {
+          console.error("Error:", error);
+        },
+      });
+    }
+  }
+
+  function getAvailableSlots(date) {
+    let date_value = date.value;
+    let pin_value = document.getElementById("pincode").value;
+    let labidentifier = "thyrocare";
+    prod_id = document.getElementById("productId").value;
+    console.log("Selected date:", date_value);
+    console.log("Selected pincode:", pin_value);
+    if (date_value == "") {
+      alert("Please select a date");
+      return false;
+    }
+    if (valid_pin(document.getElementById("pincode"))) {
+      console.log("Valid pincode");
+      $.ajax({
+        type: "POST",
+
+        url: `/get_slots_lp?date=${date_value}&pincode=${pin_value}&provider=${labidentifier}&product_id=${prod_id}`,
+        data: { date: date_value, pincode: pin_value },
+        success: function (response) {
+          console.log("Available slots:", response);
+          let slots = response.slots;
+          let slotSelect = document.getElementById("ddl_avlSlots");
+          slotSelect.innerHTML = "<option value=''>Select Slot</option>";
+          if (slots.length == 0) {
+            alert("No slots available for the selected date");
+            return false;
+          }
+          for (let i = 0; i < slots.length; i++) {
+            let option = document.createElement("option");
+            option.value = slots[i];
+            option.textContent = slots[i];
+            slotSelect.appendChild(option);
+          }
+        },
+        error: function (error) {
+          console.error("Error:", error);
+        },
+      });
+    }
+  }
+
+  function place_order() {
+    let pin_value = document.getElementById("pincode").value;
+    let date_value = document.getElementById("appointment_date").value;
+    let slot_value = document.getElementById("ddl_avlSlots").value;
+    let provider = "thyrocare";
+    let product_id = document.getElementById("productId").value;
+    let selected_slot = document.getElementById("ddl_avlSlots").value;
+    let name = document.getElementById("customer_name").value;
+    let email = document.getElementById("customer_email").value;
+    let phone = document.getElementById("customer_phone").value;
+    let age = document.getElementById("age").value;
+    let address = document.getElementById("address").value;
+    let gender = document.getElementById("gender").value;
+    let reports = 0;
+    if (courier_charge.checked) {
+      reports = 1;
+      console.log("Courier charge selected");
+    } else {
+      reports = 0;
+      console.log("Courier charge not selected");
+    }
+
+    console.log("courier_charge", reports);
+
+    if (valid_pin(document.getElementById("pincode"))) {
+      console.log("Valid pincode");
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/order_lp",
+        data: JSON.stringify({
+          pincode: pin_value,
+          date: date_value,
+          slot: slot_value,
+          provider: provider,
+          product_id: product_id,
+          selected_slot: selected_slot,
+          name: name,
+          email: email,
+          phone: phone,
+          age: age,
+          address: address,
+          gender: gender,
+          hardcopy: reports,
+          product_id: product_id,
+        }),
+        success: function (response) {
+          console.log("Order placed successfully:", response);
+          alert("Order placed successfully!");
+          closeForm();
+        },
+        error: function (error) {
+          console.error("Error placing order:", error);
+        },
+      });
+    }
+  }
 </script>
 {% endblock %}
