@@ -247,6 +247,7 @@
           required
           placeholder="Enter complete address (min 25 characters)"
           minlength="25"
+          onblur="validateAddress(this);"
         ></textarea>
         <input
           class="form-el-input"
@@ -302,6 +303,16 @@
     gender_value = document.getElementById("gender").value;
     if (gender_value == "") {
       alert("Please enter correct gender");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function validateAddress(address) {
+    let address_value = address.value;
+    if (address_value.length < 25) {
+      alert("Please enter a valid address with minimum 25 characters");
       return false;
     } else {
       return true;
@@ -419,7 +430,11 @@
 
     console.log("courier_charge", reports);
 
-    if (valid_pin(document.getElementById("pincode"))) {
+    if (
+      valid_pin(document.getElementById("pincode")) &&
+      validateAddress(document.getElementById("address")) &&
+      GenderValidation()
+    ) {
       console.log("Valid pincode");
       $.ajax({
         type: "POST",
@@ -442,14 +457,18 @@
           product_id: product_id,
         }),
         success: function (response) {
-          console.log("Order placed successfully:", response);
-          alert("Order placed successfully!");
+          //console.log("Order placed successfully:", response);
+          alert(
+            "Order placed successfully! You shall receive the details on your email/mobile."
+          );
           closeForm();
         },
         error: function (error) {
           console.error("Error placing order:", error);
         },
       });
+    } else {
+      alert("Please enter valid details -check pincode/ gender/ address");
     }
   }
 </script>
