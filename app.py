@@ -2397,9 +2397,11 @@ def order_lp():
             return response
         else:
             print("order creation failed")
+            
             cursor.close()
             connection.close()
-            return jsonify({'error': 'Failed to create order'}), 500
+            print(f"Alert : {response['response']['message']}")
+            return jsonify({"error": response['response']['message']}), 400
     elif provider == 'healthians':
         lat, long = get_lat_long(pincode)
         response = check_serviability_by_lat_long(lat, long)

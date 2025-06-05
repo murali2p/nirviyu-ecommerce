@@ -780,6 +780,24 @@
     margin-bottom: 20px !important;
   }
 
+  .spinner {
+  border: 2px solid #f3f3f3; 
+  border-top: 2px solid #000; 
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
 </style>
       <div class="wrapper">
         <header class="header-area header-wrapper">
@@ -1073,8 +1091,9 @@
           >
         </div>
       </div>
-      <button type="button" class="submit-btn" onclick="place_order();">
-        Submit
+      <button type="button" class="submit-btn" id= "submitBtn" onclick="place_order();">
+        <span id="btnText">Place Order</span>
+        <span id="spinner" class="spinner" style="display: none;"></span>
       </button>
     </form>
   </div>
@@ -1207,6 +1226,8 @@
   }
 
   function place_order() {
+
+
     let pin_value = document.getElementById("pincode").value;
     let date_value = document.getElementById("appointment_date").value;
     let slot_value = document.getElementById("ddl_avlSlots").value;
@@ -1235,6 +1256,9 @@
       validateAddress(document.getElementById("address")) &&
       GenderValidation()
     ) {
+      document.getElementById("btnText").style.display = "none";
+      document.getElementById("spinner").style.display = "inline-block";
+      document.getElementById("submitBtn").disabled = true;
       console.log("Valid pincode");
       $.ajax({
         type: "POST",
@@ -1258,6 +1282,9 @@
         }),
         success: function (response) {
           //console.log("Order placed successfully:", response);
+          document.getElementById("btnText").style.display = "inline";
+          document.getElementById("spinner").style.display = "none";
+          document.getElementById("submitBtn").disabled = false;
           alert(
             "Order placed successfully! You shall receive the details on your email/mobile."
           );
@@ -1265,6 +1292,11 @@
         },
         error: function (error) {
           console.error("Error placing order:", error);
+          const errorMessage = error.responseJSON?.error || "Something went wrong";
+          document.getElementById("btnText").style.display = "inline";
+          document.getElementById("spinner").style.display = "none";
+          document.getElementById("submitBtn").disabled = false;
+          alert("Error: " + errorMessage);
         },
       });
     } else {
@@ -6106,6 +6138,12 @@
     input.min = formatDate(today);
     input.max = formatDate(maxDate);
   });
+</script>
+<script>
+function showSpinner() {
+  document.getElementById("btnText").style.display = "none";
+  document.getElementById("spinner").style.display = "inline-block";
+}
 </script>
 
 
