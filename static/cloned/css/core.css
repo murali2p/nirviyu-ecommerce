@@ -1,0 +1,18 @@
+/*Font*/
+@import url("montserrat.css");
+
+/*Icon*/
+@import url("font-awesome.min.css");
+
+/*Plugins*/
+@import url("animate.css");
+@import url("jquery-ui.min.css");
+@import url("bootstrap-select.css");
+@import url("meanmenu.min.css");
+@import url("slick.css");
+@import url("lightbox.min.css");
+@import url("jquery.mb.YTPlayer.min.css");
+@import url("textanimate.css");
+
+/*Shortcode*/
+@import url("default.css");

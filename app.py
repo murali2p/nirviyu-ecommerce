@@ -2358,17 +2358,17 @@ def order_lp():
         row_id = cursor.lastrowid  # Get the ID of the newly inserted address
         
         #print("updating the test_id")
-        cursor.execute("update thyrocare_lp_test_bookings set test_id=concat('nirviyu_lp_order_no',%s)  where tc_book_id = %s",(row_id,row_id))
+        cursor.execute("update thyrocare_lp_test_bookings set test_id=concat('nirviyu_lp_',%s,%s)  where tc_book_id = %s",(f'{env}',row_id,row_id))
         
         connection.commit()
         
         #print("test_id updated")
         
-        order_id="nirviyu_lp_order_no"+str(row_id)
+        order_id="nirviyu_lp_"+f'{env}'+str(row_id)
         #print(order_id)
         #pass the details to thyrocare api for booking
         response = create_order_thyrocare(products,pincode,report,name,age, gender,phone, email,address,date, time,order_id)
-        
+        print(response)
         if response['response_status'] == 1:
             #print("order created successfully")
             #print(response)
@@ -2481,6 +2481,20 @@ def order_lp():
 
     return jsonify({'message': 'Booking successful!'})
 
+
+@app.route('/thyrocare_lp_clone', methods=['GET'])
+def thyrocare_lp_clone():
+    # connection = mysql.connector.connect(**db_config)
+    # cursor = connection.cursor(dictionary=True)
+    
+    # # Fetch list of products and rates from db
+    # cursor.execute("SELECT tc_prod_id, tc_prod_name, tc_test_Count, tc_rate_b2c, tc_fasting FROM thyrocare_tests WHERE tc_prod_id IN ('PROJ1048412', 'PROJ1048414', 'PROJ1035580', 'PROJ1045784', 'PROJ1048416', 'PROJ1048417', 'PROJ1048420', 'PROJ1048421', 'PROJ1049391', 'PROJ1049392') LIMIT 10")
+    # products = cursor.fetchall()
+    
+    # cursor.close()
+    # connection.close()
+    
+    return render_template('cloned/index.html')
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode

@@ -231,6 +231,7 @@ def create_order_thyrocare(products,pincode,report_required,name, age, gender,ph
       "gender":f"{gender}"
       }
       ],
+    
       "coupon":"",
       "order_mode":"DSA-BOOKING-API",
       "collection_type":"",
@@ -321,7 +322,7 @@ def report_download_thyrocare(lead_id,mobile):
 #       "userType": "DSA"
 #   }
 
-#cancel_order_thyrocare('VLD53360','TEST')
+#cancel_order_thyrocare('VL257A79','TEST')
 
 #{'respId': 'SUCCESS', 'response': 'Order cancelled successfully'}
 
