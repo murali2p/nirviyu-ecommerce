@@ -1102,17 +1102,28 @@
           <option value="Female">Female</option>
         </select>
 
+      <input
+        class="form-el-input"
+        type="text"
+        name="appointment_date"
+        id="appointment_date"
+        placeholder="Appointment Date"
+        onfocus="this.type='date';"
+        onblur="if (this.value === '') this.type='text';"
+        onchange="getAvailableSlots(this);"
+        required
+      />
 
-
-        <input
+        <!--input
           class="form-el-input"
           type="date"
           name="appointment_date"
           id="appointment_date"
           placeholder="Appointment Date"
           onchange="getAvailableSlots(this);"
+          placeholder="Appointment Dt"
           required
-        />
+        /-->
 
         <select name="ddl_avlSlots" id="ddl_avlSlots" class="form-el-input">
           <option value="">Select Slot</option>
