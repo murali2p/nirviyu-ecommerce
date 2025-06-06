@@ -16,7 +16,7 @@ from werkzeug.utils import secure_filename
 from rapidfuzz import process,fuzz
 import requests,json
 from flask_apscheduler import APScheduler
-from thyrocare import get_thyrocare_products,get_thyrocare_test_detail,check_pincode_availability_thyrocare,check_slots_availability_thyrocare,create_order_thyrocare
+from thyrocare import create_order_thyrocare_lp,get_thyrocare_products,get_thyrocare_test_detail,check_pincode_availability_thyrocare,check_slots_availability_thyrocare,create_order_thyrocare
 from thyrocare import view_cart_details_thyrocare,cancel_order_thyrocare,update_db_thyrocare_products,report_download_thyrocare,get_order_summary_thyrocare
 from healthians import get_product_details,get_lat_long,get_slots_by_lat_long,check_serviability_by_lat_long
 from healthians import place_order_healthians,cancel_order,save_zipcodes_to_db,get_order_status_healthians,get_reports
@@ -2306,7 +2306,7 @@ def thyrocare_lp():
     
     connection=mysql.connector.connect(**db_config)
     cursor = connection.cursor()
-    cursor.execute("SELECT tc_prod_id, tc_prod_name, tc_test_Count, tc_rate_b2c, tc_fasting FROM thyrocare_tests where tc_prod_id in ('PROJ1048412','PROJ1048414','PROJ1035580','PROJ1045784','PROJ1048416','PROJ1048417','PROJ1048420','PROJ1048421','PROJ1049391','PROJ1049392')  LIMIT 10")
+    cursor.execute("SELECT tc_prod_id, tc_prod_name, tc_test_Count, tc_rate_b2c, tc_fasting FROM thyrocare_tests where tc_prod_id in ('PROJ1048412','PROJ1048414','PROJ1048447','PROJ1048439','PROJ1048416','PROJ1048417','PROJ1048420','PROJ1048421','PROJ1049711','PROJ1049712')  LIMIT 10")
     products = cursor.fetchall()   
     return render_template('thyrocare_lp.html',products=products)
 
@@ -2326,6 +2326,9 @@ def order_lp():
     report=data.get('hardcopy')
     provider=data.get('provider')
     product_id=data.get('product_id','')
+    name2 = data.get('name2','')
+    age2 = data.get('age2','')
+    gender2 = data.get('gender2','')
     print("you are inside the order_lp route")
     print(data)
  
@@ -2365,10 +2368,16 @@ def order_lp():
         #print("test_id updated")
         
         order_id="nirviyu_lp_"+f'{env}'+str(row_id)
-        #print(order_id)
+        
+        if len(name2)> 0 and len(str(age2)) > 0 and len(gender2) > 0:
+            #print("adding second person details")
+            ben_data=[{"name":f"{name}","age":f"{age}","gender":f"{gender}"},{"name":f"{name2}","age":f"{age2}","gender":f"{gender2}"}]
+        else:
+            #print("adding first person details")
+            ben_data=[{"name":f"{name}","age":f"{age}","gender":f"{gender}"}]
         #pass the details to thyrocare api for booking
-        response = create_order_thyrocare(products,pincode,report,name,age, gender,phone, email,address,date, time,order_id)
-        print(response)
+        response = create_order_thyrocare_lp(products,pincode,report,name,age, gender,phone, email,address,date, time,order_id,ben_data)
+        #print(response)
         if response['response_status'] == 1:
             #print("order created successfully")
             #print(response)

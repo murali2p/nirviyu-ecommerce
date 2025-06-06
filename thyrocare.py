@@ -61,6 +61,9 @@ def get_thyrocare_products():
   #   for item in response.json().get('master').get('tests',[]):
   #     f.write(item['rate']['b2C']+"*"+item['rate']['offerRate'] +"*"+item['name']+"*"+item['code']+'\n')
   # print("all products retrieved successfully")
+  
+  #print(response.json())
+  
   return response.json()
 
 
@@ -243,6 +246,42 @@ def create_order_thyrocare(products,pincode,report_required,name, age, gender,ph
   #print(response.json())
   return response.json()
 
+def create_order_thyrocare_lp(products,pincode,report_required,name, age, gender,phone, email,address,date, time,order_id,ben_data):
+  headers = {
+      'Content-Type': 'application/json',
+      'Cookie': ''
+  }
+  data = {
+      "api_key": get_thyrocare_token(),
+
+      "ref_order_id":f"{order_id}",
+      "email":f"{email}",
+      "mobile":f"{phone}",
+      "address":f"{address}",
+      "appt_date":f"{date} {time}",
+      "order_by":"Customer",
+      "passon":0,
+      "pay_type":"POSTPAID",
+      "pincode":f"{pincode}",
+      "products":f"{products}",
+      "ref_code":"7869734430",
+      "remarks":"testentry",
+      "reports":f"{report_required}",
+      "service_type":"HOME",
+      "ben_data": ben_data,
+    
+      "coupon":"",
+      "order_mode":"DSA-BOOKING-API",
+      "collection_type":"",
+      "source":"GoelHealthCare",
+  }
+  
+  
+  response = requests.post(url='https://dx-dsa-service.thyrocare.com//api/booking-master/v2/create-order',json=data, headers=headers)
+  #print(response.json())
+  return response.json()
+
+
 
 def get_order_summary_thyrocare(order_no):
   headers = {
@@ -322,7 +361,7 @@ def report_download_thyrocare(lead_id,mobile):
 #       "userType": "DSA"
 #   }
 
-#cancel_order_thyrocare('VL257A79','TEST')
+#cancel_order_thyrocare('VL13B3B9','TEST')
 
 #{'respId': 'SUCCESS', 'response': 'Order cancelled successfully'}
 
@@ -510,3 +549,5 @@ def report_download_thyrocare(lead_id,mobile):
 #     print("Image downloaded successfully!")
 # else:
 #     print("Failed to retrieve image.")
+
+#get_thyrocare_products()

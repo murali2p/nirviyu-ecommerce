@@ -125,6 +125,10 @@
         color: #fff;
       }
 
+      .hidden {
+        display: none ;
+      }
+
       .copyright {
         padding: 30px 0px;
         text-align: center !important;
@@ -1062,12 +1066,44 @@
           onblur="validateAddress(this);"
         ></textarea>
 
-        <select class="prod_name_sel" name="product_id" id="product_id" required>
+        <select class="prod_name_sel" name="product_id" id="product_id"   onchange="check_dual_bendata();"  required>
   <option value="">-- Select a Product --</option>
   {% for product in products %}
     <option value="{{ product[0] }}">{{ product[1] }}</option>
   {% endfor %}
 </select>
+        <input
+          type="text"
+          name="customer_name2"
+          id="customer_name2"
+          placeholder="2nd Beneficiary Name"
+          
+          
+        />
+       <input
+          class="form-el-input"
+          type="number"
+          name="age2"
+          id="age2"
+          placeholder="Enter Age"
+                    
+        />
+
+        <select
+          class="form-el-input"
+          name="gender2"
+          id="gender2"
+          onchange="return GenderValidation();"
+          
+          
+        >
+          <option value="">Gender*</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+
+
+
         <input
           class="form-el-input"
           type="date"
@@ -1104,7 +1140,9 @@
     //console.log(id, name);
     //document.getElementById("productId").value = id;
     //document.getElementById("productName").innerText = name;
+    
     document.getElementById("bookingModal_").style.display = "flex";
+    check_dual_bendata();
   }
 
   function closeForm() {
@@ -1225,6 +1263,36 @@
     }
   }
 
+
+  function check_dual_bendata(){
+    
+  
+    let product_id = document.getElementById("product_id").value;
+    if (product_id=="PROJ1048447" || product_id=="PROJ1048439" ) {
+      document.getElementById("customer_name2").style.display = "block";
+      document.getElementById("age2").style.display = "block";
+      document.getElementById("gender2").style.display = "block";
+      document.getElementById("customer_name2").required = true;
+      document.getElementById("age2").required = true;
+      document.getElementById("gender2").required = true;
+    } 
+    else{
+      document.getElementById("customer_name2").style.display = "none";
+      document.getElementById("age2").style.display = "none";
+      document.getElementById("gender2").style.display = "none";
+      document.getElementById("customer_name2").required = false;
+      document.getElementById("age2").required = false;
+      document.getElementById("gender2").required = false;
+      document.getElementById("customer_name2").value = "";
+      document.getElementById("age2").value = "";
+      document.getElementById("gender2").value = "";
+    }
+
+      
+  }
+
+
+
   function place_order() {
 
 
@@ -1240,6 +1308,9 @@
     let age = document.getElementById("age").value;
     let address = document.getElementById("address").value;
     let gender = document.getElementById("gender").value;
+    let gender2 = document.getElementById("gender2").value;
+    let name2 = document.getElementById("customer_name2").value;
+    let age2 = document.getElementById("age2").value;
     let reports = 0;
     if (courier_charge.checked) {
       reports = 1;
@@ -1278,7 +1349,9 @@
           address: address,
           gender: gender,
           hardcopy: reports,
-          product_id: product_id,
+          name2: name2,
+          age2: age2,
+          gender2: gender2,
         }),
         success: function (response) {
           //console.log("Order placed successfully:", response);
