@@ -2338,7 +2338,7 @@ def order_lp():
     
     if provider == 'thyrocare':
         
-        if report=="1":
+        if report==1:
             report='Y'
         else:
             report='N'
