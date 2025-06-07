@@ -577,10 +577,17 @@
         Email:
         <a class="email-link" href="mailto:info@nirviyu.com"
           >info@nirviyu.com</a
-        > | <a class="email-link" href="{{ url_for('privacy_policy') }}"> Privacy Policy</a>
+        > | <a class="email-link" href="{{ url_for('privacy_policy') }}"> Privacy Policy</a> | <a class="email-link" href="{{ url_for('return_policy') }}"> Return Policy</a>
       </p>
 
   </footer>
+  <div class="WhatsAppButton__root" style="position: fixed; bottom: 20px; right: 15px; z-index: 1000;"><a href="https://wa.me/919993694449?text=Hey" style="text-decoration: none" target="_blank"><img src="https://s3.ap-south-1.amazonaws.com/cdn.limechat.ai/packs/js/whatsapp_widget/media/LC_WA.png" style="width:48px; opacity:1"></a><a class="whatsapp__poweredBy whatsapp__poweredByTopRight" id="whatspopup" style="bottom: 72px; right: 0px;">Have Queries? Let's chat<img src="https://s3.ap-south-1.amazonaws.com/cdn.limechat.ai/packs/js/whatsapp_widget/media/LC_close.png" class="closePopUp" onclick="close_func();"></a></div>
+
+<script>
+  function close_func() {
+    document.getElementById("whatspopup").style.display = "none";
+  }
+</script>
 
 <!--script src="../static/scripts/slider.js"></script-->
 <script src="../static/scripts/product_slider.js"></script>

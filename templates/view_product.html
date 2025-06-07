@@ -84,6 +84,12 @@
                                         Upload Images
                                     </button>
                                 </form>
+                                    <form method="POST" action="/admin/delete-photos/${product.prod_id}">
+                                    <input type="hidden" name="product_id" value="${product.prod_id}">
+                                    <button type="submit">
+                                        Delete Images
+                                    </button>
+                                </form>
                             </td>
                         </tr>`;
               resultsBody.innerHTML += row;

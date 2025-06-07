@@ -1762,6 +1762,75 @@ def upload_photos(product_id):
 
     return render_template("upload_images.html", product_id=product_id)
 
+# upload photos
+@app.route("/admin/delete-photos/<int:product_id>", methods=["GET", "POST"])
+@login_required
+@roles_required('admin')
+def delete_photos(product_id):
+    
+    
+    connection= mysql.connector.connect(**db_config)
+    cursor = connection.cursor(dictionary=True)
+    # Get the list of image URLs for the product
+    cursor.execute("SELECT image_url FROM product_images WHERE product_id = %s", (product_id,))
+    images = cursor.fetchall()
+    
+    #extract image name from the image_url
+    images = [image['image_url'] for image in images]
+    #print(images)
+    cursor.close()
+    connection.close()
+    
+    images_names = []
+    for image in images:
+        if image:
+            # Extract the filename from the URL
+            filename = image.split("/")[-1]
+            images_names.append(filename)
+    #print(images_names)
+    
+        
+    
+    if not images:
+        flash("No images found for this product.", "error")
+        return redirect(request.url)
+
+    return render_template("delete_images.html", product_id=product_id, images=images_names)
+
+@app.route("/admin/delete-photo/<int:product_id>/<string:image_add>", methods=["POST"])
+@login_required
+@roles_required('admin')
+def delete_photos_confirm(product_id, image_add):
+    product_id=product_id
+    image_add=image_add
+    if request.method == "POST":
+
+        
+        file_path = os.path.join(app.config["UPLOAD_FOLDER"], image_add)
+        print(file_path)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+            connection = mysql.connector.connect(**db_config)
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM product_images WHERE product_id = %s AND image_url = %s", (product_id, f"../static/uploads/{image_add}"))
+            connection.commit() 
+            cursor.close()
+            connection.close()
+            flash("Photo deleted successfully", "success")
+            
+        
+        else:
+            flash("Photo not found", "error")
+            connection = mysql.connector.connect(**db_config)
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM product_images WHERE product_id = %s AND image_url = %s", (product_id, f"../static/uploads/{image_add}"))
+            connection.commit() 
+            cursor.close()
+            connection.close()
+               
+    return redirect(url_for("delete_photos", product_id=product_id))
+
 
 @app.route('/enquiry', methods=['GET','POST'])
 def enquiry():
@@ -2506,6 +2575,10 @@ def thyrocare_lp_clone():
     # connection.close()
     
     return render_template('cloned/index.html')
+
+@app.route('/return_policy')
+def return_policy():
+    return render_template('return_policy.html')
 
 if __name__ == '__main__':
     app.run(host=os.getenv('host'),port=int(os.getenv('port')),debug=os.getenv('DEBUG'))  # run the Flask app in debug mode

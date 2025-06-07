@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete Product Images</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .custom-table {
+        width: 50%;
+        border-collapse: collapse;
+      }
+      .custom-table th,
+      .custom-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      .custom-table th {
+        background-color: #f2f2f2;
+      }
+      .custom-table img {
+        width: 100px;
+        height: auto;
+      }
+      .custom-table button {
+        padding: 5px 10px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .custom-table button:hover {
+        background-color: #d32f2f;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Delete Photos for Product {{ product_id }}</h2>
+
+    <p>
+      Delete images Carefully ! Deleted Image needs to be reuploaded if they are
+      to be updated back.
+    </p>
+
+    <!-- Write code to fetch all the image names from images and give a delete button to delete the image-->
+
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Image Name</th>
+          <th>Image preview</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for image in images %}
+        <tr>
+          <td>{{ image}}</td>
+          <td>
+            <img
+              src="{{ url_for('static', filename='uploads/' + image) }}"
+              alt="Image Preview"
+              style="width: 100px; height: auto"
+            />
+          </td>
+
+          <td>
+            <form
+              method="POST"
+              action="/admin/delete-photo/{{product_id}}/{{ image}}"
+            >
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <p class="{{ category }}">{{ message }}</p>
+    {% endfor %} {% endif %} {% endwith %}
+  </body>
+</html>

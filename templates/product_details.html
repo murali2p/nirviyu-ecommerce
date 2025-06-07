@@ -1,5 +1,76 @@
 {% extends "base.html" %} {% block title %}Nirviyu: Products{% endblock %} {%
 block content %}
+<style>
+  .manufactureDetails{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-top: 20px;
+
+  }
+
+  .manufactureDetails> div:first-child {
+    margin-left: 30%;
+    margin-right: 0;
+  }
+  .manufactureDetails> div:last-child {
+    margin-left: 0;
+    margin-right: 30%;
+  }
+  
+
+
+
+  @media (max-width: 768px) {
+  .manufactureDetails{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .manufactureDetails> div:first-child {
+
+
+    margin-left: 25px !important;
+    
+    margin-bottom: 20px !important;
+    width: 100%;
+    padding: 0 20px !important;
+    left: 25px !important;
+  }
+  .manufactureDetails> div:last-child {
+
+    margin-left: 25px !important;
+    margin-right: 0 !important;
+    padding: 0 20px !important;
+    width: 100%;
+    left: 25px !important;
+
+
+
+
+
+  }
+  
+  }
+
+  
+  .manufacture-details-header {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  .manufacture-details-text {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  </style>
 
 <div class="container product-details">
   <h1 class="product-details-header">{{ product['prod_name'] }}</h1>
@@ -67,6 +138,29 @@ block content %}
   <h2 class="product-details-description disclaimer">Disclaimer</h2>
   <p class="product_details_el">{{product['disclaimer']}}</p></br>
 </div>
+
+<section class ="manufactureDetails">
+  <div class="manufactureMarketing container">
+    <h2 class="manufacture-details-header">Manufactured By</h2>
+    <p class="manufacture-details-text">BACFO Pharmaceuticals(India) Limited </p>
+<p>C-46, Phase II, Gautam Buddha
+Nagar,</p><p> Noida - 201305, (UP)<p>
+<p>Fssai
+Lic. No.: 10019051003060</p>
+  </div>
+  <!-- Marketed by -->
+
+  <div class="manufactureMarketing container">
+    <h2 class="manufacture-details-header">Marketed By</h2>
+    <p class="manufacture-details-text">Goel Healthcare</p>
+<p>F-7, City Center, Shiv Talkies Road,</p><p> Old Bus
+Stand, Bilaspur (C.G.) 495001 (INDIA)</p><p>
+fssai
+Lic. No. : 10524999000097</p>
+  </div>
+
+  </section>
+
 </section class='bottom-footer'>
 <footer class="footer">
   <section>
@@ -84,10 +178,17 @@ block content %}
       Email:
       <a class="email-link" href="mailto:info@nirviyu.com"
         >info@nirviyu.com</a
-      > | <a class="email-link" href="{{ url_for('privacy_policy') }}"> Privacy Policy</a>
+      > | <a class="email-link" href="{{ url_for('privacy_policy') }}"> Privacy Policy | <a class="email-link" href="{{ url_for('return_policy') }}"> Return Policy</a>
     </p>
 
 </footer>
+  <div class="WhatsAppButton__root" style="position: fixed; bottom: 20px; right: 15px; z-index: 1000;"><a href="https://wa.me/919993694449?text=Hey" style="text-decoration: none" target="_blank"><img src="https://s3.ap-south-1.amazonaws.com/cdn.limechat.ai/packs/js/whatsapp_widget/media/LC_WA.png" style="width:48px; opacity:1"></a><a class="whatsapp__poweredBy whatsapp__poweredByTopRight" id="whatspopup" style="bottom: 72px; right: 0px;">Have Queries? Let's chat<img src="https://s3.ap-south-1.amazonaws.com/cdn.limechat.ai/packs/js/whatsapp_widget/media/LC_close.png" class="closePopUp" onclick="close_func();"></a></div>
+
+<script>
+  function close_func() {
+    document.getElementById("whatspopup").style.display = "none";
+  }
+</script>
 <script>
   function isMobile() {
     return window.innerWidth <= 768; // Adjust breakpoint if needed
