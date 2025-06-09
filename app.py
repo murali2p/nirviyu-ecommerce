@@ -2538,7 +2538,7 @@ def order_lp():
         #pass the details to healthians api for booking
         
         response=place_order_healthians(patient_id,name,age ,gender,slot_id, products,phone,name, email, address,lat, long, pincode,row_id, "goelhealthcare", zone_id)
-        #print("response from healthians in route",response)
+        print("response from healthians in route",response)
         if response['status']:
             print("order created successfully")
             print(response)
