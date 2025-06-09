@@ -370,7 +370,21 @@ def get_product_details(product_id):
         "deal_type_id": deal_id
     }
     response = requests.post(url, headers=headers, json=data)
-    #print(f"Response from Healthians API: {response.json()} ")
+    
+    # create a csv file to save the product details with the product_id as the filename and have columsn that take id and name from the response data
+    if response.status_code == 200:
+        product_details = response.json()
+        #print(f"Product details: {product_details}")  # Debugging output
+        # Save product details to a CSV file
+        filename = f"{product_details['data']['name']}_{product_id}.csv"
+        with open(filename, 'w') as file:
+            file.write("id,name\n")
+            for item in product_details['data']['constituents']:
+                file.write(f"{item['id']},{item['name']}\n")
+        print(f"Product details saved to {filename}")
+    
+    
+    print(f"Response from Healthians API: {response.json()} ")
     if response.status_code == 200:
         return response.json()
     else:
@@ -429,4 +443,5 @@ def get_order_status_healthians(booking_id):
 #save_zipcodes_to_db()
 #get_products_by_zipcode(403601)
 #healthians_get_access_token()
+#get_product_details("package_1818")
 

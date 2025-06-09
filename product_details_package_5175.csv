@@ -1,0 +1,81 @@
+id,name
+135,Albumin, Serum
+150,Alkaline Phosphatase, Serum
+502,Bilirubin Direct, Serum
+504,Bilirubin Total, Serum
+970,GGTP (Gamma GT)
+1947,Proteins, Serum
+2024,SGOT/AST
+2025,SGPT/ALT
+2269,Bilirubin- Indirect, Serum
+2270,Globulin
+2271,A/G Ratio
+2302,SGOT/SGPT Ratio
+531,BUN Urea Nitrogen, Serum
+548,Calcium Total, Serum
+621,Chlorides, Serum
+696,Creatinine, Serum
+1900,Phosphorus-Inorganic, Serum
+2040,Sodium, Serum
+2206,Urea, Serum
+2208,Uric Acid, Serum
+2298,BUN/Creatinine Ratio 
+2299,Urea/Creatinine Ratio
+2303,EGFR
+1886,pH Urine
+2044,Specific gravity
+2211,Urobilinogen
+2276,Colour
+2277,Transparency
+2280,Sugar
+2282,Blood
+2285,Red Blood Cells
+2286,Pus cells (Leukocytes)
+2287,Epithelial cells
+2288,Crystals
+2289,Cast
+2290,Bacteria
+2291,Yeast Cells
+2304,Nitrate
+2439,URINE KETONE
+2440,URINE PROTEIN
+2524,Leucocyte Esterase
+2540,Bile Pigments (Bilirubin)
+4842,Others - Urine
+4843,Volume - Urine
+12,Absolute Basophils Count, Blood
+14,Absolute Eosinophil Count, Blood
+16,Absolute Lymphocyte Count, Blood
+17,Absolute Monocyte Count, Blood
+18,Absolute Neutrophil Count, Blood
+1041,Hemoglobin Hb
+1729,MCH
+1730,MCHC
+1731,MCV
+1781,MPV Mean Platelet Volume
+1881,PCV Haematocrit
+1909,Platelet Count Thrombocyte count
+2246,WBC-Total Counts Leucocytes
+2263,RDW (Red Cell Distribution Width)
+2264,Neutrophils
+2265,Eosinophils
+2266,Lymphocytes
+2267,Monocytes
+2268,Basophils
+2300,RDW-CV
+2301,MENTZER INDEX9MCV/RCC
+5867,Red Blood Cells - Blood
+6657,RDWI
+6658,GK Index
+625,Cholesterol-Total, Serum
+1033,HDL Cholesterol Direct
+2165,Triglycerides, Serum
+2272,Non - HDL Cholesterol, Serum
+2275,CHOL/HDL RATIO
+9438,LDL Cholesterol Cal
+9439,VLDL Cholesterol Cal
+9440,LDL / HDL Cholesterol Ratio Cal
+9441,HDL / LDL Cholesterol Ratio Cal
+977,Blood Glucose Fasting
+2192,TSH Ultra - Sensitive
+2226,Vitamin D Total-25 Hydroxy

@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Nirviyu: Stay Healthy{% endblock %}</title>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+    </script>
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K2ZBJPLL');</script>
+  <!-- End Google Tag Manager -->
+ 
+<!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1375916097000437');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1375916097000437&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+</head>
+  <body>
+
+
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2ZBJPLL"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  rel="stylesheet"
+/>
+
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='cloned/css/bootstrap.min.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='cloned/css/core.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='cloned/css/shortcodes.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='cloned/css/style.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='cloned/css/responsive.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='cloned/css/custom.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='cloned/css/style-customizer.css')}}"
+/>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='cloned/css/slick-theme.css')}}"
+/>
+<link
+  rel="icon"
+  href="{{ url_for('static', filename='cloned/images/Favicon1.png')}}"
+/>
+<script src="{{ url_for('static', filename='cloned/js/jquery.js')}}"></script>
+
+<!-- Modernizr JS -->
+<script src="{{ url_for('static', filename='cloned/js/modernizr-2.8.3.min.js')}}"></script>
+<!--Date picker start.. --->
+
+<script src="js/jquery-1.12.4.js"></script>
+<script src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<script src="js/jquery-3.1.1.min.js"></script>
+<!-- Date picker time end -->
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='cloned/js/jquery-1.12.4.js')}}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='cloned/js/jquery-ui_1.js')}}"
+></script>
+<script src="{{ url_for('static', filename='cloned/js/sweetalert.min.js')}}"></script>
+<!-- Bootstrap CSS -->
+<!--link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+/-->
+<!-- Bootstrap JS -->
+<!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script-->
+
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='cloned/css/slick-theme.css')}}"
+/>
+    <style>
+      .ui-datepicker-month {
+        color: #fff;
+      }
+
+      .hidden {
+        display: none ;
+      }
+
+      .copyright {
+        padding: 30px 0px;
+        text-align: center !important;
+        margin: 0 auto !important;
+        display: table !important;
+      }
+
+      .form-control[readonly] {
+        background-color: #fff !important;
+      }
+
+      .single-price-package .price-header .price-value .text-large {
+        font-size: 25px !important;
+      }
+
+      .single-price-package .price-header .price-value .duration {
+        bottom: -13px !important;
+        left: -10px;
+      }
+
+      .single-price-package .price-header .price-value sup {
+        top: 0px !important;
+        font-size: 20px;
+      }
+
+      .single-price-package .price-header .price-value {
+        background: linear-gradient(to right, #2b569a, #9cbced);
+        padding: 28px 0 !important;
+      }
+      /*.abt:hover{
+            color: #fff !important;
+            text-decoration: underline;
+        }
+        .abt-text{
+            color: #fff !important;
+        }
+        .footer-area{
+            font-size: 16px;
+        }
+        .abt{
+             color: #fff !important;
+        }
+        .copy-right{
+            text-align:center;
+        }
+        .foot-policy{
+            font-size: 18px;
+            color: #fff;
+            padding-top: 14px;
+        }
+        .foot-content{
+            padding:2em;
+        }*/
+
+      .ui-widget-header {
+        /*border: 1px solid #d49768;*/
+        background: #2b569a
+          url(/static/cloned/images/ui-bg_glass_25_cb842e_1x400.png) 50% 50%
+          repeat-x;
+        color: #ffffff;
+        font-weight: bold;
+      }
+
+      #txt_email {
+        text-transform: inherit !important;
+      }
+      /*.whatsapp-no:hover{
+                color: #fff !important;
+                text-decoration: underline;
+        }
+
+        .foot-copyright:hover{
+            color:#fff !important;
+            text-decoration:underline !important;
+        }*/
+
+      .Space label {
+        margin-left: -20px;
+      }
+
+      .ui-state-default,
+      .ui-widget-content .ui-state-default,
+      .ui-widget-header .ui-state-default {
+        background: #d2d0cd
+          url(/static/cloned/images/ui-bg_glass_70_ede4d4_1x400.png) 50% 50%
+          repeat-x;
+      }
+
+      .strikethrough {
+        text-decoration: line-through;
+      }
+
+      .DisNone {
+        display: none;
+      }
+
+      .focus {
+        border: 3px solid #ffb000;
+      }
+
+      .switch {
+        display: inline-block;
+        vertical-align: middle;
+        cursor: pointer;
+        margin: 3px 0;
+        box-sizing: border-box;
+        font-size: 10px;
+      }
+
+      .switch.switch-sm .ios-switch {
+        height: 25px;
+        width: 55px;
+      }
+
+      .ios-switch {
+        height: 45px;
+        width: 75px;
+        position: relative;
+        background-color: #e5e5e5;
+        border-radius: 100px;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+
+      .switch.switch-info .ios-switch .on-background {
+        background: #e36159;
+      }
+
+      .ios-switch.on .on-background {
+        opacity: 1;
+      }
+
+      .owl-stage {
+        width: 855px;
+      }
+
+      .owl-nav {
+        display: block;
+      }
+
+      @media screen and (max-width: 520px) {
+        .owl-nav {
+          display: block;
+        }
+      }
+
+      @media screen and (max-width: 1200px) {
+        .company-info {
+          padding: 0;
+          float: none;
+        }
+
+        .contact {
+          text-align: center;
+        }
+      }
+
+      /*@media screen and (min-width:1200px) {
+            .company-info-item {
+                margin-left: 623px;
+            }
+        }*/
+
+      .ios-switch .on-background {
+        opacity: 0;
+        z-index: 1;
+        -o-transition: 0.3s 0.2s;
+        -ms-transition: 0.3s 0.2s;
+        -moz-transition: 0.3s 0.2s;
+        -webkit-transition: 0.3s 0.2s;
+        transition: 0.3s 0.2s;
+        background-image: linear-gradient(#e36159, #e36159);
+      }
+
+      .ios-switch .background-fill {
+        width: 100%;
+        height: 100%;
+        border-radius: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      .ios-switch.on .state-background {
+        -o-transform: scale(0);
+        -ms-transform: scale(0);
+        -moz-transform: scale(0);
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+
+      .add_width {
+        width: 1710px;
+      }
+
+      .remove_width {
+        width: 1710px;
+      }
+
+      .ios-switch .state-background {
+        border-radius: 100px;
+        z-index: 2;
+        background-image: -o-linear-gradient(white, #eaedfa);
+        background-image: -ms-linear-gradient(white, #eaedfa);
+        background-image: -moz-linear-gradient(white, #eaedfa);
+        background-image: -webkit-linear-gradient(white, #eaedfa);
+        background-image: linear-gradient(white, rgba(227, 97, 89, 0.65));
+        border: 2px solid #e5e5e5;
+        -o-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        -o-transform: scale(1);
+        -ms-transform: scale(1);
+        -moz-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -o-transition: 0.4s;
+        -ms-transition: 0.4s;
+        -moz-transition: 0.4s;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      .ios-switch .background-fill {
+        width: 100%;
+        height: 100%;
+        border-radius: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      .switch.switch-sm .ios-switch .handle {
+        height: 21px;
+        width: 21px;
+      }
+
+      .ios-switch.on .handle {
+        -o-animation: expand-on 0.3s 0.2s;
+        -ms-animation: expand-on 0.3s 0.2s;
+        -moz-animation: expand-on 0.3s 0.2s;
+        -webkit-animation: expand-on 0.3s 0.2s;
+        animation: expand-on 0.3s 0.2s;
+        -o-transform: translate(30px, 0);
+        -ms-transform: translate(30px, 0);
+        -moz-transform: translate(30px, 0);
+        -webkit-transform: translate(30px, 0);
+        transform: translate(30px, 0);
+        -o-transform: translate3d(30px, 0, 0);
+        -ms-transform: translate3d(30px, 0, 0);
+        -moz-transform: translate3d(30px, 0, 0);
+        -webkit-transform: translate3d(30px, 0, 0);
+        transform: translate3d(30px, 0, 0);
+      }
+
+      .switch .ios-switch .handle {
+        height: 31px;
+        width: 31px;
+      }
+
+      .ios-switch .handle {
+        width: 41px;
+        height: 41px;
+        background-color: white;
+        top: 2px;
+        left: 2px;
+        position: absolute;
+        border-radius: 20px;
+        box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.075),
+          0 3px 5px rgba(0, 0, 0, 0.15), 1px 2px 2px rgba(0, 0, 0, 0.05);
+        z-index: 3;
+        -o-transition: -o-transform 0.3s 0.25s
+          cubic-bezier(0.455, 0.03, 0.215, 1.33);
+        -ms-transition: -ms-transform 0.3s 0.25s
+          cubic-bezier(0.455, 0.03, 0.215, 1.33);
+        -moz-transition: -moz-transform 0.3s 0.25s
+          cubic-bezier(0.455, 0.03, 0.215, 1.33);
+        -webkit-transition: -webkit-transform 0.3s 0.25s
+          cubic-bezier(0.455, 0.03, 0.215, 1.33);
+        -o-transition: transform 0.3s 0.25s
+          cubic-bezier(0.455, 0.03, 0.215, 1.33);
+        -ms-transition: transform 0.3s 0.25s
+          cubic-bezier(0.455, 0.03, 0.215, 1.33);
+        -moz-transition: transform 0.3s 0.25s
+          cubic-bezier(0.455, 0.03, 0.215, 1.33);
+        -webkit-transition: transform 0.3s 0.25s
+          cubic-bezier(0.455, 0.03, 0.215, 1.33);
+        transition: transform 0.3s 0.25s cubic-bezier(0.455, 0.03, 0.215, 1.33);
+        -o-box-sizing: content-box;
+        -ms-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        -webkit-box-sizing: content-box;
+        box-sizing: content-box;
+      }
+
+      * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      input[type="radio"] {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 3px 4px;
+      }
+
+      input[type="checkbox"] {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 6px 4px;
+      }
+
+      input,
+      button,
+      select,
+      textarea {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+      }
+
+      .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+      }
+
+      .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: red;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -60px; /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+      }
+
+      button,
+      input,
+      optgroup,
+      select,
+      textarea {
+        font: inherit;
+        font-size: 14px !important;
+        color: #999999 !important;
+        font-weight: 500 !important;
+        border-radius: 5px;
+        border: 1px solid #e1e1e1;
+      }
+
+      .but_sumbit {
+        height: 50px;
+        width: 120px;
+        font-size: 20px;
+      }
+
+      #but_sumbit0 {
+        height: 50px;
+        width: 120px;
+        font-size: 20px;
+      }
+
+      .lbl_testc {
+        font-size: 16px;
+      }
+
+      .lbl_test_count {
+        font-size: 15px;
+        font-family: calibri;
+        color: #fff;
+      }
+
+      .ui-state-highlight,
+      .ui-widget-content .ui-state-highlight,
+      .ui-widget-header .ui-state-highlight {
+        border: 1px solid #2b569a;
+        padding: 0px 3px;
+      }
+
+      .ui-state-active,
+      .ui-widget-content .ui-state-active,
+      .ui-widget-header .ui-state-active,
+      a.ui-button:active,
+      .ui-button:active,
+      .ui-button.ui-state-active:hover {
+        color: #2b569a;
+        padding: 0px 3px;
+      }
+
+      .ui-datepicker th {
+        background-color: #eee !important;
+      }
+
+      .ui-widget-content {
+        height: auto;
+      }
+
+      .ui-datepicker table {
+        background-color: #eee !important;
+      }
+
+      .ui-state-default,
+      .ui-widget-content .ui-state-default {
+        border-radius: 0% !important;
+        height: 22px !important;
+        margin-left: 0px !important;
+        margin-top: 0px !important;
+        top: 0% !important;
+        width: 30px !important;
+      }
+
+      .slick-slider {
+        display: table !important;
+        table-layout: fixed !important;
+        width: 100% !important;
+      }
+
+      .radio- input {
+        vertical-align: sub !important;
+      }
+
+      .radio- {
+        margin-left: 0px !important;
+        display: inline-flex !important;
+      }
+
+      .main-rd {
+        display: inline-flex !important;
+      }
+
+      #Label3 {
+        display: initial !important;
+        vertical-align: top !important;
+      }
+
+      .sub-label label {
+        line-height: 20px !important;
+      }
+
+      #newDataTable tbody tr td:nth-child(4) {
+        vertical-align: top !important;
+      }
+
+      #newDataTable tbody tr td #addButton {
+        padding: 7px 15px !important;
+        width: 50px !important;
+      }
+
+      #newDataTable tbody tr td:nth-child(5) {
+        vertical-align: top !important;
+      }
+
+      #newDataTable tbody tr td #deleteButton {
+        padding: 7px 15px !important;
+        width: 50px !important;
+        margin-top: 0 !important;
+      }
+
+      .plusicon {
+        width: 50px !important;
+        margin-top: 0 !important;
+      }
+
+      .minusicon {
+        margin-top: 0 !important;
+        width: 50px !important;
+      }
+    </style>
+<style>
+
+    
+  /*whatsapp widget*/
+
+  .whatsapp__poweredByTopRight {
+    bottom: 0px;
+    right: 0px;
+  }
+
+  .whatsapp__poweredBy {
+    display: flex;
+    position: absolute;
+    bottom: 2px;
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+    background-color: #fff !important;
+    border-radius: 10px;
+    -moz-box-shadow: 0px 0px 4px 0px rgb(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0px 0px 4px 0px rgb(0 0 0 / 20%);
+    box-shadow: 0px 0px 4px 0px rgb(0 0 0 / 20%);
+    width: intrinsic;
+    width: -moz-max-content;
+    width: -webkit-max-content;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    color: #1d2129;
+    padding: 12px;
+    text-decoration: none;
+    max-width: 248px;
+    height: auto !important;
+  }
+
+  .closePopUp {
+    width: 12px !important;
+    float: right;
+    height: 12px !important;
+    margin-right: -4px !important;
+    margin-top: -10px !important;
+    border-radius: 50% !important;
+    z-index: 99999;
+  }
+
+  .prod_name_sel{
+      width: 100% !important;
+      padding: 10px !important;
+      margin-bottom: 15px !important;
+      border-radius: 5px !important;
+      border: 1px solid #ccc !important;
+      height:40px !important;
+  }
+
+    .slick-slider {
+      display: table !important;
+      table-layout: fixed !important;
+      width: 100% !important;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f7f7;
+    }
+  
+    .product {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .product img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .product h3 {
+      margin: 10px 0 5px;
+    }
+    .product p {
+      font-size: 14px;
+      color: #555;
+    }
+    .product .price {
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .btn-book {
+      background-color: black;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      bottom: 0;
+      position: relative;
+    }
+    .btn-book:hover {
+      background-color: #333;
+    }
+
+    /* Modal */
+    .modal_ {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content_ {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 400px;
+      text-align: left;
+    }
+    .modal-content_ h2 {
+      margin-top: 0;
+    }
+    .modal-content_ input,
+    .modal-content_ textarea {
+      font:calibri, sans-serif;
+      width: 100% !important;
+      padding: 10px !important;
+      margin-bottom: 15px !important; 
+      border-radius: 5px !important;
+      border: 1px solid #ccc !important;
+    }
+    .modal-content_ .submit-btn {
+      background-color: black !important;
+      color: white !important;
+      padding: 10px 20px !important;
+      border: none !important;
+      border-radius: 5px !important;
+      cursor: pointer !important;
+    }
+    .close {
+      float: right;
+      font-size: 20px;
+      cursor: pointer;
+      color: #aaa;
+    }
+    .two-col-display {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 10px !important;
+      float: left !important;
+    }
+
+    .form-el-input {
+      width: 100% !important;
+      padding: 10px !important;
+      /*margin-bottom: 15px !important;*/
+      border-radius: 5px !important;
+      border: 1px solid #ccc !important;
+      height:40px !important;
+    }
+    .custom-input::placeholder {
+    color: #888;
+    font-style: italic;
+    }
+
+
+
+    .add {
+      grid-column: span 2;
+      width: 100%;
+    }
+
+    #pin_check_status {
+      grid-column: span 2;
+      font-size: 10px;
+    }
+    .courier {
+      grid-column: span 2 !important;
+      gap: 8px !important; /* Adds spacing between the checkbox and text */
+      margin-bottom: 10px !important; /* Adds spacing below the checkbox */
+    }
+
+    .courier_charge {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important; /* Adds spacing between the checkbox and text */
+      width: 100% !important; /* Ensures it utilizes the full span */
+    }
+
+    input[type="checkbox"] {
+      width: 16px !important; /* Standard checkbox size */
+      height: 16px !important; /* Ensure it’s not oversized */
+      margin: 0 !important; /* Remove extra space */
+      vertical-align: middle !important; /* Align with text */
+    }
+
+    input[type="email"] {
+      width: 100% !important;
+      padding: 10px !important;
+      margin-bottom: 15px !important;
+      border-radius: 5px !important;
+      border: 1px solid #ccc !important;
+      letter-spacing: 0.5px !important; /* Adjust letter spacing */
+    }
+
+    .model_header{
+      font-size: 20px !important;
+      color: #333 !important;
+      margin-bottom: 20px !important;
+    }
+
+    .spinner {
+    border: 2px solid #f3f3f3; 
+    border-top: 2px solid #000; 
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+
+</style>
+      <div class="wrapper">
+        <header class="header-area header-wrapper">
+          <div class="header-top-bar bg-white">
+            <div class="container">
+              <div class="row">
+                <div class="">
+                  <div class="col-md-4 col-sm-4 col-xs-6">
+                    <div class="logo">
+                      <a href="#">
+                        <img
+                          src="static\img\logo\healthian.svg"
+                          alt="logo"
+                          class="img-responsive t-logo"
+                        />
+                      </a>
+                    </div>
+                  </div>
+
+                  <!--div class="col-md-4 col-sm-3 col-xs-6">
+                    <div class="logo">
+                      <a href="#" style="height: 10px !important;
+                          ">
+                        <img
+                          src="static\img\logo\logo-removebg-preview.png"
+                          
+                          alt=""
+                          
+                        />
+                      </a>
+                    </div>
+                  </div-->
+
+                  <div class="col-md-4 col-sm-5 col-xs-12 order-2">
+                    <div id="DSACODE" style="padding: 2px 0px">
+                      <div class="company-info clearfix">
+                        <div class="company-info-item">
+                          <div class="contact">
+                            Have a Query? Give a Call on :
+
+                            <span style="color: #48519a">
+                              <a href="tel:9993694449" id="w3s">
+                                <span type="mob" id="Label2">9993694449</span></a
+                              >
+                            </span>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+      </div>
+<div class="hero-land" style="text-align: center; margin-top: 20px">
+
+                    <picture>
+                      <source media="(min-width: 1024px)" srcset="{{ url_for('static', filename='uploads/health_desk_lp.jpeg') }}" style="width:100%;" >  
+                      <source media="(min-width: 768px)" srcset="{{ url_for('static', filename='uploads/health_tab_lp.jpeg') }}" style="width:100%;" >
+                    <img src="{{ url_for('static', filename='uploads/health_mob_lp.jpeg') }}" style="width:100%;" alt="Banner 2">
+                    </picture>
+
+  <!--img
+    src="{{ url_for('static', filename='uploads/thyro_land.PNG') }}"
+    alt="Thyrocare"
+    style="width: 80%; height: auto align: center"
+  /-->
+</div>
+<!--
+<div class="container">
+  {% for product in products %}
+  <div class="product">
+    <!--img src="" alt="{{ product[1] }}" /-->
+    <!--
+    <h3>{{ product[1] }}</h3>
+    <p>Total tests: {{ product[2] }}</p>
+    <p class="price">₹{{ product[3] }}</p>
+    <button
+      class="btn-book"
+      onclick="openForm_('{{ product[0] }}', '{{ product[1] }}')"
+      product_id="{{ product[0] }}"
+    >
+      Book Now
+    </button>
+  </div>
+  {% endfor %}
+</div>
+-->
+<div id="Compare">
+      <!-- SERVICES AREA START -->
+      <div class="services-area pb-0 pt-55">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="section-title-2 text-center">
+                <h2>Compare Wellness Packages</h2>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div
+              class="service-carousel dots-right-btm"
+              id="accordionExample"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT SCTION -->
+    <div id="about">
+      <section id="page-content" class="page-wrapper">
+        <div class="features-area fix">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-4">
+                <a
+                  href="https://b2capi.thyrocare.com//About"
+                  class="purchase-btn1"
+                  tabindex="0"
+                >
+                  <img src="images/22.png" class="about"
+                /></a>
+              </div>
+              <div
+                class="col-md-8"
+                style="padding-right: 0px; padding-left: 0px"
+              >
+                <div class="features-info bg-gray">
+                  <div class="section-title mb-20">
+                    <h2 class="h1">
+                      Why do we need Preventive Health Checkup?
+                    </h2>
+                  </div>
+                  <div class="features-desc">
+                    <p>
+                      "Prevention is better than cure", "A stitch in time saves
+                      nine" are well-known adages. Today more emphasis is placed
+                      on the prevention of diseases and promoting health
+                      awareness. Growing sedentary lifestyles, increasing stress
+                      levels at work place, tempting and enticing food displays,
+                      growing disposable incomes, increased addictions to
+                      automobiles, all indicate that we give to our body more
+                      than what it needs. This has given rise to obesity,
+                      diabetes, high blood pressure and a host for many other
+                      lifestyle disorders. With advanced tests and technologies,
+                      clinical laboratories can help in identifying various
+                      disorders accurately which can be treated completely or at
+                      least the progress can be delayed.
+                    </p>
+                  </div>
+                  <div class="features-include">
+                    <div class="row">
+                      <h2
+                        class="section-title h1"
+                        style="
+                          padding-left: 15px;
+                          margin-bottom: 20px;
+                          margin-top: 20px;
+                        "
+                      >
+                        Our USP
+                      </h2>
+
+                      <div class="col-lg-4 col-md-4 col-sm-4 tc">
+                        <div class="features-include-list">
+                          <i class="fa fa-map-marker faa-tada f40"></i>
+                          <h6>Avaliable in all Major Cities and Towns</h6>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-4 tc">
+                        <div class="features-include-list">
+                          <i class="fa fa-clock-o faa-tada f40"></i>
+                          <h6>Takes just 5 mins for collection</h6>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-4 tc">
+                        <div class="features-include-list">
+                          <i class="fa fa-inr faa-tada f40"></i>
+                          <h6>
+                            Save tax upto Rs. 5000 under section 80D of Income
+                            tax act 1961
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  
+    <!-- ABOUT SCTION -->
+<!-- Modal Form -->
+<div id="bookingModal_" class="modal_">
+  <div class="modal-content_">
+    <span class="close" onclick="closeForm()">&times;</span>
+    <h2 class="model_header">Book Healthians Package: <span id="productName"></span></h2>
+    <form method="POST">
+      <input type="hidden" name="product_id" id="productId" />
+      <div class="two-col-display">
+        <span id="pin_check_status" type="hidden"></span>
+        <input
+          type="text"
+          name="pincode"
+          id="pincode"
+          maxlength="6"
+          placeholder="Pincode"
+          onblur="valid_pin(this); Pinavalability(this);"
+          required
+        />
+        <input
+          type="text"
+          name="customer_name"
+          id="customer_name"
+          placeholder="Your Name"
+          required
+        />
+        <input
+        class="custom_input"
+          type="email"
+          name="customer_email"
+          id="customer_email"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="text"
+          name="customer_phone"
+          id="customer_phone"
+          pattern="[0-9]{10}"
+          maxlength="10"
+          placeholder="Phone"
+          required
+        />
+        <input
+          class="form-el-input"
+          type="number"
+          name="age"
+          id="age"
+          placeholder="Enter Age"
+          required
+        />
+
+        <select
+          class="form-el-input"
+          name="gender"
+          id="gender"
+          onchange="return GenderValidation();"
+          required
+        >
+          <option value="">Gender*</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+
+
+
+        <textarea
+          class="add"
+          name="notes"
+          id="address"
+          rows="2"
+          required
+          placeholder="Enter complete address (min 25 characters)"
+          minlength="25"
+          onblur="validateAddress(this);"
+        ></textarea>
+
+        <select class="prod_name_sel" name="product_id" id="product_id"   onchange="check_dual_bendata();"  required>
+  <option value="">-- Select a Product --</option>
+  {% for product in products %}
+    <option value="{{ product[0] }}">{{ product[1] }}</option>
+  {% endfor %}
+</select>
+        <input
+          type="text"
+          name="customer_name2"
+          id="customer_name2"
+          placeholder="2nd Beneficiary Name"
+          
+          
+        />
+       <input
+          class="form-el-input"
+          type="number"
+          name="age2"
+          id="age2"
+          placeholder="Enter Age"
+                    
+        />
+
+        <select
+          class="form-el-input"
+          name="gender2"
+          id="gender2"
+          onchange="return GenderValidation();"
+          
+          
+        >
+          <option value="">Gender*</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+
+      <input
+        class="form-el-input"
+        type="text"
+        name="appointment_date"
+        id="appointment_date"
+        placeholder="Appointment Date"
+        onfocus="this.type='date';"
+        onblur="if (this.value === '') this.type='text';"
+        onchange="getAvailableSlots(this);"
+        required
+      />
+
+        <!--input
+          class="form-el-input"
+          type="date"
+          name="appointment_date"
+          id="appointment_date"
+          placeholder="Appointment Date"
+          onchange="getAvailableSlots(this);"
+          placeholder="Appointment Dt"
+          required
+        /-->
+
+        <select name="ddl_avlSlots" id="ddl_avlSlots" class="form-el-input">
+          <option value="">Select Slot</option>
+        </select>
+        <div class="courier">
+
+          <span class="courier_charge">
+            <input
+              id="courier_charge"
+              type="checkbox"
+              name="courier_charge"
+            />Additional Rs. 75 for Printed Reports</span
+          >
+        </div>
+      </div>
+      <button type="button" class="submit-btn" id= "submitBtn" onclick="place_order();">
+        <span id="btnText">Place Order</span>
+        <span id="spinner" class="spinner" style="display: none;"></span>
+      </button>
+    </form>
+  </div>
+</div>
+ <div class="WhatsAppButton__root" style="position: fixed; bottom: 20px; right: 15px; z-index: 100;"><a href="https://wa.me/919993694449?text=Hey" style="text-decoration: none" target="_blank"><img src="https://s3.ap-south-1.amazonaws.com/cdn.limechat.ai/packs/js/whatsapp_widget/media/LC_WA.png" style="width:48px; opacity:1"></a><a class="whatsapp__poweredBy whatsapp__poweredByTopRight" id="whatspopup" style="bottom: 72px; right: 0px;">Have Queries? Let's chat<img src="https://s3.ap-south-1.amazonaws.com/cdn.limechat.ai/packs/js/whatsapp_widget/media/LC_close.png" class="closePopUp" onclick="close_func();"></a></div>
+
+<script>
+  function close_func() {
+    document.getElementById("whatspopup").style.display = "none";
+  }
+</script>
+<script>
+  function openForm_() {
+    //console.log(id, name);
+    //document.getElementById("productId").value = id;
+    //document.getElementById("productName").innerText = name;
+    
+    document.getElementById("bookingModal_").style.display = "flex";
+    check_dual_bendata();
+  }
+
+  function closeForm() {
+    document.getElementById("bookingModal_").style.display = "none";
+  }
+
+  window.onclick = function (event) {
+    let modal = document.getElementById("bookingModal_");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  function GenderValidation() {
+    gender_value = document.getElementById("gender").value;
+    if (gender_value == "") {
+      alert("Please enter correct gender");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function validateAddress(address) {
+    let address_value = address.value;
+    if (address_value.length < 25) {
+      alert("Please enter a valid address with minimum 25 characters");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function valid_pin(pin) {
+    let pin_value = pin.value;
+    if (pin_value.length != 6) {
+      alert("Please enter a valid pincode");
+      return false;
+    } else if (isNaN(pin_value)) {
+      alert("Please enter a valid pincode");
+      return false;
+    } else if (pin_value < 100000 || pin_value > 999999) {
+      alert("Please enter a valid pincode");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function Pinavalability(pin) {
+    let pin_value = pin.value;
+    if (valid_pin(pin)) {
+      $.ajax({
+        type: "POST",
+        url: "/pincode_check",
+        data: { pincode: pin_value, provider: "thyrocare" },
+        success: function (response) {
+          if (response.serviceable) {
+            console.log("Pincode is available");
+            document.getElementById("pin_check_status").innerText =
+              "Pincode is servicable";
+            document.getElementById("pin_check_status").style.display = "block";
+            document.getElementById("pin_check_status").style.color = "green";
+          } else {
+            alert("Pincode is not available");
+            document.getElementById("pin_check_status").innerText =
+              "Pincode is not servicable";
+            document.getElementById("pin_check_status").style.display = "block";
+            document.getElementById("pin_check_status").style.color = "red";
+            //console.log(response);
+          }
+        },
+        error: function (error) {
+          console.error("Error:", error);
+        },
+      });
+    }
+  }
+
+  function getAvailableSlots(date) {
+    let date_value = date.value;
+    let pin_value = document.getElementById("pincode").value;
+    let labidentifier = "healthians";
+    prod_id = document.getElementById("product_id").value;
+    console.log("Selected date:", date_value);
+    console.log("Selected pincode:", pin_value);
+    if (date_value == "") {
+      alert("Please select a date");
+      return false;
+    }
+    if (valid_pin(document.getElementById("pincode"))) {
+      console.log("Valid pincode");
+      $.ajax({
+        type: "POST",
+
+        url: `/get_slots_lp?date=${date_value}&pincode=${pin_value}&provider=${labidentifier}&product_id=${prod_id}`,
+        data: { date: date_value, pincode: pin_value },
+        success: function (response) {
+          console.log("Available slots:", response);
+          let slots = response.slots;
+          let slotSelect = document.getElementById("ddl_avlSlots");
+          slotSelect.innerHTML = "<option value=''>Select Slot</option>";
+          if (slots.length == 0) {
+            alert("No slots available for the selected date");
+            return false;
+          }
+          for (let i = 0; i < slots.length; i++) {
+            let option = document.createElement("option");
+            option.value = slots[i];
+            option.textContent = slots[i];
+            slotSelect.appendChild(option);
+          }
+        },
+        error: function (error) {
+          console.error("Error:", error);
+        },
+      });
+    }
+  }
+
+
+  function check_dual_bendata(){
+    
+  
+    let product_id = document.getElementById("product_id").value;
+    if (product_id=="PROJ1048447" || product_id=="PROJ1048439" ) {
+      document.getElementById("customer_name2").style.display = "block";
+      document.getElementById("age2").style.display = "block";
+      document.getElementById("gender2").style.display = "block";
+      document.getElementById("customer_name2").required = true;
+      document.getElementById("age2").required = true;
+      document.getElementById("gender2").required = true;
+    } 
+    else{
+      document.getElementById("customer_name2").style.display = "none";
+      document.getElementById("age2").style.display = "none";
+      document.getElementById("gender2").style.display = "none";
+      document.getElementById("customer_name2").required = false;
+      document.getElementById("age2").required = false;
+      document.getElementById("gender2").required = false;
+      document.getElementById("customer_name2").value = "";
+      document.getElementById("age2").value = "";
+      document.getElementById("gender2").value = "";
+    }
+
+      
+  }
+
+
+
+  function place_order() {
+
+
+    let pin_value = document.getElementById("pincode").value;
+    let date_value = document.getElementById("appointment_date").value;
+    let slot_value = document.getElementById("ddl_avlSlots").value;
+    let provider = "healthians";
+    let product_id = document.getElementById("product_id").value;
+    let selected_slot = document.getElementById("ddl_avlSlots").value;
+    let name = document.getElementById("customer_name").value;
+    let email = document.getElementById("customer_email").value;
+    let phone = document.getElementById("customer_phone").value;
+    let age = document.getElementById("age").value;
+    let address = document.getElementById("address").value;
+    let gender = document.getElementById("gender").value;
+    let gender2 = document.getElementById("gender2").value;
+    let name2 = document.getElementById("customer_name2").value;
+    let age2 = document.getElementById("age2").value;
+    let reports = 0;
+    //if (courier_charge.checked) {
+     // reports = 1;
+    //  console.log("Courier charge selected");
+    //} else {
+    //  reports = 0;
+    //  console.log("Courier charge not selected");
+    //}
+
+    console.log("courier_charge", reports);
+
+    if (
+      valid_pin(document.getElementById("pincode")) &&
+      validateAddress(document.getElementById("address")) &&
+      GenderValidation()
+    ) {
+      document.getElementById("btnText").style.display = "none";
+      document.getElementById("spinner").style.display = "inline-block";
+      document.getElementById("submitBtn").disabled = true;
+      console.log("Valid pincode");
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/order_lp",
+        data: JSON.stringify({
+          pincode: pin_value,
+          date: date_value,
+          slot: slot_value,
+          provider: provider,
+          product_id: product_id,
+          selected_slot: selected_slot,
+          name: name,
+          email: email,
+          phone: phone,
+          age: age,
+          address: address,
+          gender: gender,
+          hardcopy: reports,
+          name2: name2,
+          age2: age2,
+          gender2: gender2,
+        }),
+        success: function (response) {
+          //console.log("Order placed successfully:", response);
+          document.getElementById("btnText").style.display = "inline";
+          document.getElementById("spinner").style.display = "none";
+          document.getElementById("submitBtn").disabled = false;
+          alert(
+            "Order placed successfully! You shall receive the details on your email/mobile."
+          );
+          closeForm();
+        },
+        error: function (error) {
+          console.error("Error placing order:", error);
+          const errorMessage = error.responseJSON?.error || "Something went wrong";
+          document.getElementById("btnText").style.display = "inline";
+          document.getElementById("spinner").style.display = "none";
+          document.getElementById("submitBtn").disabled = false;
+          alert("Error: " + errorMessage);
+        },
+      });
+    } else {
+      alert("Please enter valid details -check pincode/ gender/ address");
+    }
+  }
+</script>
+<script src="{{ url_for('static', filename='cloned/js/bootstrap.min.js')}}"></script>
+<script src="{{ url_for('static', filename='cloned/js/jquery.nivo.slider.js')}}"></script>
+<script src="{{ url_for('static', filename='cloned/js/plugins.js')}}"></script>
+<script src="{{ url_for('static', filename='cloned/js/main.js')}}"></script>
+<script type="text/javascript">
+  var MinBen = 0;
+  function BindAccordian(emailerProducts) {
+    debugger;
+    var html = "";
+    for (var i = 0; i < emailerProducts.length; i++) {
+      //$('#ddl_offer').append("<option value='" + emailerProducts[i].NAME + "~" + emailerProducts[i].RATE +"~" + emailerProducts[i].Code+"'>" + emailerProducts[i].NAME+"</option>")
+
+      var groups = {};
+      for (var j = 0; j < emailerProducts[i].Child.length; j++) {
+        var groupName = emailerProducts[i].Child[j].groupname;
+        if (!groups[groupName]) {
+          groups[groupName] = [];
+        }
+        groups[groupName].push(emailerProducts[i].Child[j].name);
+      }
+      emailerProducts[i].Child = [];
+      for (var groupName in groups) {
+        emailerProducts[i].Child.push({
+          groupname: groupName,
+          name: groups[groupName],
+        });
+      }
+      if (emailerProducts[i].catalogueRate != 0) {
+        var prec = 0;
+        prec =
+          100 -
+          (emailerProducts[i].RATE * 100) / emailerProducts[i].catalogueRate;
+        var roundpre = Math.round(prec);
+        //html = html + "<span style='font-size:15px;margin:-8px 12px;display:block;'>" + roundpre + "%</span>";
+      }
+
+      html =
+        html + "<div id='div_accordion1Primary' class='col-md-12 col-sm-6'>";
+      html = html + "<div class='service-item'>";
+      html = html + "<div class='single-price-package'>";
+      html = html + "<div class='price-header'>";
+      html = html + "<h3>";
+      html =
+        html +
+        "<span id='lbl_offer1' class='lbl_testc'>" +
+        emailerProducts[i].NAME +
+        "</span>";
+      html = html + "</h3>";
+      html = html + "<h4 class='price-value'>";
+      if (roundpre == 0) {
+        html =
+          html +
+          "<span class='fa-stack fa-lg' style='color: #80a2ef;float:left;margin-top:-20px;margin-left: 5px;width:auto!important;display:none;'>";
+      } else {
+        html =
+          html +
+          "<span class='fa-stack fa-lg' style='color: #80a2ef;float:left;margin-top:-20px;margin-left: 5px;width:auto!important;'>";
+      }
+
+      html = html + "<i class='fa fa-certificate fa-stack-2x'></i>";
+      html =
+        html +
+        "<span class='fa-stack fa-lg' style='color:white;margin-left:-14 %'>";
+      if (emailerProducts[i].catalogueRate != 0) {
+        var prec = 0;
+        prec =
+          100 -
+          (emailerProducts[i].RATE * 100) / emailerProducts[i].catalogueRate;
+        var roundpre = Math.round(prec);
+        html =
+          html +
+          "<span style='font-size:15px;margin:-8px 12px;display:block;'>" +
+          roundpre +
+          "%</span>";
+      }
+      html = html + "</span>";
+      html = html + "</span>";
+      html = html + "<div style='margin-top: -15px;'>";
+
+      if (emailerProducts[i].MinBen != null) {
+        html =
+          html +
+          "<span id='lbl_offerrate" +
+          i +
+          "'>" +
+          parseInt(emailerProducts[i].RATE) * emailerProducts[i].MinBen +
+          "/-</span>";
+        MinBen = emailerProducts[i].MinBen;
+        //html = html + "<span id='lbl_offerrate" + i + "'>" + ((parseInt(emailerProducts[i].RATE)) * emailerProducts[i].MinBen) + "/-</span>";
+      } else {
+        html =
+          html +
+          "<span id='lbl_offerrate" +
+          i +
+          "'>" +
+          parseInt(emailerProducts[i].RATE) +
+          "/-</span>";
+        MinBen = 1;
+        //html = html + "<span id='lbl_offerrate" + i + "'>" + (parseInt(emailerProducts[i].RATE)) + "/-</span>";
+      }
+
+      html = html + "   ";
+      if (roundpre > 0) {
+        html =
+          html +
+          "<sup class='text-bottom' style='font-size: 15px;'><i class='fa fa-inr'></i></sup><span class='text-large'  style='font-size: 17px!important;'>";
+      }
+
+      if (emailerProducts[i].MinBen != null) {
+        if (roundpre > 0) {
+          html =
+            html +
+            "<strike><span id='lbl_offerrate1" +
+            i +
+            "'>" +
+            parseInt(emailerProducts[i].catalogueRate) *
+              emailerProducts[i].MinBen +
+            "/-</span></strike>";
+        }
+
+        MinBen = emailerProducts[i].MinBen;
+        //html = html + "<span id='lbl_offerrate" + i + "'>" + ((parseInt(emailerProducts[i].RATE)) * emailerProducts[i].MinBen) + "/-</span>";
+      } else {
+        if (roundpre > 0) {
+          html =
+            html +
+            "<strike><span  style='font-size: 15px!important;' id='lbl_offerrate1" +
+            i +
+            "'>" +
+            parseInt(emailerProducts[i].catalogueRate) +
+            "/-</span></strike>";
+        }
+
+        MinBen = 1;
+        //html = html + "<span id='lbl_offerrate" + i + "'>" + (parseInt(emailerProducts[i].RATE)) + "/-</span>";
+      }
+
+      html = html + "</span><br><span class='duration'>";
+      html =
+        html +
+        "<span id='lbl_test_counts1' class='lbl_test_count'>( " +
+        emailerProducts[i].ChildCount +
+        " Tests )</span></span>";
+      html = html + "</div>";
+      html = html + "</h4>";
+      html = html + "</div>";
+      html = html + "<div class='panel-group' id='accordion_" + i + "'>";
+
+      for (var l = 0; l < emailerProducts[i].Child.length; l++) {
+        html = html + "<div class='panel panel-default'>";
+        html = html + "<div class='panel-heading'>";
+        html =
+          html +
+          "<h4 class='panel-title'><a data-toggle='collapse' data-parent='#accordion_" +
+          i +
+          "' href='#collapseone-" +
+          i +
+          l +
+          "' aria-expanded='false' class='collapsed'>" +
+          emailerProducts[i].Child[l].groupname +
+          " (" +
+          emailerProducts[i].Child[l].name.length +
+          ") <i class='fa fa-angle-down'></i></a></h4>";
+        html = html + "</div>";
+        html =
+          html +
+          "<div id='collapseone-" +
+          i +
+          l +
+          "' class='panel-collapse collapse' aria-expanded='false' style='height: 0px;'>";
+
+        html = html + "<div class='panel-body'>";
+        html = html + "<ul class='text-left'>";
+        for (var k = 0; k < emailerProducts[i].Child[l].name.length; k++)
+          html = html + "<li>" + emailerProducts[i].Child[l].name[k] + "</li>";
+        html = html + "</ul>";
+        html = html + "</div>";
+        html = html + "</div>";
+        html = html + "</div>";
+      }
+      html = html + "</div>";
+
+      html = html + "<div class='price-footer'>";
+      html =
+        html +
+        "<button class='purchase-btn' onclick='openForm_()'>Book Now</button>";
+
+        
+      html = html + "</div>";
+      html = html + "</div>";
+
+      html = html + "</div>";
+      html = html + "</div>";
+    }
+    $("#accordionExample").html(html);
+
+    $(".service-carousel").slick("unslick");
+
+    $(".service-carousel")
+      .not(".slick-initialized")
+      .slick({
+        arrows: true,
+        dots: true,
+        infinite: false,
+        speed: 300,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        responsive: [
+          {
+            breakpoint: 991,
+            settings: { slidesToShow: 3, slidesToScroll: 2 },
+          }, // Tablet
+          {
+            breakpoint: 767,
+            settings: { slidesToShow: 2, slidesToScroll: 1 },
+          }, // Large Mobile
+          {
+            breakpoint: 479,
+            settings: { slidesToShow: 1, slidesToScroll: 1 },
+          }, // Small Mobile
+        ],
+      });
+  }
+  function SetRateCollectionWise(CollectionType) {
+    debugger;
+    var count = $("#ddl_offer option").size();
+    count = parseInt(count) - 1;
+    for (var i = 0; i < count; i++) {
+      var LblRate = $("#lbl_offerrate" + i).text();
+      LblRate = parseInt(LblRate.replace("/-", ""));
+      if (CollectionType == "COLLECTION CENTER") {
+        LblRate = LblRate - (200 + (MinBen - 1) * 100);
+      } else {
+        LblRate = LblRate + (200 + (MinBen - 1) * 100);
+      }
+      $("#lbl_offerrate" + i).text(LblRate + "/-");
+    }
+  }
+
+  function checkEmail(str) {
+    with (str.value) {
+      var re = new RegExp(
+        "^[a-z0-9]+([_|\.|-]{1}[a-z0-9]+)*@[a-z0-9]+([_|\.|-]­{1}[a-z0-9]+)*[\.]{1}(com|ca|net|org|fr|us|qc.ca|gouv.qc.ca)$",
+        "i"
+      );
+      if (!re.test(str.value)) {
+        alert("Please enter a valid email address");
+        str.value = "";
+      } else {
+        return true;
+      }
+    }
+  }
+
+  //function SpecialServiceTypeBind() {
+  //    $.ajax({
+  //        type: "POST",
+  //        url: "DM_Emailer.aspx" + "/CheckServiceType",
+  //        contentType: "application/json; charset=utf-8",
+  //        dataType: "json",
+  //        async: true,
+  //        cache: false,
+  //        success: function (Response) {
+  //            console.log(Response);
+  //            var trHTML = '';
+  //            var optionHTML = '';
+  //            if (Response.d.respId == "RES00001") {
+  //                $.each(Response.d.serviceType, function (i, item) {
+  //                    trHTML += '<option value=' + item.id + '|' + item.rate + '>' + item.serviceName + '</option>';
+  //                });
+  //                $('#ServiceType').append(trHTML);
+  //                if (Response.d.reportServices != null) {
+  //                    $("#ReportLabel").text(Response.d.reportServices[0].serviceName);
+  //                    $("#SameDayReport").val(Response.d.reportServices[0].id + "|" + Response.d.reportServices[0].rate);
+  //                    //EmergencyReportAmt = parseInt(Response.reportServices[0].rate);
+  //                }
+  //                //$.each(Response.techniciansSafety, function (i, item) {
+  //                //    optionHTML += '<option value=' + item.id + '|' + item.rate + '>' + item.serviceName + '</option>';
+  //                //});
+  //                //$('#TechniciansSafety').append(optionHTML);
+
+  //            }
+  //        },
+  //        error: function () {
+  //            return false;
+  //        }
+  //    });
+  //}
+</script>
+
+<script>
+  function Products(emailerProducts) {
+    document.addEventListener("DOMContentLoaded", function () {
+      BindAccordian(emailerProducts);
+    });
+  }
+
+  function ShowMessage(title, message, icon) {
+    swal({ title: title, text: message, icon: icon });
+  }
+</script>
+
+<script type="text/javascript">
+  //<![CDATA[
+  Products([
+    {
+      Child: [{code: '135', name: 'Albumin Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '150', name: 'Alkaline Phosphatase Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '502', name: 'Bilirubin Direct Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '504', name: 'Bilirubin Total Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '970', name: 'GGTP (Gamma GT) ', groupname: 'Liver Function Test', type: 'null'}, {code: '1947', name: 'Proteins Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '2024', name: 'SGOT/AST ', groupname: 'Liver Function Test', type: 'null'}, {code: '2025', name: 'SGPT/ALT ', groupname: 'Liver Function Test', type: 'null'}, {code: '2269', name: 'Bilirubin- Indirect Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '2270', name: 'Globulin ', groupname: 'Liver Function Test', type: 'null'}, {code: '2271', name: 'A/G Ratio ', groupname: 'Liver Function Test', type: 'null'}, {code: '2302', name: 'SGOT/SGPT Ratio ', groupname: 'Liver Function Test', type: 'null'}, {code: '1577', name: 'Iron Serum', groupname: 'Iron', type: 'null'}, {code: '2127', name: 'TIBC ', groupname: 'Others', type: 'null'}, {code: '2203', name: 'UIBC Serum', groupname: 'Others', type: 'null'}, {code: '2292', name: 'Transferrin Saturation ', groupname: 'Others', type: 'null'}, {code: '531', name: 'BUN Urea Nitrogen Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '548', name: 'Calcium Total Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '621', name: 'Chlorides Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '696', name: 'Creatinine Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '1900', name: 'Phosphorus-Inorganic Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '2040', name: 'Sodium Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '2206', name: 'Urea Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '2208', name: 'Uric Acid Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '2298', name: 'BUN/Creatinine Ratio ', groupname: 'Kidney Function Test', type: 'null'}, {code: '2299', name: 'Urea/Creatinine Ratio ', groupname: 'Kidney Function Test', type: 'null'}, {code: '2303', name: 'EGFR ', groupname: 'Kidney Function Test', type: 'null'}, {code: '1018', name: 'Glycated Hemoglobin (HbA1c) ', groupname: 'Others', type: 'null'}, {code: '2293', name: 'Average blood glucose ', groupname: 'Others', type: 'null'}, {code: '1886', name: 'pH Urine ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2044', name: 'Specific gravity ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2211', name: 'Urobilinogen ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2276', name: 'Colour ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2277', name: 'Transparency ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2280', name: 'Sugar ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2282', name: 'Blood ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2285', name: 'Red Blood Cells ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2286', name: 'Pus cells (Leukocytes) ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2287', name: 'Epithelial cells ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2288', name: 'Crystals ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2289', name: 'Cast ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2290', name: 'Bacteria ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2291', name: 'Yeast Cells ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2304', name: 'Nitrate ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2439', name: 'URINE KETONE ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2440', name: 'URINE PROTEIN ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2524', name: 'Leucocyte Esterase ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2540', name: 'Bile Pigments (Bilirubin) ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '4842', name: 'Others - Urine ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '4843', name: 'Volume - Urine ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '12', name: 'Absolute Basophils Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '14', name: 'Absolute Eosinophil Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '16', name: 'Absolute Lymphocyte Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '17', name: 'Absolute Monocyte Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '18', name: 'Absolute Neutrophil Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1041', name: 'Hemoglobin Hb ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1729', name: 'MCH ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1730', name: 'MCHC ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1731', name: 'MCV ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1781', name: 'MPV Mean Platelet Volume ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1881', name: 'PCV Haematocrit ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1909', name: 'Platelet Count Thrombocyte count ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2246', name: 'WBC-Total Counts Leucocytes ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2263', name: 'RDW (Red Cell Distribution Width) ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2264', name: 'Neutrophils ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2265', name: 'Eosinophils ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2266', name: 'Lymphocytes ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2267', name: 'Monocytes ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2268', name: 'Basophils ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2300', name: 'RDW-CV ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2301', name: 'MENTZER INDEX9MCV/RCC ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '5867', name: 'Red Blood Cells - Blood ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '6657', name: 'RDWI ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '6658', name: 'GK Index ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2192', name: 'TSH Ultra - Sensitive ', groupname: 'Others', type: 'null'}, {code: '2307', name: 'Random Blood Sugar ', groupname: 'Others', type: 'null'}],
+      ChildCount: 76,
+      NAME: "Healthy India 2025 Full Body Checkup - (Non Fasting Package)",
+      catalogueRate: "4400",
+      RATE: "1100",
+      MinBen: "1",
+      MaxBen: "10",
+      MultipleBen: "1",
+      Code: "package_5070",
+      Incentive: "360",
+      chcCharges: "0",
+    },
+    {
+      Child: [{code: '135', name: 'Albumin Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '150', name: 'Alkaline Phosphatase Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '502', name: 'Bilirubin Direct Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '504', name: 'Bilirubin Total Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '970', name: 'GGTP (Gamma GT) ', groupname: 'Liver Function Test', type: 'null'}, {code: '1947', name: 'Proteins Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '2024', name: 'SGOT/AST ', groupname: 'Liver Function Test', type: 'null'}, {code: '2025', name: 'SGPT/ALT ', groupname: 'Liver Function Test', type: 'null'}, {code: '2269', name: 'Bilirubin- Indirect Serum', groupname: 'Liver Function Test', type: 'null'}, {code: '2270', name: 'Globulin ', groupname: 'Liver Function Test', type: 'null'}, {code: '2271', name: 'A/G Ratio ', groupname: 'Liver Function Test', type: 'null'}, {code: '2302', name: 'SGOT/SGPT Ratio ', groupname: 'Liver Function Test', type: 'null'}, {code: '2097', name: 'T3 Total Tri Iodothyronine', groupname: 'Others', type: 'null'}, {code: '2099', name: 'T4 Total Thyroxine', groupname: 'Others', type: 'null'}, {code: '2192', name: 'TSH Ultra - Sensitive ', groupname: 'Others', type: 'null'}, {code: '531', name: 'BUN Urea Nitrogen Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '548', name: 'Calcium Total Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '621', name: 'Chlorides Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '696', name: 'Creatinine Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '1900', name: 'Phosphorus-Inorganic Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '2040', name: 'Sodium Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '2206', name: 'Urea Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '2208', name: 'Uric Acid Serum', groupname: 'Kidney Function Test', type: 'null'}, {code: '2298', name: 'BUN/Creatinine Ratio ', groupname: 'Kidney Function Test', type: 'null'}, {code: '2299', name: 'Urea/Creatinine Ratio ', groupname: 'Kidney Function Test', type: 'null'}, {code: '2303', name: 'EGFR ', groupname: 'Kidney Function Test', type: 'null'}, {code: '1018', name: 'Glycated Hemoglobin (HbA1c) ', groupname: 'Others', type: 'null'}, {code: '2293', name: 'Average blood glucose ', groupname: 'Others', type: 'null'}, {code: '1886', name: 'pH Urine ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2044', name: 'Specific gravity ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2211', name: 'Urobilinogen ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2276', name: 'Colour ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2277', name: 'Transparency ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2280', name: 'Sugar ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2282', name: 'Blood ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2285', name: 'Red Blood Cells ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2286', name: 'Pus cells (Leukocytes) ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2287', name: 'Epithelial cells ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2288', name: 'Crystals ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2289', name: 'Cast ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2290', name: 'Bacteria ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2291', name: 'Yeast Cells ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2304', name: 'Nitrate ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2439', name: 'URINE KETONE ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2440', name: 'URINE PROTEIN ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2524', name: 'Leucocyte Esterase ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '2540', name: 'Bile Pigments (Bilirubin) ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '4842', name: 'Others - Urine ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '4843', name: 'Volume - Urine ', groupname: 'Urine Routine & Microscopy Extended', type: 'null'}, {code: '12', name: 'Absolute Basophils Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '14', name: 'Absolute Eosinophil Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '16', name: 'Absolute Lymphocyte Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '17', name: 'Absolute Monocyte Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '18', name: 'Absolute Neutrophil Count Blood', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1041', name: 'Hemoglobin Hb ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1729', name: 'MCH ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1730', name: 'MCHC ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1731', name: 'MCV ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1781', name: 'MPV Mean Platelet Volume ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1881', name: 'PCV Haematocrit ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '1909', name: 'Platelet Count Thrombocyte count ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2246', name: 'WBC-Total Counts Leucocytes ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2263', name: 'RDW (Red Cell Distribution Width) ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2264', name: 'Neutrophils ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2265', name: 'Eosinophils ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2266', name: 'Lymphocytes ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2267', name: 'Monocytes ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2268', name: 'Basophils ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2300', name: 'RDW-CV ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '2301', name: 'MENTZER INDEX9MCV/RCC ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '5867', name: 'Red Blood Cells - Blood ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '6657', name: 'RDWI ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '6658', name: 'GK Index ', groupname: 'Complete blood Count (CBC)', type: 'null'}, {code: '625', name: 'Cholesterol-Total Serum', groupname: 'Cholesterol-Total', type: 'null'}, {code: '1033', name: 'HDL Cholesterol Direct ', groupname: 'Others', type: 'null'}, {code: '2165', name: 'Triglycerides Serum', groupname: 'Triglycerides', type: 'null'}, {code: '2272', name: 'Non - HDL Cholesterol Serum', groupname: 'Others', type: 'null'}, {code: '2275', name: 'CHOL/HDL RATIO ', groupname: 'Others', type: 'null'}, {code: '9438', name: 'LDL Cholesterol Cal ', groupname: 'Others', type: 'null'}, {code: '9439', name: 'VLDL Cholesterol Cal ', groupname: 'Others', type: 'null'}, {code: '9440', name: 'LDL / HDL Cholesterol Ratio Cal ', groupname: 'Others', type: 'null'}, {code: '9441', name: 'HDL / LDL Cholesterol Ratio Cal ', groupname: 'Others', type: 'null'}, {code: '977', name: 'Blood Glucose Fasting ', groupname: 'Blood Glucose Fasting', type: 'null'}, {code: '2221', name: 'Vitamin B12 Cyanocobalamin ', groupname: 'Others', type: 'null'}, {code: '2226', name: 'Vitamin D Total-25 Hydroxy ', groupname: 'Others', type: 'null'}],
+      ChildCount: 85,
+      NAME: "Healthy India 2025 Full Body Checkup Advance",
+      catalogueRate: "6400",
+      RATE: "1600",
+      MinBen: "1",
+      MaxBen: "10",
+      MultipleBen: "1",
+      Code: "package_5015",
+      Incentive: "510",
+      chcCharges: "0",
+    },
+    {
+      Child: [{'code': '135', 'name': 'Albumin Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '150', 'name': 'Alkaline Phosphatase Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '502', 'name': 'Bilirubin Direct Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '504', 'name': 'Bilirubin Total Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '970', 'name': 'GGTP (Gamma GT) ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '1947', 'name': 'Proteins Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2024', 'name': 'SGOT/AST ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2025', 'name': 'SGPT/ALT ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2269', 'name': 'Bilirubin- Indirect Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2270', 'name': 'Globulin ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2271', 'name': 'A/G Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2302', 'name': 'SGOT/SGPT Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '531', 'name': 'BUN Urea Nitrogen Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '548', 'name': 'Calcium Total Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '621', 'name': 'Chlorides Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '696', 'name': 'Creatinine Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1900', 'name': 'Phosphorus-Inorganic Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2040', 'name': 'Sodium Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2206', 'name': 'Urea Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2208', 'name': 'Uric Acid Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2298', 'name': 'BUN/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2299', 'name': 'Urea/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2303', 'name': 'EGFR ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1886', 'name': 'pH Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2044', 'name': 'Specific gravity ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2211', 'name': 'Urobilinogen ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2276', 'name': 'Colour ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2277', 'name': 'Transparency ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2280', 'name': 'Sugar ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2282', 'name': 'Blood ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2285', 'name': 'Red Blood Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2286', 'name': 'Pus cells (Leukocytes) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2287', 'name': 'Epithelial cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2288', 'name': 'Crystals ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2289', 'name': 'Cast ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2290', 'name': 'Bacteria ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2291', 'name': 'Yeast Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2304', 'name': 'Nitrate ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2439', 'name': 'URINE KETONE ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2440', 'name': 'URINE PROTEIN ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2524', 'name': 'Leucocyte Esterase ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2540', 'name': 'Bile Pigments (Bilirubin) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4842', 'name': 'Others - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4843', 'name': 'Volume - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '12', 'name': 'Absolute Basophils Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '14', 'name': 'Absolute Eosinophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '16', 'name': 'Absolute Lymphocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '17', 'name': 'Absolute Monocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '18', 'name': 'Absolute Neutrophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1041', 'name': 'Hemoglobin Hb ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1729', 'name': 'MCH ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1730', 'name': 'MCHC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1731', 'name': 'MCV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1781', 'name': 'MPV Mean Platelet Volume ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1881', 'name': 'PCV Haematocrit ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1909', 'name': 'Platelet Count Thrombocyte count ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2246', 'name': 'WBC-Total Counts Leucocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2263', 'name': 'RDW (Red Cell Distribution Width) ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2264', 'name': 'Neutrophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2265', 'name': 'Eosinophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2266', 'name': 'Lymphocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2267', 'name': 'Monocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2268', 'name': 'Basophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2300', 'name': 'RDW-CV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2301', 'name': 'MENTZER INDEX9MCV/RCC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '5867', 'name': 'Red Blood Cells - Blood ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6657', 'name': 'RDWI ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6658', 'name': 'GK Index ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '625', 'name': 'Cholesterol-Total Serum', 'groupname': 'Cholesterol-Total', 'type': 'null'}, {'code': '1033', 'name': 'HDL Cholesterol Direct ', 'groupname': 'Others', 'type': 'null'}, {'code': '2165', 'name': 'Triglycerides Serum', 'groupname': 'Triglycerides', 'type': 'null'}, {'code': '2272', 'name': 'Non - HDL Cholesterol Serum', 'groupname': 'Others', 'type': 'null'}, {'code': '2275', 'name': 'CHOL/HDL RATIO ', 'groupname': 'Others', 'type': 'null'}, {'code': '9438', 'name': 'LDL Cholesterol Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '9439', 'name': 'VLDL Cholesterol Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '9440', 'name': 'LDL / HDL Cholesterol Ratio Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '9441', 'name': 'HDL / LDL Cholesterol Ratio Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '977', 'name': 'Blood Glucose Fasting ', 'groupname': 'Blood Glucose Fasting', 'type': 'null'}, {'code': '2192', 'name': 'TSH Ultra - Sensitive ', 'groupname': 'Others', 'type': 'null'}, {'code': '2226', 'name': 'Vitamin D Total-25 Hydroxy ', 'groupname': 'Others', 'type': 'null'}],
+      ChildCount: 80,
+      NAME: "Healthy India 2025 Full Body Checkup Lite",
+      catalogueRate: "5200",
+      RATE: "1300",
+      MinBen: "1",
+      MaxBen: "1",
+      MultipleBen: "1",
+      Code: "package_5175",
+      Incentive: "140",
+      chcCharges: "0",
+    },
+    {
+      Child: [{'code': '135', 'name': 'Albumin Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '150', 'name': 'Alkaline Phosphatase Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '502', 'name': 'Bilirubin Direct Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '504', 'name': 'Bilirubin Total Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '970', 'name': 'GGTP (Gamma GT) ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '1947', 'name': 'Proteins Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2024', 'name': 'SGOT/AST ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2025', 'name': 'SGPT/ALT ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2269', 'name': 'Bilirubin- Indirect Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2270', 'name': 'Globulin ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2271', 'name': 'A/G Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2302', 'name': 'SGOT/SGPT Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2097', 'name': 'T3 Total Tri Iodothyronine', 'groupname': 'Others', 'type': 'null'}, {'code': '2099', 'name': 'T4 Total Thyroxine', 'groupname': 'Others', 'type': 'null'}, {'code': '2192', 'name': 'TSH Ultra - Sensitive ', 'groupname': 'Others', 'type': 'null'}, {'code': '1577', 'name': 'Iron Serum', 'groupname': 'Iron', 'type': 'null'}, {'code': '2127', 'name': 'TIBC ', 'groupname': 'Others', 'type': 'null'}, {'code': '2203', 'name': 'UIBC Serum', 'groupname': 'Others', 'type': 'null'}, {'code': '2292', 'name': 'Transferrin Saturation ', 'groupname': 'Others', 'type': 'null'}, {'code': '531', 'name': 'BUN Urea Nitrogen Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '548', 'name': 'Calcium Total Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '621', 'name': 'Chlorides Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '696', 'name': 'Creatinine Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1900', 'name': 'Phosphorus-Inorganic Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2040', 'name': 'Sodium Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2206', 'name': 'Urea Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2208', 'name': 'Uric Acid Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2298', 'name': 'BUN/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2299', 'name': 'Urea/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2303', 'name': 'EGFR ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1018', 'name': 'Glycated Hemoglobin (HbA1c) ', 'groupname': 'Others', 'type': 'null'}, {'code': '2293', 'name': 'Average blood glucose ', 'groupname': 'Others', 'type': 'null'}, {'code': '1886', 'name': 'pH Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2044', 'name': 'Specific gravity ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2211', 'name': 'Urobilinogen ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2276', 'name': 'Colour ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2277', 'name': 'Transparency ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2280', 'name': 'Sugar ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2282', 'name': 'Blood ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2285', 'name': 'Red Blood Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2286', 'name': 'Pus cells (Leukocytes) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2287', 'name': 'Epithelial cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2288', 'name': 'Crystals ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2289', 'name': 'Cast ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2290', 'name': 'Bacteria ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2291', 'name': 'Yeast Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2304', 'name': 'Nitrate ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2439', 'name': 'URINE KETONE ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2440', 'name': 'URINE PROTEIN ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2524', 'name': 'Leucocyte Esterase ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2540', 'name': 'Bile Pigments (Bilirubin) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4842', 'name': 'Others - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4843', 'name': 'Volume - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '12', 'name': 'Absolute Basophils Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '14', 'name': 'Absolute Eosinophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '16', 'name': 'Absolute Lymphocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '17', 'name': 'Absolute Monocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '18', 'name': 'Absolute Neutrophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1041', 'name': 'Hemoglobin Hb ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1729', 'name': 'MCH ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1730', 'name': 'MCHC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1731', 'name': 'MCV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1781', 'name': 'MPV Mean Platelet Volume ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1881', 'name': 'PCV Haematocrit ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1909', 'name': 'Platelet Count Thrombocyte count ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2246', 'name': 'WBC-Total Counts Leucocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2263', 'name': 'RDW (Red Cell Distribution Width) ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2264', 'name': 'Neutrophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2265', 'name': 'Eosinophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2266', 'name': 'Lymphocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2267', 'name': 'Monocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2268', 'name': 'Basophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2300', 'name': 'RDW-CV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2301', 'name': 'MENTZER INDEX9MCV/RCC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '5867', 'name': 'Red Blood Cells - Blood ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6657', 'name': 'RDWI ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6658', 'name': 'GK Index ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '625', 'name': 'Cholesterol-Total Serum', 'groupname': 'Cholesterol-Total', 'type': 'null'}, {'code': '1033', 'name': 'HDL Cholesterol Direct ', 'groupname': 'Others', 'type': 'null'}, {'code': '2165', 'name': 'Triglycerides Serum', 'groupname': 'Triglycerides', 'type': 'null'}, {'code': '2272', 'name': 'Non - HDL Cholesterol Serum', 'groupname': 'Others', 'type': 'null'}, {'code': '2275', 'name': 'CHOL/HDL RATIO ', 'groupname': 'Others', 'type': 'null'}, {'code': '9438', 'name': 'LDL Cholesterol Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '9439', 'name': 'VLDL Cholesterol Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '9440', 'name': 'LDL / HDL Cholesterol Ratio Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '9441', 'name': 'HDL / LDL Cholesterol Ratio Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '279', 'name': 'RA Test Rheumatoid Arthritis Factor Quantitative', 'groupname': 'Others', 'type': 'null'}, {'code': '423', 'name': 'Amylase Enzymatic Serum', 'groupname': 'Others', 'type': 'null'}, {'code': '697', 'name': 'CRP (C Reactive Protein) Quantitative Serum', 'groupname': 'Others', 'type': 'null'}, {'code': '977', 'name': 'Blood Glucose Fasting ', 'groupname': 'Blood Glucose Fasting', 'type': 'null'}, {'code': '2221', 'name': 'Vitamin B12 Cyanocobalamin ', 'groupname': 'Others', 'type': 'null'}, {'code': '2226', 'name': 'Vitamin D Total-25 Hydroxy ', 'groupname': 'Others', 'type': 'null'}]  ,
+      ChildCount: 92,
+      NAME: "Healthy India 2025 Full Body Checkup Prime",
+      catalogueRate: "8000",
+      RATE: "2000",
+      MinBen: "1",
+      MaxBen: "1",
+      MultipleBen: "1",
+      Code: "package_5075",
+      Incentive: "495",
+      chcCharges: "0",
+    },
+    {
+      Child: [{'code': '135', 'name': 'Albumin Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '150', 'name': 'Alkaline Phosphatase Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '502', 'name': 'Bilirubin Direct Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '504', 'name': 'Bilirubin Total Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '970', 'name': 'GGTP (Gamma GT) ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '1947', 'name': 'Proteins Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2024', 'name': 'SGOT/AST ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2025', 'name': 'SGPT/ALT ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2269', 'name': 'Bilirubin- Indirect Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2270', 'name': 'Globulin ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2271', 'name': 'A/G Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2302', 'name': 'SGOT/SGPT Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '531', 'name': 'BUN Urea Nitrogen Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '548', 'name': 'Calcium Total Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '621', 'name': 'Chlorides Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '696', 'name': 'Creatinine Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1900', 'name': 'Phosphorus-Inorganic Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2040', 'name': 'Sodium Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2206', 'name': 'Urea Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2208', 'name': 'Uric Acid Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2298', 'name': 'BUN/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2299', 'name': 'Urea/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2303', 'name': 'EGFR ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1018', 'name': 'Glycated Hemoglobin (HbA1c) ', 'groupname': 'Others', 'type': 'null'}, {'code': '2293', 'name': 'Average blood glucose ', 'groupname': 'Others', 'type': 'null'}, {'code': '1886', 'name': 'pH Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2044', 'name': 'Specific gravity ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2211', 'name': 'Urobilinogen ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2276', 'name': 'Colour ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2277', 'name': 'Transparency ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2280', 'name': 'Sugar ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2282', 'name': 'Blood ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2285', 'name': 'Red Blood Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2286', 'name': 'Pus cells (Leukocytes) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2287', 'name': 'Epithelial cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2288', 'name': 'Crystals ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2289', 'name': 'Cast ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2290', 'name': 'Bacteria ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2291', 'name': 'Yeast Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2304', 'name': 'Nitrate ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2439', 'name': 'URINE KETONE ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2440', 'name': 'URINE PROTEIN ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2524', 'name': 'Leucocyte Esterase ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2540', 'name': 'Bile Pigments (Bilirubin) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4842', 'name': 'Others - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4843', 'name': 'Volume - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '12', 'name': 'Absolute Basophils Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '14', 'name': 'Absolute Eosinophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '16', 'name': 'Absolute Lymphocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '17', 'name': 'Absolute Monocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '18', 'name': 'Absolute Neutrophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1041', 'name': 'Hemoglobin Hb ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1729', 'name': 'MCH ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1730', 'name': 'MCHC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1731', 'name': 'MCV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1781', 'name': 'MPV Mean Platelet Volume ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1881', 'name': 'PCV Haematocrit ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1909', 'name': 'Platelet Count Thrombocyte count ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2246', 'name': 'WBC-Total Counts Leucocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2263', 'name': 'RDW (Red Cell Distribution Width) ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2264', 'name': 'Neutrophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2265', 'name': 'Eosinophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2266', 'name': 'Lymphocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2267', 'name': 'Monocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2268', 'name': 'Basophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2300', 'name': 'RDW-CV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2301', 'name': 'MENTZER INDEX9MCV/RCC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '5867', 'name': 'Red Blood Cells - Blood ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6657', 'name': 'RDWI ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6658', 'name': 'GK Index ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '625', 'name': 'Cholesterol-Total Serum', 'groupname': 'Cholesterol-Total', 'type': 'null'}, {'code': '1033', 'name': 'HDL Cholesterol Direct ', 'groupname': 'Others', 'type': 'null'}, {'code': '2165', 'name': 'Triglycerides Serum', 'groupname': 'Triglycerides', 'type': 'null'}, {'code': '2272', 'name': 'Non - HDL Cholesterol Serum', 'groupname': 'Others', 'type': 'null'}, {'code': '2275', 'name': 'CHOL/HDL RATIO ', 'groupname': 'Others', 'type': 'null'}, {'code': '9438', 'name': 'LDL Cholesterol Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '9439', 'name': 'VLDL Cholesterol Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '9440', 'name': 'LDL / HDL Cholesterol Ratio Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '9441', 'name': 'HDL / LDL Cholesterol Ratio Cal ', 'groupname': 'Others', 'type': 'null'}, {'code': '977', 'name': 'Blood Glucose Fasting ', 'groupname': 'Blood Glucose Fasting', 'type': 'null'}, {'code': '2192', 'name': 'TSH Ultra - Sensitive ', 'groupname': 'Others', 'type': 'null'}],
+      ChildCount: 81,
+      NAME: "Healthy India 2025 Full Body Checkup Vital",
+      catalogueRate: "4000",
+      RATE: "1000",
+      MinBen: "1",
+      MaxBen: "10",
+      MultipleBen: "1",
+      Code: "package_5790",
+      Incentive: "750",
+      chcCharges: "0",
+    },
+    {
+      Child: [{'code': '135', 'name': 'Albumin Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '150', 'name': 'Alkaline Phosphatase Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '502', 'name': 'Bilirubin Direct Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '504', 'name': 'Bilirubin Total Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '970', 'name': 'GGTP (Gamma GT) ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '1947', 'name': 'Proteins Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2024', 'name': 'SGOT/AST ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2025', 'name': 'SGPT/ALT ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2269', 'name': 'Bilirubin- Indirect Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2270', 'name': 'Globulin ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2271', 'name': 'A/G Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2302', 'name': 'SGOT/SGPT Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '531', 'name': 'BUN Urea Nitrogen Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '548', 'name': 'Calcium Total Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '621', 'name': 'Chlorides Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '696', 'name': 'Creatinine Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1900', 'name': 'Phosphorus-Inorganic Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2040', 'name': 'Sodium Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2206', 'name': 'Urea Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2208', 'name': 'Uric Acid Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2298', 'name': 'BUN/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2299', 'name': 'Urea/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2303', 'name': 'EGFR ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1886', 'name': 'pH Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2044', 'name': 'Specific gravity ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2211', 'name': 'Urobilinogen ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2276', 'name': 'Colour ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2277', 'name': 'Transparency ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2280', 'name': 'Sugar ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2282', 'name': 'Blood ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2285', 'name': 'Red Blood Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2286', 'name': 'Pus cells (Leukocytes) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2287', 'name': 'Epithelial cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2288', 'name': 'Crystals ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2289', 'name': 'Cast ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2290', 'name': 'Bacteria ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2291', 'name': 'Yeast Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2304', 'name': 'Nitrate ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2439', 'name': 'URINE KETONE ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2440', 'name': 'URINE PROTEIN ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2524', 'name': 'Leucocyte Esterase ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2540', 'name': 'Bile Pigments (Bilirubin) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4842', 'name': 'Others - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4843', 'name': 'Volume - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '12', 'name': 'Absolute Basophils Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '14', 'name': 'Absolute Eosinophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '16', 'name': 'Absolute Lymphocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '17', 'name': 'Absolute Monocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '18', 'name': 'Absolute Neutrophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1041', 'name': 'Hemoglobin Hb ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1729', 'name': 'MCH ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1730', 'name': 'MCHC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1731', 'name': 'MCV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1781', 'name': 'MPV Mean Platelet Volume ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1881', 'name': 'PCV Haematocrit ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1909', 'name': 'Platelet Count Thrombocyte count ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2246', 'name': 'WBC-Total Counts Leucocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2263', 'name': 'RDW (Red Cell Distribution Width) ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2264', 'name': 'Neutrophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2265', 'name': 'Eosinophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2266', 'name': 'Lymphocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2267', 'name': 'Monocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2268', 'name': 'Basophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2300', 'name': 'RDW-CV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2301', 'name': 'MENTZER INDEX9MCV/RCC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '5867', 'name': 'Red Blood Cells - Blood ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6657', 'name': 'RDWI ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6658', 'name': 'GK Index ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '625', 'name': 'Cholesterol-Total Serum', 'groupname': 'Cholesterol-Total', 'type': 'null'}, {'code': '977', 'name': 'Blood Glucose Fasting ', 'groupname': 'Blood Glucose Fasting', 'type': 'null'}, {'code': '1577', 'name': 'Iron Serum', 'groupname': 'Iron', 'type': 'null'}, {'code': '2165', 'name': 'Triglycerides Serum', 'groupname': 'Triglycerides', 'type': 'null'}] ,
+      ChildCount: 72,
+      NAME: "Healthy India 2025 Full Body Checkup With Free Iron Test",
+      catalogueRate: "2800",
+      RATE: "700",
+      MinBen: "1",
+      MaxBen: "10",
+      MultipleBen: "1",
+      Code: "package_1818",
+      Incentive: "1500",
+      chcCharges: "0",
+    },
+    {
+      Child: [{'code': '135', 'name': 'Albumin Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '150', 'name': 'Alkaline Phosphatase Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '502', 'name': 'Bilirubin Direct Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '504', 'name': 'Bilirubin Total Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '970', 'name': 'GGTP (Gamma GT) ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '1947', 'name': 'Proteins Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2024', 'name': 'SGOT/AST ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2025', 'name': 'SGPT/ALT ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2269', 'name': 'Bilirubin- Indirect Serum', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2270', 'name': 'Globulin ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2271', 'name': 'A/G Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2302', 'name': 'SGOT/SGPT Ratio ', 'groupname': 'Liver Function Test', 'type': 'null'}, {'code': '2097', 'name': 'T3 Total Tri Iodothyronine', 'groupname': 'Others', 'type': 'null'}, {'code': '2099', 'name': 'T4 Total Thyroxine', 'groupname': 'Others', 'type': 'null'}, {'code': '2192', 'name': 'TSH Ultra - Sensitive ', 'groupname': 'Others', 'type': 'null'}, {'code': '531', 'name': 'BUN Urea Nitrogen Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '548', 'name': 'Calcium Total Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '621', 'name': 'Chlorides Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '696', 'name': 'Creatinine Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1900', 'name': 'Phosphorus-Inorganic Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2040', 'name': 'Sodium Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2206', 'name': 'Urea Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2208', 'name': 'Uric Acid Serum', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2298', 'name': 'BUN/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2299', 'name': 'Urea/Creatinine Ratio ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '2303', 'name': 'EGFR ', 'groupname': 'Kidney Function Test', 'type': 'null'}, {'code': '1886', 'name': 'pH Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2044', 'name': 'Specific gravity ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2211', 'name': 'Urobilinogen ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2276', 'name': 'Colour ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2277', 'name': 'Transparency ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2280', 'name': 'Sugar ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2282', 'name': 'Blood ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2285', 'name': 'Red Blood Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2286', 'name': 'Pus cells (Leukocytes) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2287', 'name': 'Epithelial cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2288', 'name': 'Crystals ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2289', 'name': 'Cast ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2290', 'name': 'Bacteria ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2291', 'name': 'Yeast Cells ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2304', 'name': 'Nitrate ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2439', 'name': 'URINE KETONE ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2440', 'name': 'URINE PROTEIN ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2524', 'name': 'Leucocyte Esterase ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '2540', 'name': 'Bile Pigments (Bilirubin) ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4842', 'name': 'Others - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '4843', 'name': 'Volume - Urine ', 'groupname': 'Urine Routine & Microscopy Extended', 'type': 'null'}, {'code': '12', 'name': 'Absolute Basophils Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '14', 'name': 'Absolute Eosinophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '16', 'name': 'Absolute Lymphocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '17', 'name': 'Absolute Monocyte Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '18', 'name': 'Absolute Neutrophil Count Blood', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1041', 'name': 'Hemoglobin Hb ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1729', 'name': 'MCH ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1730', 'name': 'MCHC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1731', 'name': 'MCV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1781', 'name': 'MPV Mean Platelet Volume ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1881', 'name': 'PCV Haematocrit ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '1909', 'name': 'Platelet Count Thrombocyte count ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2246', 'name': 'WBC-Total Counts Leucocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2263', 'name': 'RDW (Red Cell Distribution Width) ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2264', 'name': 'Neutrophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2265', 'name': 'Eosinophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2266', 'name': 'Lymphocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2267', 'name': 'Monocytes ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2268', 'name': 'Basophils ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2300', 'name': 'RDW-CV ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '2301', 'name': 'MENTZER INDEX9MCV/RCC ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '5867', 'name': 'Red Blood Cells - Blood ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6657', 'name': 'RDWI ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '6658', 'name': 'GK Index ', 'groupname': 'Complete blood Count (CBC)', 'type': 'null'}, {'code': '977', 'name': 'Blood Glucose Fasting ', 'groupname': 'Blood Glucose Fasting', 'type': 'null'}],
+      ChildCount: 72,
+      NAME: "Healthy India 2025 Full Body Checkup With Hormone",
+      catalogueRate: "3600",
+      RATE: "900",
+      MinBen: "1",
+      MaxBen: "10",
+      MultipleBen: "1",
+      Code: "package_5071",
+      Incentive: "720",
+      chcCharges: "0",
+    }
+  ]); //]]>
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("appointment_date");
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 7);
+
+    // Format to YYYY-MM-DD
+    const formatDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    input.min = formatDate(today);
+    input.max = formatDate(maxDate);
+  });
+</script>
+<script>
+function showSpinner() {
+  document.getElementById("btnText").style.display = "none";
+  document.getElementById("spinner").style.display = "inline-block";
+}
+</script>
+
+
+  </body>
+</html>

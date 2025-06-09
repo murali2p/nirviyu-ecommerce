@@ -1,0 +1,77 @@
+id,name,,
+135,Albumin, Serum,Liver Function Test 
+150,Alkaline Phosphatase, Serum,Liver Function Test 
+502,Bilirubin Direct, Serum,Liver Function Test 
+504,Bilirubin Total, Serum,Liver Function Test 
+970,GGTP (Gamma GT),,Liver Function Test 
+1947,Proteins, Serum,Liver Function Test 
+2024,SGOT/AST,,Liver Function Test 
+2025,SGPT/ALT,,Liver Function Test 
+2269,Bilirubin- Indirect, Serum,Liver Function Test 
+2270,Globulin,,Liver Function Test 
+2271,A/G Ratio,,Liver Function Test 
+2302,SGOT/SGPT Ratio,,Liver Function Test 
+1577,Iron, Serum,Iron
+2127,TIBC,,Others
+2203,UIBC, Serum,Others
+2292,Transferrin Saturation,,Others
+531,BUN Urea Nitrogen, Serum,Kidney Function Test
+548,Calcium Total, Serum,Kidney Function Test
+621,Chlorides, Serum,Kidney Function Test
+696,Creatinine, Serum,Kidney Function Test
+1900,Phosphorus-Inorganic, Serum,Kidney Function Test
+2040,Sodium, Serum,Kidney Function Test
+2206,Urea, Serum,Kidney Function Test
+2208,Uric Acid, Serum,Kidney Function Test
+2298,BUN/Creatinine Ratio ,,Kidney Function Test
+2299,Urea/Creatinine Ratio,,Kidney Function Test
+2303,EGFR,,Kidney Function Test
+1018,Glycated Hemoglobin (HbA1c),,Others
+2293,Average blood glucose,,Others
+1886,pH Urine,,Urine Routine & Microscopy Extended
+2044,Specific gravity,,Urine Routine & Microscopy Extended
+2211,Urobilinogen,,Urine Routine & Microscopy Extended
+2276,Colour,,Urine Routine & Microscopy Extended
+2277,Transparency,,Urine Routine & Microscopy Extended
+2280,Sugar,,Urine Routine & Microscopy Extended
+2282,Blood,,Urine Routine & Microscopy Extended
+2285,Red Blood Cells,,Urine Routine & Microscopy Extended
+2286,Pus cells (Leukocytes),,Urine Routine & Microscopy Extended
+2287,Epithelial cells,,Urine Routine & Microscopy Extended
+2288,Crystals,,Urine Routine & Microscopy Extended
+2289,Cast,,Urine Routine & Microscopy Extended
+2290,Bacteria,,Urine Routine & Microscopy Extended
+2291,Yeast Cells,,Urine Routine & Microscopy Extended
+2304,Nitrate,,Urine Routine & Microscopy Extended
+2439,URINE KETONE,,Urine Routine & Microscopy Extended
+2440,URINE PROTEIN,,Urine Routine & Microscopy Extended
+2524,Leucocyte Esterase,,Urine Routine & Microscopy Extended
+2540,Bile Pigments (Bilirubin),,Urine Routine & Microscopy Extended
+4842,Others - Urine,,Urine Routine & Microscopy Extended
+4843,Volume - Urine,,Urine Routine & Microscopy Extended
+12,Absolute Basophils Count, Blood,Complete blood Count (CBC)
+14,Absolute Eosinophil Count, Blood,Complete blood Count (CBC)
+16,Absolute Lymphocyte Count, Blood,Complete blood Count (CBC)
+17,Absolute Monocyte Count, Blood,Complete blood Count (CBC)
+18,Absolute Neutrophil Count, Blood,Complete blood Count (CBC)
+1041,Hemoglobin Hb,,Complete blood Count (CBC)
+1729,MCH,,Complete blood Count (CBC)
+1730,MCHC,,Complete blood Count (CBC)
+1731,MCV,,Complete blood Count (CBC)
+1781,MPV Mean Platelet Volume,,Complete blood Count (CBC)
+1881,PCV Haematocrit,,Complete blood Count (CBC)
+1909,Platelet Count Thrombocyte count,,Complete blood Count (CBC)
+2246,WBC-Total Counts Leucocytes,,Complete blood Count (CBC)
+2263,RDW (Red Cell Distribution Width),,Complete blood Count (CBC)
+2264,Neutrophils,,Complete blood Count (CBC)
+2265,Eosinophils,,Complete blood Count (CBC)
+2266,Lymphocytes,,Complete blood Count (CBC)
+2267,Monocytes,,Complete blood Count (CBC)
+2268,Basophils,,Complete blood Count (CBC)
+2300,RDW-CV,,Complete blood Count (CBC)
+2301,MENTZER INDEX9MCV/RCC,,Complete blood Count (CBC)
+5867,Red Blood Cells - Blood,,Complete blood Count (CBC)
+6657,RDWI,,Complete blood Count (CBC)
+6658,GK Index,,Complete blood Count (CBC)
+2192,TSH Ultra - Sensitive,,Others
+2307,Random Blood Sugar,,Others

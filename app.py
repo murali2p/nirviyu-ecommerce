@@ -2379,6 +2379,22 @@ def thyrocare_lp():
     products = cursor.fetchall()   
     return render_template('thyrocare_lp.html',products=products)
 
+#landing page thyrocare
+@app.route('/healthians_lp',methods=['GET','POST'])
+def healthians_lp():
+    if request.method == 'POST':
+        #print(request.form)
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        age = request.form.get('age')
+    
+    connection=mysql.connector.connect(**db_config)
+    cursor = connection.cursor()
+    cursor.execute("SELECT distinct deal_id, test_name FROM healthians_products where deal_id in ('package_5070','package_5015','package_5175','package_5075','package_5790','package_1818','package_5071')  LIMIT 10")
+    products = cursor.fetchall()   
+    return render_template('healthians_lp.html',products=products)
+
 @app.route('/order_lp',methods=['GET','POST'])
 def order_lp():
     data= request.get_json()
@@ -2486,21 +2502,21 @@ def order_lp():
         if response['status'] == True:
             #print("service available")
             zone_id = response['data']['zone_id']
-        products=[]
-        cursor.execute( "select deal_id from healthians_cart where cust_id = %s",(current_user.id,))
-        cart= cursor.fetchall()
+        products=[product_id]
+        # cursor.execute( "select deal_id from healthians_cart where cust_id = %s",(current_user.id,))
+        # cart= cursor.fetchall()
         
         if gender=='Male':
             gender='M'
         else:
             gender='F'
         
-        for item in cart:
-            products.append(item['deal_id'])
+        # for item in cart:
+        #     products.append(item['deal_id'])
         print("products in cart",products)
         #print("inserting records to healthians_test_bookings")
         # insert record into healthians_test_bookings
-        query = "insert into healthians_test_bookings(pincode,booking_date,booking_time,booking_slotid,patient_name,age,gender,vendor_id, mobile, email,products,cust_id) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        query = "insert into healthians_test_bookings_lp(pincode,booking_date,booking_time,booking_slotid,patient_name,age,gender,vendor_id, mobile, email,products,cust_id) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         product_string=','.join(products)
         print("product_string",product_string)
         cursor.execute(query,(pincode,date,time,slot_id,name,age,gender,'goelhealthcare',phone,email,product_string,current_user.id))
@@ -2511,9 +2527,9 @@ def order_lp():
         row_id = cursor.lastrowid
         # Get the ID of the newly inserted address
         
-        patient_id = "goelhealthcare"+str(row_id)
+        patient_id = "goelhealth_"+f'{env}'+str(row_id)
         #print("updating the test_id")
-        cursor.execute("update healthians_test_bookings set patient_id=%s  where healthians_book_id = %s",(patient_id,row_id)) 
+        cursor.execute("update healthians_test_bookings_lp set patient_id=%s  where healthians_book_id = %s",(patient_id,row_id)) 
         
         connection.commit()
         
@@ -2521,28 +2537,32 @@ def order_lp():
         
         #pass the details to healthians api for booking
         
-        response=place_order_healthians(patient_id,name,age ,gender,slot_id, products,phone,current_user.username, email, address,lat, long, pincode,row_id, "goelhealthcare", zone_id)
+        response=place_order_healthians(patient_id,name,age ,gender,slot_id, products,phone,name, email, address,lat, long, pincode,row_id, "goelhealthcare", zone_id)
         #print("response from healthians in route",response)
         if response['status']:
             print("order created successfully")
             print(response)
             
             #print("updating the order details")
-            cursor.execute("update healthians_test_bookings set healthians_order_no=%s where healthians_book_id = %s",(response['booking_id'],row_id))
+            cursor.execute("update healthians_test_bookings_lp set healthians_order_no=%s where healthians_book_id = %s",(response['booking_id'],row_id))
             connection.commit()
             
             print("order details updated")
             
             #print("deleting the cart items")
-            cursor.execute("delete from healthians_cart  where cust_id = %s",(current_user.id,))
+            #cursor.execute("delete from healthians_cart  where cust_id = %s",(current_user.id,))
 
-            connection.commit()
+            #connection.commit()
             #print("cart items deleted")
             
             # insert records into orders table
             
             cursor.close()
             connection.close()
+                        # send email to admin
+            msg = Message(f'Nirviyu: New Order Placed -External Landing Page - {order_id}', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com','tusharbpt@yahoo.in'])
+            msg.body = (f'Hi Admin, \n\nNew order has been placed through Healthians Landing page. \nReview the Order: {order_id} for fulfillment. \n\n regards \n Team Nirivyu \n ***This is an auto generated email.Do not Reply.***')
+            mail.send(msg)
             return response
         
         
