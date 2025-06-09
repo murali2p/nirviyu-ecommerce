@@ -2560,8 +2560,8 @@ def order_lp():
             cursor.close()
             connection.close()
                         # send email to admin
-            msg = Message(f'Nirviyu: New Order Placed -External Landing Page - {order_id}', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com','tusharbpt@yahoo.in'])
-            msg.body = (f'Hi Admin, \n\nNew order has been placed through Healthians Landing page. \nReview the Order: {order_id} for fulfillment. \n\n regards \n Team Nirivyu \n ***This is an auto generated email.Do not Reply.***')
+            msg = Message(f'Nirviyu: New Order Placed -External Landing Page - {patient_id}', sender='info@nirviyu.com', recipients=['mohanmurali.behera@gmail.com','tusharbpt@yahoo.in'])
+            msg.body = (f'Hi Admin, \n\nNew order has been placed through Healthians Landing page. \nReview the Order: {patient_id} for fulfillment. \n\n regards \n Team Nirivyu \n ***This is an auto generated email.Do not Reply.***')
             mail.send(msg)
             return response
         
