@@ -2519,7 +2519,7 @@ def order_lp():
         query = "insert into healthians_test_bookings_lp(pincode,booking_date,booking_time,booking_slotid,patient_name,age,gender,vendor_id, mobile, email,products,cust_id) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         product_string=','.join(products)
         print("product_string",product_string)
-        cursor.execute(query,(pincode,date,time,slot_id,name,age,gender,'goelhealthcare',phone,email,product_string,current_user.id))
+        cursor.execute(query,(pincode,date,time,slot_id,name,age,gender,'goelhealthcare',phone,email,product_string,123))
         
         connection.commit()
         
