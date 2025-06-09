@@ -1323,8 +1323,8 @@
           }
           for (let i = 0; i < slots.length; i++) {
             let option = document.createElement("option");
-            option.value = slots[i];
-            option.textContent = slots[i];
+            option.value = slots[i]['slot_id'];
+            option.textContent = slots[i]['time'];
             slotSelect.appendChild(option);
           }
         },
