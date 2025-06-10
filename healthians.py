@@ -316,6 +316,64 @@ def place_order_healthians(patient_id,name,age ,gender,slot_id, product,mobile,b
     else:
         raise Exception(f"Failed to place order: {response.status_code} - {response.text}")
 
+# this function places order for a given slot id and product id
+def place_order_healthians_lp(patient_id,name,age ,gender,slot_id, product,mobile,billing_name, email, address,lat, long, zipcode,booking_id, vendor_billing_user_id, zone_id,discounted_price):
+    url = f"{os.getenv('healthians_base_url')}/goelhealthcare/createBooking_v3"
+    data = {
+    "customer": [
+        {
+            "customer_id": f"{patient_id}",
+            "customer_name": f"{name}",
+            "relation": "self",
+            "age": age,
+            "gender": f"{gender}",
+        }
+    ],
+    "slot": {
+        "slot_id": f"{slot_id}"
+    },
+    "package": [
+        {
+            "deal_id": product,
+        }
+    ],
+    "customer_calling_number": mobile,
+    "billing_cust_name": f"{billing_name}",
+    "gender": f"{gender}",
+    "mobile": mobile,
+    "email": f"{email}",
+    "sub_locality": f"{address}",
+    "latitude": f"{lat}",
+    "longitude": f"{long}",
+    "address": f"{address}",
+    "zipcode": zipcode,
+    "hard_copy": 0,
+    "vendor_booking_id": f"{booking_id}",
+    "vendor_billing_user_id": f"{vendor_billing_user_id}",
+    "payment_option": "cod",
+    "zone_id": zone_id,
+    "discounted_price": discounted_price
+    }
+    checksum=generate_checksum(json.dumps(data), os.getenv('X-Checksum'))
+    #print(f"Checksum: {checksum}")  # Debugging output
+    # data['checksum'] = checksum
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization  ': f"Bearer {healthians_get_access_token()}",
+        'X-Checksum': checksum
+        
+    }   
+    
+    
+    response = requests.post(url, headers=headers, json=data)
+    resp_data = response.json()
+    #print(f"Response from Healthians API: {response.json()} ")
+    if resp_data:
+        #print(f"Response from Healthians API: {resp_data} ")  # Debugging output
+        return response.json()
+    else:
+        raise Exception(f"Failed to place order: {response.status_code} - {response.text}")
+
 def cancel_order(booking_id, vendor_user_id, customer_id):
     url = f"{os.getenv('healthians_base_url')}/goelhealthcare/cancelBooking"
     headers = {
@@ -329,7 +387,7 @@ def cancel_order(booking_id, vendor_user_id, customer_id):
         "remarks": "Customer not available"
     }
     response = requests.post(url, headers=headers, json=data)
-    #print(f"Response from Healthians API: {response.json()} ")
+    print(f"Response from Healthians API: {response.json()} ")
     if response.status_code == 200:
         return response.json()
     else:
@@ -445,3 +503,4 @@ def get_order_status_healthians(booking_id):
 #healthians_get_access_token()
 #get_product_details("package_1818")
 
+#cancel_order(14016815305, 'goelhealthcare', 'goelhealth_prod3')

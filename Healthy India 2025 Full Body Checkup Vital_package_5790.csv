@@ -1,29 +1,30 @@
 id,name,,
-135,Albumin, Serum,Liver Function Test 
-150,Alkaline Phosphatase, Serum,Liver Function Test 
-502,Bilirubin Direct, Serum,Liver Function Test 
-504,Bilirubin Total, Serum,Liver Function Test 
-970,GGTP (Gamma GT),,Liver Function Test 
-1947,Proteins, Serum,Liver Function Test 
-2024,SGOT/AST,,Liver Function Test 
-2025,SGPT/ALT,,Liver Function Test 
-2269,Bilirubin- Indirect, Serum,Liver Function Test 
-2270,Globulin,,Liver Function Test 
-2271,A/G Ratio,,Liver Function Test 
-2302,SGOT/SGPT Ratio,,Liver Function Test 
-531,BUN Urea Nitrogen, Serum,Kidney Function Test
-548,Calcium Total, Serum,Kidney Function Test
-621,Chlorides, Serum,Kidney Function Test
-696,Creatinine, Serum,Kidney Function Test
-1900,Phosphorus-Inorganic, Serum,Kidney Function Test
-2040,Sodium, Serum,Kidney Function Test
-2206,Urea, Serum,Kidney Function Test
-2208,Uric Acid, Serum,Kidney Function Test
-2298,BUN/Creatinine Ratio ,,Kidney Function Test
-2299,Urea/Creatinine Ratio,,Kidney Function Test
-2303,EGFR,,Kidney Function Test
-1018,Glycated Hemoglobin (HbA1c),,Others
-2293,Average blood glucose,,Others
+135,Albumin, Serum,Liver Function Test
+150,Alkaline Phosphatase, Serum,Liver Function Test
+502,Bilirubin Direct, Serum,Liver Function Test
+504,Bilirubin Total, Serum,Liver Function Test
+970,GGTP (Gamma GT),,Liver Function Test
+1947,Proteins, Serum,Liver Function Test
+2024,SGOT/AST,,Liver Function Test
+2025,SGPT/ALT,,Liver Function Test
+2269,Bilirubin- Indirect, Serum,Liver Function Test
+2270,Globulin,,Liver Function Test
+2271,A/G Ratio,,Liver Function Test
+2302,SGOT/SGPT Ratio,,Liver Function Test
+531,BUN Urea Nitrogen, Serum,Kideny Function Test
+548,Calcium Total, Serum,Kideny Function Test
+621,Chlorides, Serum,Kideny Function Test
+696,Creatinine, Serum,Kideny Function Test
+1900,Phosphorus-Inorganic, Serum,Kideny Function Test
+2040,Sodium, Serum,Kideny Function Test
+2206,Urea, Serum,Kideny Function Test
+2208,Uric Acid, Serum,Kideny Function Test
+2298,BUN/Creatinine Ratio ,,Kideny Function Test
+2299,Urea/Creatinine Ratio,,Kideny Function Test
+2303,EGFR,,Kideny Function Test
+1018,Glycated Hemoglobin (HbA1c),,Diabetic Profile
+977,Blood Glucose Fasting,,Diabetic Profile
+2293,Average blood glucose,,Diabetic Profile
 1886,pH Urine,,Urine Routine & Microscopy Extended
 2044,Specific gravity,,Urine Routine & Microscopy Extended
 2211,Urobilinogen,,Urine Routine & Microscopy Extended
@@ -45,38 +46,37 @@ id,name,,
 2540,Bile Pigments (Bilirubin),,Urine Routine & Microscopy Extended
 4842,Others - Urine,,Urine Routine & Microscopy Extended
 4843,Volume - Urine,,Urine Routine & Microscopy Extended
-12,Absolute Basophils Count, Blood,Complete blood Count (CBC)
-14,Absolute Eosinophil Count, Blood,Complete blood Count (CBC)
-16,Absolute Lymphocyte Count, Blood,Complete blood Count (CBC)
-17,Absolute Monocyte Count, Blood,Complete blood Count (CBC)
-18,Absolute Neutrophil Count, Blood,Complete blood Count (CBC)
-1041,Hemoglobin Hb,,Complete blood Count (CBC)
-1729,MCH,,Complete blood Count (CBC)
-1730,MCHC,,Complete blood Count (CBC)
-1731,MCV,,Complete blood Count (CBC)
-1781,MPV Mean Platelet Volume,,Complete blood Count (CBC)
-1881,PCV Haematocrit,,Complete blood Count (CBC)
-1909,Platelet Count Thrombocyte count,,Complete blood Count (CBC)
-2246,WBC-Total Counts Leucocytes,,Complete blood Count (CBC)
-2263,RDW (Red Cell Distribution Width),,Complete blood Count (CBC)
-2264,Neutrophils,,Complete blood Count (CBC)
-2265,Eosinophils,,Complete blood Count (CBC)
-2266,Lymphocytes,,Complete blood Count (CBC)
-2267,Monocytes,,Complete blood Count (CBC)
-2268,Basophils,,Complete blood Count (CBC)
-2300,RDW-CV,,Complete blood Count (CBC)
-2301,MENTZER INDEX9MCV/RCC,,Complete blood Count (CBC)
-5867,Red Blood Cells - Blood,,Complete blood Count (CBC)
-6657,RDWI,,Complete blood Count (CBC)
-6658,GK Index,,Complete blood Count (CBC)
-625,Cholesterol-Total, Serum,Cholesterol-Total
-1033,HDL Cholesterol Direct,,Others
-2165,Triglycerides, Serum,Triglycerides
-2272,Non - HDL Cholesterol, Serum,Others
-2275,CHOL/HDL RATIO,,Others
-9438,LDL Cholesterol Cal,,Others
-9439,VLDL Cholesterol Cal,,Others
-9440,LDL / HDL Cholesterol Ratio Cal,,Others
-9441,HDL / LDL Cholesterol Ratio Cal,,Others
-977,Blood Glucose Fasting,,Blood Glucose Fasting
-2192,TSH Ultra - Sensitive,,Others
+12,Absolute Basophils Count, Blood,Complete Blood Count (CBC)
+14,Absolute Eosinophil Count, Blood,Complete Blood Count (CBC)
+16,Absolute Lymphocyte Count, Blood,Complete Blood Count (CBC)
+17,Absolute Monocyte Count, Blood,Complete Blood Count (CBC)
+18,Absolute Neutrophil Count, Blood,Complete Blood Count (CBC)
+1041,Hemoglobin Hb,,Complete Blood Count (CBC)
+1729,MCH,,Complete Blood Count (CBC)
+1730,MCHC,,Complete Blood Count (CBC)
+1731,MCV,,Complete Blood Count (CBC)
+1781,MPV Mean Platelet Volume,,Complete Blood Count (CBC)
+1881,PCV Haematocrit,,Complete Blood Count (CBC)
+1909,Platelet Count Thrombocyte count,,Complete Blood Count (CBC)
+2246,WBC-Total Counts Leucocytes,,Complete Blood Count (CBC)
+2263,RDW (Red Cell Distribution Width),,Complete Blood Count (CBC)
+2264,Neutrophils,,Complete Blood Count (CBC)
+2265,Eosinophils,,Complete Blood Count (CBC)
+2266,Lymphocytes,,Complete Blood Count (CBC)
+2267,Monocytes,,Complete Blood Count (CBC)
+2268,Basophils,,Complete Blood Count (CBC)
+2300,RDW-CV,,Complete Blood Count (CBC)
+2301,MENTZER INDEX9MCV/RCC,,Complete Blood Count (CBC)
+5867,Red Blood Cells - Blood,,Complete Blood Count (CBC)
+6657,RDWI,,Complete Blood Count (CBC)
+6658,GK Index,,Complete Blood Count (CBC)
+625,Cholesterol-Total, Serum,Lipid Profile
+1033,HDL Cholesterol Direct,,Lipid Profile
+2165,Triglycerides, Serum,Lipid Profile
+2272,Non - HDL Cholesterol, Serum,Lipid Profile
+2275,CHOL/HDL RATIO,,Lipid Profile
+9438,LDL Cholesterol Cal,,Lipid Profile
+9439,VLDL Cholesterol Cal,,Lipid Profile
+9440,LDL / HDL Cholesterol Ratio Cal,,Lipid Profile
+9441,HDL / LDL Cholesterol Ratio Cal,,Lipid Profile
+2192,TSH Ultra - Sensitive,,TSH Ultra - Sensitive

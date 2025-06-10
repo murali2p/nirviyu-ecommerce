@@ -1,19 +1,19 @@
 id,name,,
-135,Albumin, Serum,Liver Function Test 
-150,Alkaline Phosphatase, Serum,Liver Function Test 
-502,Bilirubin Direct, Serum,Liver Function Test 
-504,Bilirubin Total, Serum,Liver Function Test 
-970,GGTP (Gamma GT),,Liver Function Test 
-1947,Proteins, Serum,Liver Function Test 
-2024,SGOT/AST,,Liver Function Test 
-2025,SGPT/ALT,,Liver Function Test 
-2269,Bilirubin- Indirect, Serum,Liver Function Test 
-2270,Globulin,,Liver Function Test 
-2271,A/G Ratio,,Liver Function Test 
-2302,SGOT/SGPT Ratio,,Liver Function Test 
-2097,T3, Total Tri Iodothyronine,Others
-2099,T4, Total Thyroxine,Others
-2192,TSH Ultra - Sensitive,,Others
+135,Albumin, Serum,Liver Function Test
+150,Alkaline Phosphatase, Serum,Liver Function Test
+502,Bilirubin Direct, Serum,Liver Function Test
+504,Bilirubin Total, Serum,Liver Function Test
+970,GGTP (Gamma GT),,Liver Function Test
+1947,Proteins, Serum,Liver Function Test
+2024,SGOT/AST,,Liver Function Test
+2025,SGPT/ALT,,Liver Function Test
+2269,Bilirubin- Indirect, Serum,Liver Function Test
+2270,Globulin,,Liver Function Test
+2271,A/G Ratio,,Liver Function Test
+2302,SGOT/SGPT Ratio,,Liver Function Test
+2097,T3  Total Tri Iodothyronine, Total Tri Iodothyronine,Thyroid Function Test
+2099,T4   Total Thyroxine, Total Thyroxine,Thyroid Function Test
+2192,TSH Ultra - Sensitive,,Thyroid Function Test
 531,BUN Urea Nitrogen, Serum,Kidney Function Test
 548,Calcium Total, Serum,Kidney Function Test
 621,Chlorides, Serum,Kidney Function Test
@@ -25,49 +25,49 @@ id,name,,
 2298,BUN/Creatinine Ratio ,,Kidney Function Test
 2299,Urea/Creatinine Ratio,,Kidney Function Test
 2303,EGFR,,Kidney Function Test
-1886,pH Urine,,Urine Routine & Microscopy Extended
-2044,Specific gravity,,Urine Routine & Microscopy Extended
-2211,Urobilinogen,,Urine Routine & Microscopy Extended
-2276,Colour,,Urine Routine & Microscopy Extended
-2277,Transparency,,Urine Routine & Microscopy Extended
-2280,Sugar,,Urine Routine & Microscopy Extended
-2282,Blood,,Urine Routine & Microscopy Extended
-2285,Red Blood Cells,,Urine Routine & Microscopy Extended
-2286,Pus cells (Leukocytes),,Urine Routine & Microscopy Extended
-2287,Epithelial cells,,Urine Routine & Microscopy Extended
-2288,Crystals,,Urine Routine & Microscopy Extended
-2289,Cast,,Urine Routine & Microscopy Extended
-2290,Bacteria,,Urine Routine & Microscopy Extended
-2291,Yeast Cells,,Urine Routine & Microscopy Extended
-2304,Nitrate,,Urine Routine & Microscopy Extended
-2439,URINE KETONE,,Urine Routine & Microscopy Extended
-2440,URINE PROTEIN,,Urine Routine & Microscopy Extended
-2524,Leucocyte Esterase,,Urine Routine & Microscopy Extended
-2540,Bile Pigments (Bilirubin),,Urine Routine & Microscopy Extended
-4842,Others - Urine,,Urine Routine & Microscopy Extended
-4843,Volume - Urine,,Urine Routine & Microscopy Extended
-12,Absolute Basophils Count, Blood,Complete blood Count (CBC)
-14,Absolute Eosinophil Count, Blood,Complete blood Count (CBC)
-16,Absolute Lymphocyte Count, Blood,Complete blood Count (CBC)
-17,Absolute Monocyte Count, Blood,Complete blood Count (CBC)
-18,Absolute Neutrophil Count, Blood,Complete blood Count (CBC)
-1041,Hemoglobin Hb,,Complete blood Count (CBC)
-1729,MCH,,Complete blood Count (CBC)
-1730,MCHC,,Complete blood Count (CBC)
-1731,MCV,,Complete blood Count (CBC)
-1781,MPV Mean Platelet Volume,,Complete blood Count (CBC)
-1881,PCV Haematocrit,,Complete blood Count (CBC)
-1909,Platelet Count Thrombocyte count,,Complete blood Count (CBC)
-2246,WBC-Total Counts Leucocytes,,Complete blood Count (CBC)
-2263,RDW (Red Cell Distribution Width),,Complete blood Count (CBC)
-2264,Neutrophils,,Complete blood Count (CBC)
-2265,Eosinophils,,Complete blood Count (CBC)
-2266,Lymphocytes,,Complete blood Count (CBC)
-2267,Monocytes,,Complete blood Count (CBC)
-2268,Basophils,,Complete blood Count (CBC)
-2300,RDW-CV,,Complete blood Count (CBC)
-2301,MENTZER INDEX9MCV/RCC,,Complete blood Count (CBC)
-5867,Red Blood Cells - Blood,,Complete blood Count (CBC)
-6657,RDWI,,Complete blood Count (CBC)
-6658,GK Index,,Complete blood Count (CBC)
-977,Blood Glucose Fasting,,Blood Glucose Fasting
+1886,pH Urine,,Urine Examination 
+2044,Specific gravity,,Urine Examination 
+2211,Urobilinogen,,Urine Examination 
+2276,Colour,,Urine Examination 
+2277,Transparency,,Urine Examination 
+2280,Sugar,,Urine Examination 
+2282,Blood,,Urine Examination 
+2285,Red Blood Cells,,Urine Examination 
+2286,Pus cells (Leukocytes),,Urine Examination 
+2287,Epithelial cells,,Urine Examination 
+2288,Crystals,,Urine Examination 
+2289,Cast,,Urine Examination 
+2290,Bacteria,,Urine Examination 
+2291,Yeast Cells,,Urine Examination 
+2304,Nitrate,,Urine Examination 
+2439,URINE KETONE,,Urine Examination 
+2440,URINE PROTEIN,,Urine Examination 
+2524,Leucocyte Esterase,,Urine Examination 
+2540,Bile Pigments (Bilirubin),,Urine Examination 
+4842,Others - Urine,,Urine Examination 
+4843,Volume - Urine,,Urine Examination 
+12,Absolute Basophils Count, Blood,Complete Blood Count (CBC)
+14,Absolute Eosinophil Count, Blood,Complete Blood Count (CBC)
+16,Absolute Lymphocyte Count, Blood,Complete Blood Count (CBC)
+17,Absolute Monocyte Count, Blood,Complete Blood Count (CBC)
+18,Absolute Neutrophil Count, Blood,Complete Blood Count (CBC)
+1041,Hemoglobin Hb,,Complete Blood Count (CBC)
+1729,MCH,,Complete Blood Count (CBC)
+1730,MCHC,,Complete Blood Count (CBC)
+1731,MCV,,Complete Blood Count (CBC)
+1781,MPV Mean Platelet Volume,,Complete Blood Count (CBC)
+1881,PCV Haematocrit,,Complete Blood Count (CBC)
+1909,Platelet Count Thrombocyte count,,Complete Blood Count (CBC)
+2246,WBC-Total Counts Leucocytes,,Complete Blood Count (CBC)
+2263,RDW (Red Cell Distribution Width),,Complete Blood Count (CBC)
+2264,Neutrophils,,Complete Blood Count (CBC)
+2265,Eosinophils,,Complete Blood Count (CBC)
+2266,Lymphocytes,,Complete Blood Count (CBC)
+2267,Monocytes,,Complete Blood Count (CBC)
+2268,Basophils,,Complete Blood Count (CBC)
+2300,RDW-CV,,Complete Blood Count (CBC)
+2301,MENTZER INDEX9MCV/RCC,,Complete Blood Count (CBC)
+5867,Red Blood Cells - Blood,,Complete Blood Count (CBC)
+6657,RDWI,,Complete Blood Count (CBC)
+6658,GK Index,,Complete Blood Count (CBC)
+977,Blood Glucose Fasting,,Fasting Blood Sugar

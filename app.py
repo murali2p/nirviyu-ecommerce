@@ -18,7 +18,7 @@ import requests,json
 from flask_apscheduler import APScheduler
 from thyrocare import create_order_thyrocare_lp,get_thyrocare_products,get_thyrocare_test_detail,check_pincode_availability_thyrocare,check_slots_availability_thyrocare,create_order_thyrocare
 from thyrocare import view_cart_details_thyrocare,cancel_order_thyrocare,update_db_thyrocare_products,report_download_thyrocare,get_order_summary_thyrocare
-from healthians import get_product_details,get_lat_long,get_slots_by_lat_long,check_serviability_by_lat_long
+from healthians import get_product_details,get_lat_long,get_slots_by_lat_long,check_serviability_by_lat_long, place_order_healthians_lp
 from healthians import place_order_healthians,cancel_order,save_zipcodes_to_db,get_order_status_healthians,get_reports
 
 # Determine the environment (default: development)
@@ -2503,6 +2503,18 @@ def order_lp():
             #print("service available")
             zone_id = response['data']['zone_id']
         products=[product_id]
+        
+        #getting the discounted_price of the product
+        connection=mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT discount_price FROM healthians_discount_ref WHERE deal_id = %s", (product_id,))
+        result = cursor.fetchone()
+        if result:
+            discounted_price = result['discount_price']
+        else:
+            discounted_price = ''
+
+            
         # cursor.execute( "select deal_id from healthians_cart where cust_id = %s",(current_user.id,))
         # cart= cursor.fetchall()
         
@@ -2537,7 +2549,7 @@ def order_lp():
         
         #pass the details to healthians api for booking
         
-        response=place_order_healthians(patient_id,name,age ,gender,slot_id, products,phone,name, email, address,lat, long, pincode,row_id, "goelhealthcare", zone_id)
+        response=place_order_healthians_lp(patient_id,name,age ,gender,slot_id, products,phone,name, email, address,lat, long, pincode,row_id, "goelhealthcare", zone_id,discounted_price)
         print("response from healthians in route",response)
         if response['status']:
             print("order created successfully")
