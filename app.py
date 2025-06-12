@@ -1975,7 +1975,7 @@ def generate_report():
             patient_id,patient_name,age,gender,b.test_name as product_ordered,created_at
             from healthians_test_bookings_lp as a
             inner join (select distinct deal_id,test_name from healthians_products) as b 
-            on b.deal_id= a.products  where healthians_order_no is null and date(created_at) between %s and %s
+            on b.deal_id= a.products  where healthians_order_no is not null and date(created_at) between %s and %s
             """, (start_date, end_date))
         
             orders = cursor.fetchall()
