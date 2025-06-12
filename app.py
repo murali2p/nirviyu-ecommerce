@@ -1,3 +1,4 @@
+import csv
 from flask import Flask, request, jsonify, render_template,session,redirect,url_for,abort,flash
 from flask_login import login_user, LoginManager, login_required, UserMixin, logout_user, current_user
 from flask_mail import Mail, Message
@@ -1887,18 +1888,190 @@ def privacy_policy():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/reports')
+@login_required
+@roles_required('admin')
+def reports():
+    return render_template('reports.html')
+
+@app.route('/generate_report', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin')
+def generate_report():
+    if request.method == 'GET':
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        reportType = request.args.get('report_type')
+        print("Report Generation Request:")
+        print("Start Date:", start_date)
+        print("End Date:", end_date)
+        print("Report Type:", reportType)
+       
+
+        if not start_date or not end_date:
+            flash("Please select both start and end dates.", "error")
+            return redirect(url_for('generate_report'))
+        
+        connection = mysql.connector.connect(**db_config)
+        cursor = connection.cursor(dictionary=True)
+        
+        if reportType=='nirviyu':
+            
+
+
+
+            # Fetch orders within the date range
+            cursor.execute("""
+            select a.order_id,a.razorpay_order_id,b.amount,b.razorpay_payment_id,a.checkout,d.username,GROUP_CONCAT(e.prod_id SEPARATOR ', ') as Products 
+            from order_checkout as a 
+            inner join order_generate as b on a.order_id=b.order_id  
+            inner join users as d on a.cust_id=d.cust_id 
+            inner join orders as e on a.order_id =e.order_id
+            where b.razorpay_payment_id is not null and date(a.checkout) between %s and %s
+            group by 1,2,3,4,5,6
+            """, (start_date, end_date))
+        
+            orders = cursor.fetchall()
+            #print("Fetched Orders:", orders)
+        
+            cursor.close()
+            connection.close()
+            
+            #export the orders to csv
+            if orders:
+                csv_file = 'orders_report.csv'
+                # Check if the file already exists and remove it
+                if os.path.exists(os.path.join(app.static_folder, csv_file)):
+                    os.remove(os.path.join(app.static_folder, csv_file))
+                
+                with open(f'static/{csv_file}', 'w', newline='') as file:
+                    writer = csv.writer(file)
+                                      
+                    writer.writerow(['Order ID', 'Razorpay Order ID', 'Amount', 'Razorpay Payment ID','Order_Dt', 'Customer Name', 'Products'])
+                    for order in orders:
+                        writer.writerow([order['order_id'], order['razorpay_order_id'], order['amount'], order['razorpay_payment_id'],order['checkout'], order['username'], order['Products']])
+                return jsonify({
+                "status": "success",
+                "message": "Report generated successfully!",
+                "report_url": url_for('static', filename=csv_file) if 'csv_file' in locals() else None
+            })
+                #flash(f"Report generated successfully! Download it <a href='{url_for('static', filename=csv_file)}'>here</a>.", "success")
+            else:
+                flash("No orders found for the selected date range.", "info")
+                return jsonify({
+                    "status": "unsuccessful",
+                    "message": "No orders found for the selected date range.",
+                    "report_url": None
+                })
+        
+
+            
+        elif reportType=='healthians':
+            # Fetch orders within the date range
+            cursor.execute("""
+            select  healthians_book_id,
+            pincode,
+            booking_date,
+            patient_id,patient_name,age,gender,b.test_name as product_ordered,created_at
+            from healthians_test_bookings_lp as a
+            inner join (select distinct deal_id,test_name from healthians_products) as b 
+            on b.deal_id= a.products  where healthians_order_no is null and date(created_at) between %s and %s
+            """, (start_date, end_date))
+        
+            orders = cursor.fetchall()
+            #print("Fetched Orders:", orders)
+        
+            cursor.close()
+            connection.close()
+            
+            #export the orders to csv
+            if orders:
+                csv_file = 'orders_report.csv'
+                # Check if the file already exists and remove it
+                if os.path.exists(os.path.join(app.static_folder, csv_file)):
+                    os.remove(os.path.join(app.static_folder, csv_file))
+                
+                with open(f'static/{csv_file}', 'w', newline='') as file:
+                    writer = csv.writer(file)
+                                      
+                    writer.writerow(['Healthians Book ID', 'Pincode', 'Booking Date', 'Patient ID', 'Patient Name', 'Age','Gender', 'Product Ordered', 'Created At'])
+                    for order in orders:
+                        writer.writerow([order['healthians_book_id'], order['pincode'], order['booking_date'], order['patient_id'], order['patient_name'], order['age'], order['gender'], order['product_ordered'], order['created_at']])
+                
+                return jsonify({
+                "status": "success",
+                "message": "Report generated successfully!",
+                "report_url": url_for('static', filename=csv_file) if 'csv_file' in locals() else None
+            })
+                #flash(f"Report generated successfully! Download it <a href='{url_for('static', filename=csv_file)}'>here</a>.", "success")
+            else:
+                flash("No orders found for the selected date range.", "info")
+                return jsonify({
+                    "status": "unsuccessful",
+                    "message": "No orders found for the selected date range.",
+                    "report_url": None
+                })
+        else:
+            
+            # Fetch orders within the date range
+            cursor.execute("""
+            select 
+            tc_book_id,pincode, booking_date,patient_name,age, gender,tc_order_no,tc_lead_no,tc_prod_name as product_ordered,created_at
+            from thyrocare_lp_test_bookings a
+            inner join thyrocare_tests b
+            on a.products=b.tc_prod_id
+            where tc_order_no is not null and date(created_at) between %s and %s
+            """, (start_date, end_date))
+        
+            orders = cursor.fetchall()
+            #print("Fetched Orders:", orders)
+        
+            cursor.close()
+            connection.close()
+            
+            #export the orders to csv
+            if orders:
+                csv_file = 'orders_report.csv'
+                # Check if the file already exists and remove it
+                if os.path.exists(os.path.join(app.static_folder, csv_file)):
+                    os.remove(os.path.join(app.static_folder, csv_file))
+                
+                with open(f'static/{csv_file}', 'w', newline='') as file:
+                    writer = csv.writer(file)
+                                      
+                    writer.writerow(['Thyrocare Book ID', 'Pincode', 'Booking Date', 'Patient Name', 'Age', 'Gender', 'Thyrocare Order No', 'Thyrocare Lead No', 'Product Ordered', 'Created At'])
+                    for order in orders:
+                        writer.writerow([order['tc_book_id'], order['pincode'], order['booking_date'], order['patient_name'], order['age'], order['gender'], order['tc_order_no'], order['tc_lead_no'], order['product_ordered'], order['created_at']])
+                
+                return jsonify({
+                "status": "success",
+                "message": "Report generated successfully!",
+                "report_url": url_for('static', filename=csv_file) if 'csv_file' in locals() else None
+            })
+                #flash(f"Report generated successfully! Download it <a href='{url_for('static', filename=csv_file)}'>here</a>.", "success")
+            else:
+                flash("No orders found for the selected date range.", "info")
+                return jsonify({
+                    "status": "unsuccessful",
+                    "message": "No orders found for the selected date range.",
+                    "report_url": None
+                })
+
+            
+    
+
 @app.route('/dashboard-data')
 def dashboard_data():
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor(dictionary=True)
     
     # Orders per day
-    cursor.execute("SELECT DATE_FORMAT(created_at, '%d-%b') AS order_day, COUNT(*) AS total_orders FROM orders GROUP BY order_day ORDER BY order_day desc limit 10")
+    cursor.execute("SELECT DATE_FORMAT(created_at, '%d-%m-%y') AS order_day,COUNT(*) AS total_orders FROM orders GROUP BY order_day ORDER BY STR_TO_DATE(order_day, '%d-%m-%y') DESC LIMIT 5")
     orders_per_day = cursor.fetchall()
     #print(orders_per_day)
 
     # Orders per shipment status
-    cursor.execute("SELECT DATE_FORMAT(o.checkout,'%d-%b') AS order_day, s.status, COUNT(*) AS count FROM order_checkout o JOIN shipment s ON o.order_id = s.internal_order_id GROUP BY order_day, s.status ORDER BY order_day")
+    cursor.execute("SELECT DATE_FORMAT(o.checkout,'%d-%m-%y') AS order_day, s.status, COUNT(*) AS count FROM order_checkout o JOIN shipment s ON o.order_id = s.internal_order_id GROUP BY order_day, s.status ORDER BY order_day desc limit 5")
     orders_by_status = cursor.fetchall()
 
     # Top-selling products

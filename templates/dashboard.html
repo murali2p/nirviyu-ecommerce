@@ -58,7 +58,16 @@
   <body>
     <div class="container">
       <h2 class="container service-provider-header graph-header">Dashboard</h2>
+      <!-- Navigation Links -->
+      <nav class="nav">
+        <ul class="nav-list">
+          <li>
+            <a class="nav-el" href="{{ url_for('reports') }}">Reports</a>
+          </li>
+          </ul>
+        </nav>
 
+        </ul>
       <!-- Summary Cards -->
       <div class="container grid grid--4-cols summary-container">
         <div class="card">Orders Today: <span id="orders_today">0</span></div>

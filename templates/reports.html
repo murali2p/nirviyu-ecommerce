@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reports</title>
+    <style>
+      .fieldOption {
+        font-weight: bold;
+        color: #333;
+        padding: 0.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!--Provide option to download report-->
+    <div class="container">
+      <h2 class="mb-4">Reports</h2>
+
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <p class="{{ category }}">{{ message }}</p>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <div class="mb-3">
+        <!--Provide Option to select the type of report and date range-->
+        <select id="reportType" class="fieldOption mb-3">
+          <option class="fieldOption" value="nirviyu">
+            Nirviyu_Products_Report
+          </option>
+          <option class="fieldOption" value="healthians">
+            Healthians_landing_Report
+          </option>
+          <option class="fieldOption" value="thyrocare">
+            Thyrocare_landing_Report
+          </option>
+        </select>
+        <input
+          class="fieldOption"
+          type="date"
+          id="startDate"
+          class="form-control mb-3"
+        />
+        <input
+          class="fieldOption"
+          type="date"
+          id="endDate"
+          class="form-control mb-3"
+        />
+        <button
+          id="generateReport"
+          class="fieldOption"
+          onclick="generate_report();"
+        >
+          Generate Report
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function generate_report() {
+        const reportType = document.getElementById("reportType").value;
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+
+        if (!startDate || !endDate) {
+          alert("Please select both start and end dates.");
+          return;
+        }
+
+        // call the /generate_report endpoint with the selected report type and date range
+        if (!reportType) {
+          alert("Please select a report type.");
+          return;
+        }
+        if (new Date(startDate) > new Date(endDate)) {
+          alert("Start date cannot be after end date.");
+          return;
+        }
+        // For demonstration purposes, we'll just log the values
+        console.log(
+          `Generating report of type ${reportType} from ${startDate} to ${endDate}`
+        );
+        // Here you would typically make an AJAX request to your server to generate the report
+        // For example, using fetch:
+        fetch(
+          `/generate_report?report_type=${reportType}&start_date=${startDate}&end_date=${endDate}`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "success" && data.report_url) {
+              // 1. Show a success message (optional)
+              console.log(data.message);
+
+              // 2. Create a temporary link
+              const link = document.createElement("a");
+              link.href = data.report_url;
+
+              // Optional: give a filename for the download
+              const fileName = `report_${reportType}_${startDate}_${endDate}.csv`;
+              link.download = fileName;
+
+              // 3. Append to the DOM, click it, then remove it
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            } else {
+              console.error("Report generation failed:", data);
+              alert("No Data Available for the selected dates.");
+            }
+          })
+          .catch((err) => {
+            console.error("Fetch error:", err);
+            alert("An error occurred while generating the report.");
+          });
+
+        // Uncomment the line below to redirect to the report generation URL
+
+        //window.location.href = `/generate_report?report_type=${reportType}&start_date=${startDate}&end_date=${endDate}`;
+      }
+    </script>
+  </body>
+</html>
