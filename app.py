@@ -2071,7 +2071,7 @@ def dashboard_data():
     #print(orders_per_day)
 
     # Orders per shipment status
-    cursor.execute("SELECT DATE_FORMAT(o.checkout,'%d-%m-%y') AS order_day, s.status, COUNT(*) AS count FROM order_checkout o JOIN shipment s ON o.order_id = s.internal_order_id GROUP BY order_day, s.status ORDER BY order_day desc limit 5")
+    cursor.execute("SELECT DATE_FORMAT(o.checkout,'%d-%m-%y') AS order_day, s.status, COUNT(*) AS count FROM order_checkout o JOIN shipment s ON o.order_id = s.internal_order_id GROUP BY order_day, s.status ORDER BY STR_TO_DATE(order_day, '%d-%m-%y') desc limit 5")
     orders_by_status = cursor.fetchall()
 
     # Top-selling products
