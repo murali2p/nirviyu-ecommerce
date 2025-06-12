@@ -17,7 +17,7 @@
         font-family: Arial, sans-serif;
       }
       .container {
-        width: 90%;
+        width: 100%;
         margin: auto;
         justify-content: center;
         text-align: center;
@@ -53,14 +53,34 @@
       .graph-header {
         padding: 3rem 3rem 3rem 3rem;
       }
-    </style>
+
+      @media (max-width: 600px) {
+        .graph-el {
+          width: auto !important; /* Full width on small screens */
+          height: 25rem !important; /* Auto height for responsiveness */
+        }
+      }
+
+      .nav {
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
+      }
+
+      .reports-nav{
+
+        font-weight: 300;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+
+      }    </style>
   </head>
   <body>
     <div class="container">
       <h2 class="container service-provider-header graph-header">Dashboard</h2>
       <!-- Navigation Links -->
-      <nav class="nav">
-        <ul class="nav-list">
+      <nav class="reports-nav">
+        <ul class="reports-nav-list">
           <li>
             <a class="nav-el" href="{{ url_for('reports') }}">Reports</a>
           </li>
